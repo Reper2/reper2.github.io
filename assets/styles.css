@@ -1,3 +1,8 @@
+@font-face {
+    font-family: 'Super Mario 256'; 
+    src: url('../SuperMario256.ttf')
+}
+
 h1, h2, h3, h4, h5, h6, p, a, summary, details {
     font-family: 'Super Mario 256', sans-serif;
     color: white;
