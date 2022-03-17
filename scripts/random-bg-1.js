@@ -56,5 +56,5 @@ $(document).ready(function(){
         'background-size': 'cover',
     });
 
-    console.log('🔀Page background has been randomised from refresh!');
+    console.log(`🔀Page background has been randomised to ${bgImg} from refresh!`);
 });
