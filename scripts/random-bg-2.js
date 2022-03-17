@@ -55,4 +55,6 @@ $(document).ready(function(){
         'background-repeat': 'no-repeat no-repeat',
         'background-size': 'cover',
     });
+
+    console.log('🔀Page background has been randomised from refresh!');
 });
