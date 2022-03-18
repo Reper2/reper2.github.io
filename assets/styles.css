@@ -96,6 +96,19 @@ a {
     font-size: 8vmin;
 }
 
+button {
+    background-color: #38d1fc;
+    outline-color: initial;
+    border-radius: 3vmin;
+    color: white;
+    font-size: 5vmin;
+    block-size: 12vmin;
+}
+
+button:hover {
+    transform: translateY(-1vh);
+}
+
 @keyframes bounceButton {
     0% {
         transform: scale(1);
