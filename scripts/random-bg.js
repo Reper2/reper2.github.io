@@ -1,4 +1,4 @@
-/* script optimisation: ioanm.ro */
+/* script optimisation: https://ioanm.ro */
 
 $(document).ready(function(){
     const num_images = 45;
