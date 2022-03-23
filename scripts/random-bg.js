@@ -1,7 +1,7 @@
 /* script optimisation: https://ioanm.ro */
 
 $(document).ready(function(){
-    const num_images = 45;
+    const num_images = 77;
 
     var randomNumber = Math.floor(Math.random() * num_images);
     var link = "https://reper2.github.io/bg/" + String(randomNumber).padStart(3, '0') + ".jpg";
