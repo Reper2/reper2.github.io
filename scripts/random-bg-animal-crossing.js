@@ -4,7 +4,7 @@ $(document).ready(function(){
     const num_images = 47;
 
     var randomNumber = Math.floor(Math.random() * num_images);
-    var link = "https://reper2.github.io/bg-acnh/" + String(randomNumber).padStart(3, '0') + ".jpg";
+    var link = "https://reper2.github.io/bg-animal-crossing/" + String(randomNumber).padStart(3, '0') + ".jpg";
     var bgImg = 'url(' + link + ')';
 
     $('body').css({
