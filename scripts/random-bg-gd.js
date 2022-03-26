@@ -1,10 +1,10 @@
 /* script optimisation: https://ioanm.ro */
 
 $(document).ready(function(){
-    const num_images = 76;
+    const num_images = 11;
 
     var randomNumber = Math.floor(Math.random() * num_images);
-    var link = "https://reper2.github.io/bg/" + String(randomNumber).padStart(3, '0') + ".jpg";
+    var link = "https://reper2.github.io/bg-gd/" + String(randomNumber).padStart(3, '0') + ".jpg";
     var bgImg = 'url(' + link + ')';
 
     $('body').css({
