@@ -58,7 +58,7 @@ a {
     position: flex;
     margin-bottom: 1vmin;
     margin-top: 1vmin;
-    border-radius: 1vmin;
+    border-radius: 30%;
     filter: drop-shadow(0.5vh 0.5vh 0.15vh rgba(0, 0, 0, 0.6));
     cursor: pointer;
     z-index: 1;
