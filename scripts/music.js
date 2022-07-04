@@ -12,7 +12,7 @@ if (music.paused) {
 musicSrc.type = 'audio/mpeg';
 
 var
-    num = Math.floor(Math.random() * 53),
+    num = Math.floor(Math.random() * 50),
     link = `/assets/music/${String(num).padStart(2, '0')}.mp3`;
 $(document).ready(function () {
     musicSrc.src = link;
