@@ -1,13 +1,14 @@
 <html lang="en">
 
 <head>
-    <title>Home - Reper2's Website</title>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <title>Home - Reper2's Epic Website</title>
     <link href="/assets/main.css" rel="stylesheet" type="text/css">
+    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-EGBMJBFWQF"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
+        function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
 
         gtag('config', 'G-EGBMJBFWQF');
@@ -15,85 +16,55 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <meta id="meta-title" property="og:title" content="Reper2's Website">
-    <meta id="meta-desc" property="og:description" content="This is Reper2's official website. Reper2's Website includes info, social links, software library, and more.">
+    <link rel="manifest" type="application/manifest+json" href="/site.webmanifest">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta id="meta-title" property="og:title" content="Reper2's Epic Website">
+    <meta id="meta-desc" property="og:description" content="This is Reper2's official website. It includes info, social links, software library, and more.">
     <meta id="meta-image" name="og:image" itemprop="image" content="https://reper2.github.io/meta.png">
-    <meta property="og:site_name" content="Reper2's Website | reper2.github.io">
-    <meta name="theme-color" content="#14d8ee">
+    <meta property="og:site_name" content="Reper2's Epic Website | reper2.github.io">
     <meta property="twitter:card" content="summary_large_image">
 </head>
 
-<body>
-    <main id="main">
-        <center>
+<body id="_bg">
+    <main><center>
+        <br><h1 width="7vmin">Reper2's Epic Website</h1>
+
+        <div id="grassBox">
+            <h2>About Me</h2>
+            <p class="gold">⌨️I like programming<br>🎮My favourite game is ACNH<br>🎺Classical jazz is very relaxing</p>
             <br>
-            <h1 class="flex" width="7vmin">Reper2's Website</h1>
-
-            <div id="aboutme" class="snow">
-                <h2>About Me</h2>
-
-                <p>
-                    <span style="color: red">I like programming.</span><br>
-                    <span style="color: yellowgreen">My favourite game is Animal Crossing: New Horizons.</span><br>
-                    <span style="color: cyan">I find classical jazz relaxing.</span><br><br>
-                    <a id="learnmore" target="_blank" href="https://github.com/Reper2">Learn more</a>
-                </p>
-
-                <button class="flex">
-                    <a href="/software">Software Library</a>
-                </button>
-
-                <br><br>
-    
-                <button class="flex">
-                    <a href="/links">All Links</a>
-                </button>
+            <a rel="noopener noreferrer" id="learnmore" target="_blank" href="https://github.com/Reper2" title="Location: Reper2 - GitHub (https://github.com/Reper2)">Learn more</a>
+            <br><br>
+            <div class="boxBtn">
+                <a href="/software" title="Location: Software Library (https://reper2.github.io/software)">Software Library</a>
+                <br>
+                <a href="/links" title="Location: Other Links (https://reper2.github.io/links)">Other Links</a>
             </div>
+        </div>
 
-            <br>
+        <br><form id="optForm"></form>
 
+        <div class="flex">
             <div id="audctrls"></div>
-            <audio id="music"></audio>
+            <div id="install"></div>
+            <div id="copy"></div>
+        </div>
 
-            <br>
+        <br><audio id="music"></audio>
+    </center></main>
 
-            <div class="tooltip">
-                <button id="copy" onclick="copyLink()">
-                    <span class="tooltiptext" id="copy-tooltip">Copy link to clipboard</span>
-                    Copy Link
-                </button>
-            </div>
-        </center>
-    </main>
-
-    <footer id="footer" class="flex socialLinks"></footer>
-    <footer id="copyright" class="flex socialLinks"></footer>
+    <footer id="footer" class="bottom"></footer>
+    <footer id="copyright" class="bottom"></footer>
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://code.iconify.design/2/2.1.2/iconify.min.js"></script>
-<script type="text/javascript" src="/scripts/music.js"></script>
-<script type="text/javascript" src="/scripts/audio-controls.js"></script>
-<script type="text/javascript" src="/scripts/clipboard.js"></script>
-<script type="text/javascript" src="/scripts/footer.js"></script>
-<script type="text/javascript" src="/scripts/copyright.js"></script>
-<script>
-    if ('serviceWorker' in navigator) {
-        // Register a service worker after the load event
-        addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js').then(console.log('Service worker successfully installed.'));
+<script type="application/javascript" src="/scripts/iconify.min.js"></script>
+<script type="application/javascript" src="/scripts/jquery.min.js"></script>
 
-            if (!matchMedia('(display-mode: standalone)').matches) { // only execute if app is not already installed
-                console.log('Executing app install reminder.'),
-                    // reminds the user they can install the app
-                    alert('Install the app!\nDesktop Browser - click install button in top-right of address bar\nMobile Browser - click Add To Homescreen after clicking share button');
-            };
-        });
-    };
-
-    onappinstalled = event => {
-        console.log('Thank you for installing the app!');
-    };
-</script>
+<script type="application/javascript" src="/scripts/app.js"></script>
+<script type="application/javascript" src="/scripts/audctrls.js"></script>
+<script type="application/javascript" src="/scripts/copyBtn.js"></script>
+<script type="application/javascript" src="/scripts/cr.js"></script>
+<script type="application/javascript" src="/scripts/footer.js"></script>
+<script type="application/javascript" src="/scripts/kb.js"></script>
+<script type="application/javascript" src="/scripts/sw-installer.js"></script>
 
 </html>

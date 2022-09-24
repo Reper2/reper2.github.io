@@ -7,10 +7,13 @@ body {
     margin: 0;
     padding: 0;
     background: #000;
-    background-image: url('/meta.png');
     background-attachment: fixed;
     background-size: cover;
     overflow-x: hidden;
+}
+
+.hideY {
+    overflow-y: hidden;
 }
 
 h1,
@@ -22,7 +25,8 @@ h6,
 p,
 a,
 span,
-button {
+button,
+label {
     font-family: 'Super Mario 256', sans-serif;
     color: white;
     -webkit-text-stroke-width: 0.2vmin;
@@ -30,7 +34,7 @@ button {
 }
 
 a {
-    text-decoration: none;
+    text-decoration: none
 }
 
 #learnmore {
@@ -38,42 +42,31 @@ a {
     text-decoration: underline;
 }
 
-#aboutme {
-    position: flex;
-    top: 5vmin;
-    text-align: center;
+.boxBtn {
     background-color: lightskyblue;
-    border-radius: 1vmin;
-    color: white;
-    font-size: 3.5vmin;
-    width: 70vmin;
+    outline-color: initial;
+    border-radius: 2vmin;
+    font-size: 4vmin;
     padding: 8px;
 }
 
-.snow {
-    background-image: url(snow.png);
-    background-position: center center;
-}
-
-.softwareIcons {
-    position: flex;
-    top: 8vmin;
-    text-align: center;
-    background-color: lightskyblue;
-    border-radius: 1vmin;
-    color: white;
-    font-size: 4vmin;
+#grassBox {
+    font-size: 3.5vmin;
+    padding: 8px;
     width: 70vmin;
+    border-radius: 1vmin;
+    text-align: center;
 }
 
-.softwareIcon {
-    position: flex;
+.appIcon,
+.link {
     margin-bottom: 1vmin;
     margin-top: 1vmin;
     border-radius: 30%;
     filter: drop-shadow(0.5vh 0.5vh 0.15vh rgba(0, 0, 0, 0.6));
     cursor: pointer;
     z-index: 1;
+    -webkit-user-select: none;
     user-select: none;
     pointer-events: all;
     transition-duration: 0.07s;
@@ -81,26 +74,25 @@ a {
     width: 10vmin;
 }
 
-.softwareIcon:active,
-.softwareIcon:focus-visible,
-a:focus-visible .softwareIcon {
-    animation: bounceButton 0.25s ease-in-out forwards;
+.appIcon:active,
+.appIcon:focus-visible,
+a:focus-visible .appIcon {
+    animation: bounceButton 0.25s ease-in-out forwards
 }
 
-.socialLinks {
-    bottom: 2vmin;
+.bottom {
     text-align: center;
-    position: flex;
     left: 2vmin;
     font-size: 4vmin;
 }
 
 .rel {
-    position: relative;
+    position: relative
 }
 
 .flex {
-    position: flex;
+    display: flex;
+    justify-content: center;
 }
 
 #back img {
@@ -112,16 +104,16 @@ a:focus-visible .softwareIcon {
 }
 
 button {
-    background-color: #38d1fc;
+    background-color: lightskyblue;
     outline-color: initial;
     border-radius: 3vmin;
-    color: white;
     font-size: 5vmin;
     block-size: 12vmin;
 }
 
-button:hover {
-    transform: translateY(-1vh);
+button:hover,
+input:hover {
+    transform: translateY(-1vh)
 }
 
 .tooltip {
@@ -134,7 +126,6 @@ button:hover {
     width: 30vmin;
     font-size: 4vmin;
     background-color: #555;
-    color: #fff;
     text-align: center;
     border-radius: 6vmin;
     padding: 5vmin;
@@ -149,7 +140,6 @@ button:hover {
 
 .tooltip .tooltiptext::after {
     content: "";
-    top: 100%;
     left: 50%;
     border-width: 5px;
     border-style: solid;
@@ -159,4 +149,43 @@ button:hover {
 .tooltip:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
+}
+
+select {
+    background-color: dodgerblue;
+    font-family: sans-serif;
+    border-color: black;
+}
+
+input {
+    font-family: sans-serif;
+    background-color: lightblue;
+}
+
+kbd {
+    background-color: #eee;
+    border-radius: 3px;
+    border: 1px solid #b4b4b4;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
+    color: #333;
+    display: inline-block;
+    font-size: .85em;
+    font-weight: 700;
+    line-height: 1;
+    padding: 2px 4px;
+    white-space: nowrap;
+}
+
+.kb-list {
+    text-align: left;
+    color: cyan;
+}
+
+.kb-hint {
+    font-size: 5vmin;
+    color: inherit;
+}
+
+.gold {
+    color: gold;
 }
