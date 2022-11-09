@@ -23,49 +23,46 @@
     <meta id="meta-image" name="og:image" itemprop="image" content="https://reper2.github.io/meta.png">
     <meta property="og:site_name" content="Reper2's Epic Website | reper2.github.io">
     <meta property="twitter:card" content="summary_large_image">
+    <meta name="theme-color" content="#14d8ee">
 </head>
 
-<body id="_bg" class="hideY">
-    <main><center>
+<body id="_bg">
+    <header>Reper2's Epic Website</header>
+    <main>
         <div id="back"></div>
-
-        <br><h1 width="7vmin">Other Links</h1>
-
+        <h1 width="7vmin">Other Links</h1>
         <div id="grassBox">
-            <a rel="noopener noreferrer" target="_blank" href="https://www.youtube.com/channel/UCofCDfLjs_TkiC-p0-k_9XA" title="Reper2 - YouTube">
+            <a href="https://www.youtube.com/channel/UCofCDfLjs_TkiC-p0-k_9XA" title="Reper2 - YouTube">
                 <img src="/assets/social-logos/youtube.svg" class="link" alt="youtube_logo">
             </a>
 
-            <a rel="noopener noreferrer" target="_blank" href="https://github.com/Reper2" title="Reper2 - GitHub">
+            <a href="https://github.com/Reper2" title="Reper2 - GitHub">
                 <span class="iconify link" data-icon="octicon:mark-github-16" data-color="green" data-width="50"></span>
             </a>
 
-            <a rel="noopener noreferrer" target="_blank" href="https://autocode.com/Reper2" title="Reper2 - Autocode">
+            <a href="https://autocode.com/Reper2" title="Reper2 - Autocode">
                 <img src="/assets/social-logos/autocode.png" class="link" alt="autocode_logo">
             </a>
 
-            <a rel="noopener noreferrer" target="_blank" href="https://dodocodes.com/user/Reper2_acnh" title="Reper2_acnh - DodoCodes">
+            <a href="https://dodocodes.com/user/Reper2_acnh" title="Reper2_acnh - DodoCodes">
                 <img src="/assets/social-logos/dodocodes.png" class="link" alt="dodocodes_logo">
             </a>
 
-            <a rel="noopener noreferrer" target="_blank" href="https://nookazon.com/profile/2566680955" title="Reper2 - Nookazon">
+            <a href="https://nookazon.com/profile/2566680955" title="Reper2 - Nookazon">
                 <img src="/assets/social-logos/nookazon.png" class="link" alt="nookazon_logo">
             </a>
         </div>
 
-        <br><form id="optForm"></form>
-
+        <form id="optForm"></form>
         <div id="buttons" class="flex">
             <div id="audctrls"></div>
             <div id="install"></div>
+            <div id="urlUpdate"></div>
             <div id="copy"></div>
         </div>
-
-        <br><audio id="music"></audio>
-    </center></main>
-
+        <audio id="music"></audio>
+    </main>
     <footer id="footer" class="bottom"></footer>
-    <footer id="copyright" class="bottom"></footer>
 </body>
 <script type="application/javascript" src="/scripts/iconify.min.js"></script>
 <script type="application/javascript" src="/scripts/jquery.min.js"></script>
@@ -74,9 +71,14 @@
 <script type="application/javascript" src="/scripts/audctrls.js"></script>
 <script type="application/javascript" src="/scripts/back.js"></script>
 <script type="application/javascript" src="/scripts/copyBtn.js"></script>
-<script type="application/javascript" src="/scripts/cr.js"></script>
+<script type="application/javascript" src="/scripts/fetchdb.js"></script>
 <script type="application/javascript" src="/scripts/footer.js"></script>
 <script type="application/javascript" src="/scripts/kb.js"></script>
 <script type="application/javascript" src="/scripts/sw-installer.js"></script>
+<script>
+    var anchor = document.getElementsByTagName("a");
+    for (let i = 0; i < anchor.length; i++)
+        [anchor[i].rel, anchor[i].target] = ["noopener noreferrer", "_blank"];
+</script>
 
 </html>

@@ -8,7 +8,7 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-EGBMJBFWQF"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+        function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
 
         gtag('config', 'G-EGBMJBFWQF');
@@ -19,57 +19,55 @@
     <link rel="manifest" type="application/manifest+json" href="/site.webmanifest">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta id="meta-title" property="og:title" content="Software Library - Reper2's Epic Website">
-    <meta id="meta-desc" property="og:description" content="Reper2's Epic Website includes info, social links, software library, and more.">
+    <meta id="meta-desc" property="og:description"
+        content="Reper2's Epic Website includes info, social links, software library, and more.">
     <meta id="meta-image" name="og:image" itemprop="image" content="https://reper2.github.io/meta.png">
     <meta property="og:site_name" content="Reper2's Epic Website | reper2.github.io">
     <meta property="twitter:card" content="summary_large_image">
+    <meta name="theme-color" content="#14d8ee">
 </head>
 
-<body id="_bg" class="hideY">
-    <main><center>
-            <div id="back"></div>
+<body id="_bg">
+    <header>Reper2's Epic Website</header>
+    <main>
+        <div id="back"></div>
+        <h1 width="7vmin">Software Library</h1>
+        <div id="grassBox">
+            <a href="/" title="Reper2's Epic Website">
+                <img src="/logo.png" class="appIcon" alt="reper2-website_logo">
+            </a>
 
-            <br><h1 width="7vmin">Software Library</h1>
+            <a href="/acnh/" title="Reper2's ACNH Website">
+                <img src="/acnh/logo.png" class="appIcon" alt="reper2-acnh_logo">
+            </a>
 
-            <div id="grassBox">
-                <a href="/" title="Reper2's Epic Website">
-                    <img src="/logo.png" class="appIcon" alt="reper2-website_logo">
-                </a>
+            <a href="/acnh-apps/" title="ACNH Apps">
+                <img src="/acnh-apps/icons/apple-touch-icon.png" class="appIcon" alt="acnh-apps_logo">
+            </a>
 
-                <a href="/acnh/" title="Reper2's ACNH Website">
-                    <img src="/acnh/logo.png" class="appIcon" alt="reper2-acnh_logo">
-                </a>
+            <a href="/nintendo-album/" title="Reper2's Nintendo Album">
+                <img src="/acnh/assets/nookPhone-app_native/camera.png" class="appIcon" alt="reper2-nintendo-album_logo">
+            </a>
 
-                <a href="/acnh-apps/" title="ACNH Apps">
-                    <img src="/acnh-apps/icons/apple-touch-icon.png" class="appIcon" alt="acnh-apps_logo">
-                </a>
+            <a href="https://autocode.com/app/Reper2/reper2-bot" title="RoboReper">
+                <img src="https://du2ha4sdmc25q.cloudfront.net/reper2/reper2-bot/src_5HJbAi9ryxPyeXcrRYwu2p7PTtJ7wnh15aYE/readme/thumbnail.png" class="appIcon" alt="roboreper_logo">
+            </a>
 
-                <a href="/nintendo-album/" title="Reper2's Nintendo Album">
-                    <img src="/acnh/assets/nookPhone-app_native/camera.png" class="appIcon" alt="reper2-nintendo-album_logo">
-                </a>
+            <a href="/mario-texture-pack/" title="Mario Texture Pack">
+                <img src="/mario-texture-pack/logo.png" class="appIcon" alt="mario-texture-pack_logo">
+            </a>
+        </div>
 
-                <a href="https://autocode.com/app/Reper2/reper2-bot" title="RoboReper">
-                    <img src="https://du2ha4sdmc25q.cloudfront.net/reper2/reper2-bot/src_5HJbAi9ryxPyeXcrRYwu2p7PTtJ7wnh15aYE/readme/thumbnail.png" class="appIcon" alt="roboreper_logo">
-                </a>
-
-                <a href="/mario-texture-pack/" title="Mario Texture Pack">
-                    <img src="/mario-texture-pack/logo.png" class="appIcon" alt="mario-texture-pack_logo">
-                </a>
-            </div>
-
-            <br><form id="optForm"></form>
-
-            <div class="flex">
-                <div id="audctrls"></div>
-                <div id="install"></div>
-                <div id="copy"></div>
-            </div>
-
-            <br><audio id="music"></audio>
-        </center></main>
-
+        <form id="optForm"></form>
+        <div class="flex">
+            <div id="audctrls"></div>
+            <div id="install"></div>
+            <div id="urlUpdate"></div>
+            <div id="copy"></div>
+        </div>
+        <audio id="music"></audio>
+    </main>
     <footer id="footer" class="bottom"></footer>
-    <footer id="copyright" class="bottom"></footer>
 </body>
 <script type="application/javascript" src="/scripts/iconify.min.js"></script>
 <script type="application/javascript" src="/scripts/jquery.min.js"></script>
@@ -78,7 +76,7 @@
 <script type="application/javascript" src="/scripts/audctrls.js"></script>
 <script type="application/javascript" src="/scripts/back.js"></script>
 <script type="application/javascript" src="/scripts/copyBtn.js"></script>
-<script type="application/javascript" src="/scripts/cr.js"></script>
+<script type="application/javascript" src="/scripts/fetchdb.js"></script>
 <script type="application/javascript" src="/scripts/footer.js"></script>
 <script type="application/javascript" src="/scripts/kb.js"></script>
 <script type="application/javascript" src="/scripts/sw-installer.js"></script>

@@ -1,363 +1,309 @@
-/* eslint-disable no-undef */
-/* eslint-disable semi */
+/**
+ * Copyright 2022 Reper2
+ * 
+ * Licensed under the MIT License;
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * 		https://github.com/Reper2/reper2.github.io/LICENSE
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 "use strict";
-const [_optForm, _optSet, _optReset, _optRand] = [document.getElementById("optForm"), document.createElement("input"), document.createElement("input"), document.createElement("input")];
+/* eslint-disable semi */
+/* eslint-disable no-undef */
 
+const opt = {
+	form: document.getElementById("optForm"),
+	lbl: {
+		_: [],
+		name: ["select song:", "or type the name:", "select box background:", "select background:"]
+	},
+	sel: {
+		_: [],
+		title: ["select a song from the dropdown then click SET", "select grass (box background) then click SET", "select background then click SET"]
+	},
+	placehld: {
+		_: [],
+		name: ["-- select song --", "-- select grass --", "-- select background --"]
+	},
+	br: [],
+	inp: {
+		_: [],
+		type: ["text", "submit", "reset", "button"],
+		val: [null, "Set", "Reset", "Random"],
+		id: [null, "optSet", "optReset", "optRand"],
+		placehld: ["enter song name", null, null, null],
+		onclick: [
+			() => {
+				sessionStorage.setItem("music", opt.inp._[0].value);
+				sessionStorage.setItem("grass", opt.sel._[1].value);
+				sessionStorage.setItem("bg", opt.sel._[2].value);
+			},
+			() => {
+				sessionStorage.setItem("music", opt.sel._[0].value);
+				sessionStorage.setItem("grass", opt.sel._[1].value);
+				sessionStorage.setItem("bg", opt.sel._[2].value);
+			},
+			() => sessionStorage.clear(),
+			() => {
+				var r = {
+					m: Math.floor(Math.random() * (opt.mus.smg.name.length + opt.mus.mk8d.name.length + opt.mus.smo.name1.length)),
+					g: Math.floor(Math.random() * opt.grass.name1.length),
+					b: Math.floor(Math.random() * (opt.bg.acnh.name1.length + opt.bg.botw.name1.length + opt.bg.sm3dw_bf.name1.length + opt.bg.smg.name1.length + opt.bg.smo.name1.length + opt.bg.smp.name1.length))
+				};
 
-const [_aud, _audSrc] = [document.getElementById("music"), document.createElement("source")];
-[_aud.controls, _aud.autoplay, _aud.loop, _aud.preload, _aud.style.display, _audSrc.type] = [true, true, true, "auto", "none", "audio/mp3"];
-if (_aud.paused) _aud.play();
+				if (r.m < opt.mus.smg.name.length) // Super Mario Galaxy
+					sessionStorage.setItem("music", opt.mus.smg.name[r.m])
+				else if (r.m >= opt.mus.smg.name.length && r.m < opt.mus.smg.name.length + opt.mus.mk8d.name.length) // Mario Kart 8 Deluxe
+					sessionStorage.setItem("music", opt.mus.mk8d.name[r.m - opt.mus.smg.name.length])
+				else if (r.m >= opt.mus.smg.name.length + opt.mus.mk8d.name.length && r.m < opt.mus.smg.name.length + opt.mus.mk8d.name.length + opt.mus.smo.name1.length) // Super Mario Odyssey
+					sessionStorage.setItem("music", opt.mus.smo.name1[r.m - opt.mus.smg.name.length - opt.mus.mk8d.name.length]);
 
-const [_musLabel, _musSel] = [document.createElement("label"), document.createElement("select")];
-const _musPlacehld = document.createElement("option");
-const mus_ = []; for (let i = 0; i < 3; i++) mus_.push(document.createElement("optgroup"));
-const mus_smg = []; for (let i = 0; i < 33; i++) mus_smg.push(document.createElement("option"));
-const mus_mk8d = []; for (let i = 0; i < 47; i++) mus_mk8d.push(document.createElement("option"));
-const mus_smo = []; for (let i = 0; i < 35; i++) mus_smo.push(document.createElement("option"));
+				sessionStorage.setItem("grass", opt.grass.name1[r.g]);
 
-_musLabel.innerHTML = "Select Song:";
-_musLabel.htmlFor = _musSel.name = "music";
-_musSel.title = "select a song from the dropdown then click SET";
-[_musPlacehld.value, _musPlacehld.innerHTML] = ["", "-- select song --"];
-[mus_[0].label, mus_[1].label, mus_[2].label] = ["Super Mario Galaxy", "Mario Kart 8 Deluxe", "Super Mario Odyssey"];
+				if (r.b < opt.bg.acnh.name1.length) // Animal Crossing
+					sessionStorage.setItem("bg", opt.bg.acnh.name1[r.b])
+				else if (r.b >= opt.bg.acnh.name1.length && r.b < opt.bg.acnh.name1.length + opt.bg.botw.name1.length) // Breath of the Wild
+					sessionStorage.setItem("bg", opt.bg.botw.name1[r.b - opt.bg.acnh.name1.length])
+				else if (r.b >= opt.bg.acnh.name1.length + opt.bg.botw.name1.length && r.b < opt.bg.acnh.name1.length + opt.bg.botw.name1.length + opt.bg.sm3dw_bf.name1.length) // Super Mario 3D World
+					sessionStorage.setItem("bg", opt.bg.sm3dw_bf.name1[r.b - opt.bg.acnh.name1.length - opt.bg.botw.name1.length])
+				else if (r.b >= opt.bg.acnh.name1.length + opt.bg.botw.name1.length + opt.bg.sm3dw_bf.name1.length && r.b < opt.bg.acnh.name1.length + opt.bg.botw.name1.length + opt.bg.sm3dw_bf.name1.length + opt.bg.smg.name1.length) // Super Mario Galaxy
+					sessionStorage.setItem("bg", opt.bg.smg.name1[r.b - opt.bg.acnh.name1.length - opt.bg.botw.name1.length - opt.bg.sm3dw_bf.name1.length])
+				else if (r.b >= opt.bg.acnh.name1.length + opt.bg.botw.name1.length + opt.bg.sm3dw_bf.name1.length + opt.bg.smg.name1.length && r.b < opt.bg.acnh.name1.length + opt.bg.botw.name1.length + opt.bg.sm3dw_bf.name1.length + opt.bg.smg.name1.length + opt.bg.smo.name1.length) // Super Mario Odyssey
+					sessionStorage.setItem("bg", opt.bg.smo.name1[r.b - opt.bg.acnh.name1.length - opt.bg.botw.name1.length - opt.bg.sm3dw_bf.name1.length - opt.bg.smg.name1.length])
+				else if (r.b >= opt.bg.acnh.name1.length + opt.bg.botw.name1.length + opt.bg.sm3dw_bf.name1.length + opt.bg.smg.name1.length + opt.bg.smo.name1.length && r.b < opt.bg.acnh.name1.length + opt.bg.botw.name1.length + opt.bg.sm3dw_bf.name1.length + opt.bg.smg.name1.length + opt.bg.smo.name1.length) // Super Mario Party
+					sessionStorage.setItem("bg", opt.bg.smp.name1[r.b - opt.bg.acnh.name1.length - opt.bg.botw.name1.length - opt.bg.sm3dw_bf.name1.length - opt.bg.smg.name1.length - opt.bg.smo.name1.length]);
 
-mus_smg[0].value = mus_smg[0].innerHTML = "Airship Armada";
-mus_smg[1].value = mus_smg[1].innerHTML = "Attack of the Airships";
-mus_smg[2].value = mus_smg[2].innerHTML = "Battlerock Galaxy";
-mus_smg[3].value = mus_smg[3].innerHTML = "Beach Bowl Galaxy";
-mus_smg[4].value = mus_smg[4].innerHTML = "Beach Bowl Galaxy - Undersea";
-mus_smg[5].value = mus_smg[5].innerHTML = "Birth";
-mus_smg[6].value = mus_smg[6].innerHTML = "Blue Sky Athletic";
-mus_smg[7].value = mus_smg[7].innerHTML = "Buoy Base Galaxy";
-mus_smg[8].value = mus_smg[8].innerHTML = "Buoy Base Galaxy - Undersea";
-mus_smg[9].value = mus_smg[9].innerHTML = "Deep Dark Galaxy";
-mus_smg[10].value = mus_smg[10].innerHTML = "Drip Drop Galaxy";
-mus_smg[11].value = mus_smg[11].innerHTML = "Dusty Dune Galaxy";
-mus_smg[12].value = mus_smg[12].innerHTML = "Enter Bowser Jr.!";
-mus_smg[13].value = mus_smg[13].innerHTML = "Enter the Galaxy";
-mus_smg[14].value = mus_smg[14].innerHTML = "Final Battle with Bowser";
-mus_smg[15].value = mus_smg[15].innerHTML = "Gateway Galaxy";
-mus_smg[16].value = mus_smg[16].innerHTML = "Good Egg Galaxy";
-mus_smg[17].value = mus_smg[17].innerHTML = "Gusty Garden Galaxy";
-mus_smg[18].value = mus_smg[18].innerHTML = "Heavy Metal Mecha-Bowser";
-mus_smg[19].value = mus_smg[19].innerHTML = "King Bowser";
-mus_smg[20].value = mus_smg[20].innerHTML = "Melty Molten Galaxy";
-mus_smg[21].value = mus_smg[21].innerHTML = "Overture";
-mus_smg[22].value = mus_smg[22].innerHTML = "Purple Comet";
-mus_smg[23].value = mus_smg[23].innerHTML = "Space Athletic";
-mus_smg[24].value = mus_smg[24].innerHTML = "Space Fantasy";
-mus_smg[25].value = mus_smg[25].innerHTML = "Space Junk Road";
-mus_smg[26].value = mus_smg[26].innerHTML = "Super Mario 2007";
-mus_smg[27].value = mus_smg[27].innerHTML = "Super Mario Galaxy -Credits Theme-";
-mus_smg[28].value = mus_smg[28].innerHTML = "The Fiery Stronghold";
-mus_smg[29].value = mus_smg[29].innerHTML = "The Galaxy Reactor";
-mus_smg[30].value = mus_smg[30].innerHTML = "The Honeyhive";
-mus_smg[31].value = mus_smg[31].innerHTML = "The Star Festival";
-mus_smg[32].value = mus_smg[32].innerHTML = "Waltz of the Boos";
+				window.location.href = "./?music=" + encodeURIComponent(opt.mus._sav.ss) + "&grass=" + encodeURIComponent(opt.grass._sav.ss) + "&bg=" + encodeURIComponent(opt.bg._sav.ss);
+			}
+		]
+	},
 
-mus_mk8d[0].value = mus_mk8d[0].innerHTML = "3DS DK Jungle";
-mus_mk8d[1].value = mus_mk8d[1].innerHTML = "3DS Music Park";
-mus_mk8d[2].value = mus_mk8d[2].innerHTML = "3DS Neo Bowser City";
-mus_mk8d[3].value = mus_mk8d[3].innerHTML = "3DS Wuhu Town";
-mus_mk8d[4].value = mus_mk8d[4].innerHTML = "Animal Crossing (Summer)";
-mus_mk8d[5].value = mus_mk8d[5].innerHTML = "Animal Crossing (Fall)";
-mus_mk8d[6].value = mus_mk8d[6].innerHTML = "Animal Crossing (Winter)";
-mus_mk8d[7].value = mus_mk8d[7].innerHTML = "Animal Crossing (Spring)";
-mus_mk8d[8].value = mus_mk8d[8].innerHTML = "Animal Crossing Results";
-mus_mk8d[9].value = mus_mk8d[9].innerHTML = "Cloudtop Cruise";
-mus_mk8d[10].value = mus_mk8d[10].innerHTML = "DS Cheep Cheep Beach";
-mus_mk8d[11].value = mus_mk8d[11].innerHTML = "DS Shroom Ridge";
-mus_mk8d[12].value = mus_mk8d[12].innerHTML = "DS Tick-Tock Clock";
-mus_mk8d[13].value = mus_mk8d[13].innerHTML = "DS Wario Stadium";
-mus_mk8d[14].value = mus_mk8d[14].innerHTML = "Electrodome";
-mus_mk8d[15].value = mus_mk8d[15].innerHTML = "GBA Sky Garden";
-mus_mk8d[16].value = mus_mk8d[16].innerHTML = "GCN Luigi's Mansion";
-mus_mk8d[17].value = mus_mk8d[17].innerHTML = "GCN Sherbet Land";
-mus_mk8d[18].value = mus_mk8d[18].innerHTML = "Hyrule Circuit";
-mus_mk8d[19].value = mus_mk8d[19].innerHTML = "Ice Ice Outpost";
-mus_mk8d[20].value = mus_mk8d[20].innerHTML = "Lunar Colony";
-mus_mk8d[21].value = mus_mk8d[21].innerHTML = "Mario Circuit";
-mus_mk8d[22].value = mus_mk8d[22].innerHTML = "Mario Kart 8";
-mus_mk8d[23].value = mus_mk8d[23].innerHTML = "Mario Kart Stadium";
-mus_mk8d[24].value = mus_mk8d[24].innerHTML = "Mount Wario";
-mus_mk8d[25].value = mus_mk8d[25].innerHTML = "Mute City";
-mus_mk8d[26].value = mus_mk8d[26].innerHTML = "N64 Choco Mountain";
-mus_mk8d[27].value = mus_mk8d[27].innerHTML = "N64 Rainbow Road";
-mus_mk8d[28].value = mus_mk8d[28].innerHTML = "N64 Royal Raceway";
-mus_mk8d[29].value = mus_mk8d[29].innerHTML = "N64 Toad's Turnpike";
-mus_mk8d[30].value = mus_mk8d[30].innerHTML = "Rainbow Road";
-mus_mk8d[31].value = mus_mk8d[31].innerHTML = "Shy Guy Falls";
-mus_mk8d[32].value = mus_mk8d[32].innerHTML = "SNES Rainbow Road";
-mus_mk8d[33].value = mus_mk8d[33].innerHTML = "Sunshine Airport";
-mus_mk8d[34].value = mus_mk8d[34].innerHTML = "Super Bell Subway";
-mus_mk8d[35].value = mus_mk8d[35].innerHTML = "Sweet Sweet Canyon";
-mus_mk8d[36].value = mus_mk8d[36].innerHTML = "Thwomp Ruins";
-mus_mk8d[37].value = mus_mk8d[37].innerHTML = "Toad Harbour";
-mus_mk8d[38].value = mus_mk8d[38].innerHTML = "Tour Ninja Hideaway";
-mus_mk8d[39].value = mus_mk8d[39].innerHTML = "Tour Paris Promenade";
-mus_mk8d[40].value = mus_mk8d[40].innerHTML = "Tour Tokyo Blur";
-mus_mk8d[41].value = mus_mk8d[41].innerHTML = "Twisted Mansion";
-mus_mk8d[42].value = mus_mk8d[42].innerHTML = "Water Park";
-mus_mk8d[43].value = mus_mk8d[43].innerHTML = "Wii Coconut Mall";
-mus_mk8d[44].value = mus_mk8d[44].innerHTML = "Wii Grumble Volcano";
-mus_mk8d[45].value = mus_mk8d[45].innerHTML = "Wii Moo Moo Meadows";
-mus_mk8d[46].value = mus_mk8d[46].innerHTML = "Wii Wario's Gold Mine";
+	aud: document.getElementById("music"),
+	audSrc: document.createElement("source"),
+	mus: {
+		_: [],
+		_sav: {
+			ss: sessionStorage.getItem("music"),
+			param: new URL(window.location.href).searchParams.get("music")
+		},
+		name: ["Super Mario Galaxy", "Mario Kart 8 Deluxe", "Super Mario Odyssey"],
+		smg: {
+			opt: [],
+			name: ["Overture", "The Star Festival", "Attack of the Airships", "Enter the Galaxy", "Egg Planet", "Rosalina in the Observatory 1", "The Honeyhive", "Space Junk Road", "Battlerock Galaxy", "Beach Bowl Galaxy", "Rosalina in the Observatory 2", "Enter Bowser Jr.!", "Waltz of the Boos", "Buoy Base Galaxy", "Gusty Garden Galaxy", "Rosalina in the Observatory 3", "King Bowser", "Melty Molten Galaxy", "The Galaxy Reactor", "Final Battle with Bowser", "Daybreak - A New Dawn", "Birth", "Super Mario Galaxy -Credits Theme-", "Purple Comet", "Blue Sky Athletic", "Super Mario 2007", "Luma", "Gateway Galaxy", "To the Observatory Grounds 1", "Observation Dome", "Course Select", "The Toad Brigade", "Airship Armada", "Space Fantasy", "To the Observatory 2", "Space Athletic", "Beach Bowl Galaxy - Undersea", "The Fiery Stronghold", "The Library", "Buoy Base Galaxy - Undersea", "Rainbow Mario", "Cosmic Comet", "Drip Drop Galaxy", "Dusty Dune Galaxy", "Heavy Metal Mecha-Bowser", "Deep Dark Galaxy", "A Wish", "Family"]
+		},
+		mk8d: {
+			opt: [],
+			name: ["Mario Kart 8", "Main Menu", "Mario Kart Stadium", "Water Park", "Sweet Sweet Canyon", "Thwomp Ruins", "Mario Circuit", "Toad Harbour", "Twisted Mansion", "Shy Guy Falls", "Sunshine Airport", "Dolphin Shoals", "Dolphin Shoals (Undersea)", "Electrodrome", "Mount Wario", "Cloudtop Cruise", "Bone-Dry Dunes", "Bowser's Castle", "Rainbow Road", "Wii Moo Moo Meadows", "GBA Mario Circuit", "DS Cheep Cheep Beach", "N64 Toad's Turnpike", "GCN Dry Dry Desert", "SNES Donut Plains 3", "N64 Royal Raceway", "3DS DK Jungle", "DS Wario Stadium", "GCN Sherbet Land", "3DS Melody Motorway", "N64 Yoshi Valley", "DS Tick-Tock Clock", "3DS Piranha Plant Pipeway", "Wii Grumble Volcano", "N64 Rainbow Road", "GCN Yoshi Circuit", "Excitebike Arena", "Dragon Driftway", "Mute City", "Wii Wario's Gold Mine", "SNES Rainbow Road", "Ice Ice Outpost", "Hyrule Circuit", "GCN Baby Park", "GBA Cheese Land", "Wild Woods", "Animal Crossing (Summer)", "Animal Crossing (Fall)", "Animal Crossing (Winter)", "Animal Crossing Results", "3DS Neo Bowser City", "GBA Ribbon Road", "Super Bell Subway", "Big Blue", "Tour Paris Promenade", "3DS Toad Circuit", "N64 Choco Mountain", "Wii Coconut Mall", "Tour Tokyo Blur", "DS Shroom Ridge", "GBA Sky Garden", "Tour Ninja Hideaway", "Tour New York Minute", "SNES Mario Circuit 3", "N64 Kalimari Desert", "Tour Sydney Sprint", "GBA Snow Land", "Wii Mushroom Gorge", "Sky High Sundae", "Waluigi Pinball", "Battle Stadium", "Sweet Sweet Kingdom", "Dragon Palace", "Lunar Colony", "3DS Wuhu Town", "GCN Luigi's Mansion", "Urchin Underpass"]
+		},
+		smo: {
+			opt: [],
+			name1: ["Bonneton", "Fossil Falls", "Fossil Falls (8-Bit)", "Fossil Falls Dinosaur", "Tostarena Ruins", "Tostarena Ruins (8-Bit)", "Tostarena Night", "Tostarena Night (8-Bit)", "Tostarena Town", "Tostarena Jaxi", "Steam Gardens", "Steam Gardens (8-Bit)", "Steam Gardens Sherm", "Lake Lamode 1", "Lake Lamode 1 (8-Bit)", "Lake Lamode 2", "Lake Lamode Underwater Passage", "Forgotten Isle 1", "Forgotten Isle 2", "Forgotten Isle 1 (8-Bit)", "New Donk City Night 1", "New Donk City Night 2", "New Donk City Daytime", "New Donk City Cafe", "New Donk City (Band Performance)", "NDC Festival", "NDC Festival (8-Bit)", "Bubblaine", "Bubblaine Underwater", "Bubblaine (8-Bit)", "Shiveria Town", "Shiveria Race-Course Entrance", "Mount Volbono", "Mount Volbono (8-Bit)", "Mount Volbono Town", "Bowser's Castle 1", "Bowser's Castle 1 (8-Bit)", "Bowser's Castle 2", "Honeylune Ridge", "Honeylune Ridge (8-Bit)", "Honeylune Ridge Caves", "Honeylune Ridge Wedding Hall", "Honeylune Ridge Collapse", "Honeylune Ridge Collapse (8-Bit)", "Honeylune Ridge Escape", "Honeylune Ridge Escape (Japanese)", "Honeylune Ridge Escape (8-Bit)", "Peach's Castle", "Broodals Battle", "Madame Broode Battle", "Knucklotec Battle", "Torkdrift Battle", "Mechawiggler Battle", "Mollusque-Lanceur Battle", "Mollusque-Lanceur Battle (8-Bit)", "Cookatiel Battle", "Ruined Dragon Battle", "RoboBrood Battle", "Bowser Battle 1", "Bowser Battle 2", "Run, Jump, Throw! 1", "Run, Jump, Throw! 2", "Run, Jump, Throw! 2 (8-Bit)", "Subterranean 1", "Subterranean 1 (8-Bit)", "Caves", "Ice", "Another World", "Ruins", "Ruins (8-Bit)", "Projection Room Above Ground", "Projection Room Underground", "Above the Clouds", "To the Next Kingdom", "Shop", "Race", "RC Car", "Spinning Slots", "Climatic Duel!"],
+			name2: ["Bonneton", "Fossil Falls", "Fossil Falls (8-Bit)", "Fossil Falls: Dinosaur", "Tostarena: Ruins", "Tostarena: Ruins (8-Bit)", "Tostarena: Night", "Tostarena: Night (8-Bit)", "Tostarena: Town", "Tostarena: Jaxi", "Steam Gardens", "Steam Gardens (8-Bit)", "Steam Gardens: Sherm", "Lake Lamode 1", "Lake Lamode 1 (8-Bit)", "Lake Lamode 2", "Lake Lamode: Underwater Passage", "Forgotten Isle 1", "Forgotten Isle 2", "Forgotten Isle 1 (8-Bit)", "New Donk City: Night 1", "New Donk City: Night 2", "New Donk City: Daytime", "New Donk City: Cafe", "New Donk City (Band Performance)", "NDC Festival", "NDC Festival (8-Bit)", "Bubblaine", "Bubblaine: Underwater", "Bubblaine (8-Bit)", "Shiveria: Town", "Shiveria: Race-Course Entrance", "Mount Volbono", "Mount Volbono (8-Bit)", "Mount Volbono: Town", "Bowser's Castle 1", "Bowser's Castle 1 (8-Bit)", "Bowser's Castle 2", "Honeylune Ridge", "Honeylune Ridge (8-Bit)", "Honeylune Ridge: Caves", "Honeylune Ridge: Wedding Hall", "Honeylune Ridge: Collapse", "Honeylune Ridge: Collapse (8-Bit)", "Honeylune Ridge: Escape", "Honeylune Ridge: Escape (Japanese)", "Honeylune Ridge: Escape (8-Bit)", "Peach's Castle", "Broodals Battle", "Madame Broode Battle", "Knucklotec Battle", "Torkdrift Battle", "Mechawiggler Battle", "Mollusque-Lanceur Battle", "Mollusque-Lanceur Battle (8-Bit)", "Cookatiel Battle", "Ruined Dragon Battle", "RoboBrood Battle", "Bowser Battle 1", "Bowser Battle 2", "Run, Jump, Throw! 1", "Run, Jump, Throw! 2", "Run, Jump, Throw! 2 (8-Bit)", "Subterranean 1", "Subterranean 1 (8-Bit)", "Caves", "Ice", "Another World", "Ruins", "Ruins (8-Bit)", "Projection Room: Above Ground", "Projection Room: Underground", "Above the Clouds", "To the Next Kingdom", "Shop", "Race", "RC Car", "Spinning Slots", "Climatic Duel!"]
+		},
+	},
 
-mus_smo[0].value = mus_smo[0].innerHTML = "Above the Clouds Stage";
-mus_smo[1].value = mus_smo[1].innerHTML = "Band Performance (Super Mario Brothers Above Ground)";
-mus_smo[2].value = mus_smo[2].innerHTML = "Bonneton";
-mus_smo[3].value = mus_smo[3].innerHTML = "Bowser Castle";
-mus_smo[4].value = mus_smo[4].innerHTML = "Bowser Castle Courtyard";
-mus_smo[5].value = mus_smo[5].innerHTML = "Break Free (Lead the Way)";
-mus_smo[6].value = mus_smo[6].innerHTML = "Bubblaine";
-mus_smo[7].value = mus_smo[7].innerHTML = "Bubblaine Underwater";
-mus_smo[8].value = mus_smo[8].innerHTML = "Forgotten Isle";
-mus_smo[9].value = mus_smo[9].innerHTML = "Fossil Falls";
-mus_smo[10].value = mus_smo[10].innerHTML = "Honeylune Ridge";
-mus_smo[11].value = mus_smo[11].innerHTML = "Honeylune Ridge Collapse";
-mus_smo[12].value = mus_smo[12].innerHTML = "Ice Cave";
-mus_smo[13].value = mus_smo[13].innerHTML = "Jump Up, Super Star!";
-mus_smo[14].value = mus_smo[14].innerHTML = "Jump Up, Super Star! NDC Festival Edition";
-mus_smo[15].value = mus_smo[15].innerHTML = "Lake Lamode";
-mus_smo[16].value = mus_smo[16].innerHTML = "Lake Lamode Above Ground";
-mus_smo[17].value = mus_smo[17].innerHTML = "Lake Lamode Underwater Passage";
-mus_smo[18].value = mus_smo[18].innerHTML = "Mount Volbono";
-mus_smo[19].value = mus_smo[19].innerHTML = "New Donk City";
-mus_smo[20].value = mus_smo[20].innerHTML = "New Donk City Night 1";
-mus_smo[21].value = mus_smo[21].innerHTML = "New Donk City Night 2 ~City Hall~";
-mus_smo[22].value = mus_smo[22].innerHTML = "Peach's Castle";
-mus_smo[23].value = mus_smo[23].innerHTML = "Peronza Plaza";
-mus_smo[24].value = mus_smo[24].innerHTML = "Poolside Rest";
-mus_smo[25].value = mus_smo[25].innerHTML = "Shiveria Town";
-mus_smo[26].value = mus_smo[26].innerHTML = "Snowline Circuit";
-mus_smo[27].value = mus_smo[27].innerHTML = "Steam Gardens";
-mus_smo[28].value = mus_smo[28].innerHTML = "Top-Hat Tower";
-mus_smo[29].value = mus_smo[29].innerHTML = "Tostarena Night";
-mus_smo[30].value = mus_smo[30].innerHTML = "Tostarena Ruins";
-mus_smo[31].value = mus_smo[31].innerHTML = "Tostarena Town";
-mus_smo[32].value = mus_smo[32].innerHTML = "Underground Moon Caverns";
-mus_smo[33].value = mus_smo[33].innerHTML = "Underground Power Plant";
-mus_smo[34].value = mus_smo[34].innerHTML = "Wedding Hall";
+	grass: {
+		_elem: document.getElementById("grassBox"),
+		_sav: {
+			ss: sessionStorage.getItem("grass"),
+			param: new URL(window.location.href).searchParams.get("grass")
+		},
+		opt: [],
+		name1: ["summer1", "summer2", "fall1", "fall2", "fall3", "fall4", "fall5", "fall6", "winter", "spring"],
+		name2: ["Summer 1", "Summer 2", "Fall 1", "Fall 2", "Fall 3", "Fall 4", "Fall 5", "Fall 6", "Winter", "Spring"],
+	},
 
-const [_getStoredMusic, _musicUrl_string] = [sessionStorage.getItem("music"), window.location.href];
-const _musicUrl = new URL(_musicUrl_string);
-const _getParamMusic = _musicUrl.searchParams.get("music");
-
-_musSel.appendChild(_musPlacehld);
-for (let i = 0; i < mus_smg.length; i++) mus_[0].appendChild(mus_smg[i]);
-for (let i = 0; i < mus_mk8d.length; i++) mus_[1].appendChild(mus_mk8d[i]);
-for (let i = 0; i < mus_smo.length; i++) mus_[2].appendChild(mus_smo[i]);
-for (let i = 0; i < mus_.length; i++) _musSel.appendChild(mus_[i]);
-
-_optForm.appendChild(_musLabel);
-_optForm.appendChild(_musSel);
-_optForm.appendChild(document.createElement("br"));
-
-$(function() {
-	const _music_sav = (_getStoredMusic || _getParamMusic);
-
-	_audSrc.src = "/assets/music/" + _music_sav + ".mp3"; _aud.appendChild(_audSrc);
-
-	console.group("🎵music");
-	if (_getStoredMusic != null && _getParamMusic != "") console.log("💾Retrieved the song you selected from session storage:", _getStoredMusic);
-	if (_getParamMusic != null && _getParamMusic != "") console.log("🔗Using song provided in url:", _getParamMusic);
-	console.log("🎵Music has been set to", _music_sav);
-	console.groupEnd();
-});
-
-
-const [_grassLabel, _grassSel] = [document.createElement("label"), document.createElement("select")];
-const _grassPlacehld = document.createElement("option");
-const grass = []; for (let i = 0; i < 10; i++) grass.push(document.createElement("option"));
-
-_grassLabel.innerHTML = "Select Box Background:";
-_grassLabel.htmlFor = (_grassSel.name = "grass");
-_grassSel.title = "select grass (box background) then click SET";
-[_grassPlacehld.value, _grassPlacehld.innerHTML] = ["_def", "-- select grass --"];
-
-grass[0].value = "summer1"; grass[0].innerHTML = "Summer 1";
-grass[1].value = "summer2"; grass[1].innerHTML = "Summer 2";
-grass[2].value = "fall1"; grass[2].innerHTML = "Fall/Autumn 1";
-grass[3].value = "fall2"; grass[3].innerHTML = "Fall/Autumn 2";
-grass[4].value = "fall3"; grass[4].innerHTML = "Fall/Autumn 3";
-grass[5].value = "fall4"; grass[5].innerHTML = "Fall/Autumn 4";
-grass[6].value = "fall5"; grass[6].innerHTML = "Fall/Autumn 5";
-grass[7].value = "fall6"; grass[7].innerHTML = "Fall/Autumn 6";
-grass[8].value = "winter"; grass[8].innerHTML = "Winter";
-grass[9].value = "spring"; grass[9].innerHTML = "Spring";
-
-const [_getStoredGrass, _grassUrl_string] = [sessionStorage.getItem("grass"), window.location.href];
-const _grassUrl = new URL(_grassUrl_string);
-const _getParamGrass = _grassUrl.searchParams.get("grass");
-
-_grassSel.appendChild(_grassPlacehld);
-for (let i = 0; i < grass.length; i++) _grassSel.appendChild(grass[i]);
-
-_optForm.appendChild(_grassLabel);
-_optForm.appendChild(_grassSel);
-_optForm.appendChild(document.createElement("br"));
-
-$(function() {
-	const [_grassBox, _grass_sav] = [document.getElementById("grassBox"), (_getStoredGrass || _getParamGrass)];
-
-	_grassBox.style.backgroundPosition = "center center";
-	if (_grass_sav == null || _grass_sav == "" || _grass_sav == "_def") [_grassBox.style.backgroundImage, _grassBox.style.backgroundSize, _grassBox.style.backgroundAttachment] = ["url('/assets/grass/_def.png')", "contain", "fixed"]
-	else _grassBox.style.backgroundImage = "url('/assets/grass/" + _grass_sav + ".png')";
-
-	console.group("🍀grass");
-	if (_getStoredGrass != null && _getStoredGrass != "") console.log("💾Retrieved the grass you selected from session storage:", _getStoredGrass);
-	if (_getParamGrass != null && _getParamGrass != "") console.log("🔗Using grass provided in url for box styling:", _getParamGrass);
-	console.log("🍀Box background has been set to", _grass_sav);
-	console.groupEnd();
-});
-
-
-const [_bgLabel, _bgSel] = [document.createElement("label"), document.createElement("select")];
-const _bgPlacehld = document.createElement("option");
-const bg_ = []; for (let i = 0; i < 6; i++) bg_.push(document.createElement("optgroup"));
-const bg_acnh = []; for (let i = 0; i < 17; i++) bg_acnh.push(document.createElement("option"));
-const bg_bf = []; for (let i = 0; i < 14; i++) bg_bf.push(document.createElement("option"));
-const bg_sm3dw = []; for (let i = 0; i < 4; i++) bg_sm3dw.push(document.createElement("option"));
-const bg_smg = []; for (let i = 0; i < 9; i++) bg_smg.push(document.createElement("option"));
-const bg_smo = []; for (let i = 0; i < 14; i++) bg_smo.push(document.createElement("option"));
-const bg_smp = []; for (let i = 0; i < 2; i++) bg_smp.push(document.createElement("option"));
-
-_bgLabel.innerHTML = "Select Background:";
-_bgLabel.htmlFor = _bgSel.name = "bg";
-_bgSel.title = "select background then click SET";
-[_bgPlacehld.value, _bgPlacehld.innerHTML] = ["_def", "-- select background --"];
-[bg_[0].label, bg_[1].label, bg_[2].label, bg_[3].label, bg_[4].label, bg_[5].label] = ["Animal Crossing: New Horizons", "Bowser's Fury", "Super Mario 3D World", "Super Mario Galaxy", "Super Mario Odyssey", "Super Mario Party"];
-
-bg_acnh[0].value = "acnh_fwShow_1"; bg_acnh[0].innerHTML = "Fireworks Show 1";
-bg_acnh[1].value = "acnh_fwShow_2"; bg_acnh[1].innerHTML = "Fireworks Show 2";
-bg_acnh[2].value = "acnh_fwShow_3"; bg_acnh[2].innerHTML = "Fireworks Show 3";
-bg_acnh[3].value = "acnh_fwShow_4"; bg_acnh[3].innerHTML = "Fireworks Show 4";
-bg_acnh[4].value = "acnh_fwShow-bowser"; bg_acnh[4].innerHTML = "Fireworks Show - Bowser Firework";
-bg_acnh[5].value = "acnh_fwShow-luigi_1"; bg_acnh[5].innerHTML = "Fireworks Show - Luigi Firework 1";
-bg_acnh[6].value = "acnh_fwShow-luigi_2"; bg_acnh[6].innerHTML = "Fireworks Show - Luigi Firework 2";
-bg_acnh[7].value = "acnh_fwShow-mario_1"; bg_acnh[7].innerHTML = "Fireworks Show - Mario Firework 1";
-bg_acnh[8].value = "acnh_fwShow-mario_2"; bg_acnh[8].innerHTML = "Fireworks Show - Mario Firework 2";
-bg_acnh[9].value = "acnh_fwShow-peach+bowser"; bg_acnh[9].innerHTML = "Fireworks Show - Peach + Bowser Firework";
-bg_acnh[10].value = "acnh_fwShow-peach+luigi"; bg_acnh[10].innerHTML = "Fireworks Show - Peach + Luigi Firework";
-bg_acnh[11].value = "acnh_fwShow-smoMario"; bg_acnh[11].innerHTML = "Fireworks Show - Mario (Odyssey) Firework";
-bg_acnh[12].value = "acnh_fwShow-smoMoon"; bg_acnh[12].innerHTML = "Fireworks Show - Power Moon Firework";
-bg_acnh[13].value = "acnh_fwShow-starFrag"; bg_acnh[13].innerHTML = "Fireworks Show - Star Fragment Firework";
-bg_acnh[14].value = "acnh_hhp_curlysCodespace"; bg_acnh[14].innerHTML = "HHP - Curly's Codespace";
-bg_acnh[15].value = "acnh_hhp_reper2+wardell-moonlight"; bg_acnh[15].innerHTML = "HHP - Reper2 & Wardell in Moonlight";
-bg_acnh[16].value = "acnh_hhp_skyhighCityApartment"; bg_acnh[16].innerHTML = "HHP - Sky-High City Apartment";
-
-bg_bf[0].value = "bf_crispClimbCastle-lighthouse"; bg_bf[0].innerHTML = "Crisp Climb Castle";
-bg_bf[1].value = "bf_furyBowser-appearing"; bg_bf[1].innerHTML = "Fury Bowser (appearing)";
-bg_bf[2].value = "bf_furyBowser-shell-spinning_1"; bg_bf[2].innerHTML = "Fury Bowser (shell spinning) 1";
-bg_bf[3].value = "bf_furyBowser-shell-spinning_2"; bg_bf[3].innerHTML = "Fury Bowser (shell spinning) 2";
-bg_bf[4].value = "bf_furyMode_1"; bg_bf[4].innerHTML = "Fury Mode 1";
-bg_bf[5].value = "bf_furyMode_2"; bg_bf[5].innerHTML = "Fury Mode 2";
-bg_bf[6].value = "bf_furyMode_3"; bg_bf[6].innerHTML = "Fury Mode 3";
-bg_bf[7].value = "bf_furyMode_4"; bg_bf[7].innerHTML = "Fury Mode 4";
-bg_bf[8].value = "bf_furyMode_5"; bg_bf[8].innerHTML = "Fury Mode 5";
-bg_bf[9].value = "bf_furyMode_6"; bg_bf[9].innerHTML = "Fury Mode 6";
-bg_bf[10].value = "bf_furyMode_7"; bg_bf[10].innerHTML = "Fury Mode 7";
-bg_bf[11].value = "bf_furyMode_furyBowser-glowing"; bg_bf[11].innerHTML = "Fury Mode - Fury Bowser (glowing)";
-bg_bf[12].value = "bf_gigabell"; bg_bf[12].innerHTML = "Gigabell";
-bg_bf[13].value = "bf_scamperShores-lighthouse"; bg_bf[13].innerHTML = "Scamper Shores lighthouse";
-
-bg_sm3dw[0].value = "sm3dw_courseClear_1"; bg_sm3dw[0].innerHTML = "Course Clear 1";
-bg_sm3dw[1].value = "sm3dw_courseClear_2"; bg_sm3dw[1].innerHTML = "Course Clear 2";
-bg_sm3dw[2].value = "sm3dw_courseClear_3"; bg_sm3dw[2].innerHTML = "Course Clear 3";
-bg_sm3dw[3].value = "sm3dw_underwater-clearPipes"; bg_sm3dw[3].innerHTML = "Underwater Clear Pipes Adventure";
-
-bg_smg[0].value = "smg_battlerockGalaxy_1"; bg_smg[0].innerHTML = "Battlerock Galaxy 1";
-bg_smg[1].value = "smg_battlerockGalaxy_2"; bg_smg[1].innerHTML = "Battlerock Galaxy 2";
-bg_smg[2].value = "smg_battlerockGalaxy_3"; bg_smg[2].innerHTML = "Battlerock Galaxy 3";
-bg_smg[3].value = "smg_battlerockGalaxy_4"; bg_smg[3].innerHTML = "Battlerock Galaxy 4";
-bg_smg[4].value = "smg_battlerockGalaxy_5"; bg_smg[4].innerHTML = "Battlerock Galaxy 5";
-bg_smg[5].value = "smg_battlerockGalaxy_6"; bg_smg[5].innerHTML = "Battlerock Galaxy 6";
-bg_smg[6].value = "smg_fieryStronghold-bowser"; bg_smg[6].innerHTML = "The Fiery Stronghold - Bowser";
-bg_smg[7].value = "smg_ghostlyGalaxy"; bg_smg[7].innerHTML = "Ghostly Galaxy";
-bg_smg[8].value = "smg_rosalinaStorytime"; bg_smg[8].innerHTML = "Rosalina Storytime";
-
-bg_smo[0].value = "smo_bonneton-peach"; bg_smo[0].innerHTML = "Bonneton - Peach in the Cap Kingdom";
-bg_smo[1].value = "smo_bowserBattle1_1"; bg_smo[1].innerHTML = "Bowser Battle 1 ~Nimbus Arena Showdown~ 1";
-bg_smo[2].value = "smo_bowserBattle1_2"; bg_smo[2].innerHTML = "Bowser Battle 1 ~Nimbus Arena Showdown~ 2";
-bg_smo[3].value = "smo_bowserBattle1_3"; bg_smo[3].innerHTML = "Bowser Battle 1 ~Nimbus Arena Showdown~ 3";
-bg_smo[4].value = "smo_honeyluneRidge-earth"; bg_smo[4].innerHTML = "Honeylune Ridge - Looking at Earth";
-bg_smo[5].value = "smo_honeyluneRidge-starBit"; bg_smo[5].innerHTML = "Honeylune Ridge - Star Bit (regional coins)";
-bg_smo[6].value = "smo_lakeLamode-binoculars--sky"; bg_smo[6].innerHTML = "Lake Lamode - Binoculars ~sky~";
-bg_smo[7].value = "smo_map-moonKingdom"; bg_smo[7].innerHTML = "Map - Path to Moon Kingdom";
-bg_smo[8].value = "smo_mountVolbono_crazyCap"; bg_smo[8].innerHTML = "Mount Volbono - Crazy Cap";
-bg_smo[9].value = "smo_mushroomKingdom-goombaTower"; bg_smo[9].innerHTML = "Mushroom Kingdom - Goomba Tower";
-bg_smo[10].value = "smo_mushroomKingdom-tailTree"; bg_smo[10].innerHTML = "Mushroom Kingdom - Tail Tree";
-bg_smo[11].value = "smo_ndc-cityHall"; bg_smo[11].innerHTML = "New Donk City - City Hall";
-bg_smo[12].value = "smo_ndc-fest--start"; bg_smo[12].innerHTML = "New Donk City - Traditional Festival ~start~";
-bg_smo[13].value = "smo_peachsCastle-throne-mario"; bg_smo[13].innerHTML = "Peach's Castle - Mario sitting on the throne";
-
-bg_smp[0].value = "smp_~yeah~"; bg_smp[0].innerHTML = "~Yeah!~";
-bg_smp[1].value = "smp_actionHighlight"; bg_smp[1].innerHTML = "Action Highlight";
-
-const [_getStoredBg, _bgUrl_string] = [sessionStorage.getItem("bg"), window.location.href];
-const _bgUrl = new URL(_bgUrl_string);
-const _getParamBg = _bgUrl.searchParams.get("bg");
-
-_bgSel.appendChild(_bgPlacehld);
-for (let i = 0; i < bg_acnh.length; i++) bg_[0].appendChild(bg_acnh[i]);
-for (let i = 0; i < bg_bf.length; i++) bg_[1].appendChild(bg_bf[i]);
-for (let i = 0; i < bg_sm3dw.length; i++) bg_[2].appendChild(bg_sm3dw[i]);
-for (let i = 0; i < bg_smg.length; i++) bg_[3].appendChild(bg_smg[i]);
-for (let i = 0; i < bg_smo.length; i++) bg_[4].appendChild(bg_smo[i]);
-for (let i = 0; i < bg_smp.length; i++) bg_[5].appendChild(bg_smp[i]);
-for (let i = 0; i < bg_.length; i++) _bgSel.appendChild(bg_[i]);
-
-_optForm.appendChild(_bgLabel);
-_optForm.appendChild(_bgSel);
-_optForm.appendChild(document.createElement("br"));
-
-$(function() {
-	const [_bg, _bg_sav] = [document.getElementById("_bg"), (_getStoredBg || _getParamBg)];
-
-	if (_bg_sav == null || _bg_sav == "" || _bg_sav == "_def") _bg.style.backgroundImage = "url('/assets/background/_def.png')";
-	else _bg.style.backgroundImage = "url('/assets/background/" + _bg_sav + ".jpg')";
-
-	console.group("🖼️background");
-	if (_getStoredBg != null && _getStoredBg != "") console.log("💾Retrieved the background you selected from session storage:", _getStoredBg);
-	if (_getParamBg != null && _getParamBg != "") console.log("🔗Using background provided in url for box styling:", _getParamBg);
-	console.log("🖼️Background has been set to", _bg_sav);
-	console.groupEnd();
-});
-
-
-[_optSet.type, _optSet.value, _optSet.id, _optSet.onclick] = ["submit", "Set", "optSet",
-	function() {
-		sessionStorage.setItem("music", _musSel.value);
-		sessionStorage.setItem("grass", _grassSel.value);
-		sessionStorage.setItem("bg", _bgSel.value);
+	bg: {
+		_: [],
+		_elem: document.getElementById("_bg"),
+		_sav: {
+			ss: sessionStorage.getItem("bg"),
+			param: new URL(window.location.href).searchParams.get("bg")
+		},
+		name: ["Animal Crossing: New Horizons", "Breath of the Wild", "Super Mario 3D World + Bowser's Fury", "Super Mario Galaxy", "Super Mario Odyssey", "Super Mario Party"],
+		acnh: {
+			opt: [],
+			name1: ["acnh_fwShow_1", "acnh_fwShow_2", "acnh_fwShow_3", "acnh_fwShow_4",	"acnh_fwShow-bowser", "acnh_fwShow-luigi_1", "acnh_fwShow-luigi_2", "acnh_fwShow-mario_1", "acnh_fwShow-mario_2", "acnh_fwShow-peach+bowser", "acnh_fwShow-peach+luigi", "acnh_fwShow-smoMario", "acnh_fwShow-smoMoon", "acnh_fwShow-starFrag", "acnh_hhp_curlysCodespace", "acnh_hhp_reper2+wardell-moonlight", "acnh_hhp_skyhighCityApartment"],
+			name2: ["Fireworks Show 1", "Fireworks Show 2", "Fireworks Show 3", "Fireworks Show 4", "Fireworks Show - Bowser Firework", "Fireworks Show - Luigi Firework 1", "Fireworks Show - Luigi Firework 2", "Fireworks Show - Mario Firework 1", "Fireworks Show - Mario Firework 2", "Fireworks Show - Peach + Bowser Firework", "Fireworks Show - Peach + Luigi Firework", "Fireworks Show - Mario (Odyssey) Firework", "Fireworks Show - Power Moon Firework", "Fireworks Show - Star Fragment Firework", "HHP - Curly's Codespace", "HHP - Reper2 & Wardell in Moonlight", "HHP - Sky-High City Apartment"]
+		},
+		botw: {
+			opt: [],
+			name1: ["botw_duelingPeaksStable", "botw_duelingPeaksStable--bloodMoon_1", "botw_duelingPeaksStable--bloodMoon_2", "botw_duelingPeaksStable--bloodMoon_3", "botw_hatenoAncientTechLab--bloodMoon", "botw_duelingPeaks", "botw_farosh", "botw_fairy-cotera_1", "botw_fairy-cotera_2", "botw_ruta", "botw_tot--staminaVessel", "botw_woodlandTower_1", "botw_woodlandTower_2", "botw_korokForest-masterSword", "botw_thundraPlateau_1", "botw_thundraPlateau_2", "botw_sanidinParkRuins--doubleRainbow", "botw_shaeLoyaShrine", "botw_lanayruWetlands--bloodMoon", "botw_nearFlightRange--frozenHorse", "botw_hebra-aurora_1", "botw_hebra-aurora_2", "botw_karkarikoVillage--cookpot", "botw_faron--floatingBoulder", "botw_7heroines", "botw_karaKaraBazaar--bloodMoon", "botw_gerudoTower--bloodMoon", "botw_deyaVilageRuins--floatingRock_1", "botw_deyaVilageRuins--floatingRock_2", "botw_spiritOrbReceived", "botw_karkarikoVillage--heartContainer", "botw_korokForest"],
+			name2: ["Dueling Peaks Stable", "Dueling Peaks Stable ~Blood Moon~ 1", "Dueling Peaks Stable ~Blood Moon~ 2", "Dueling Peaks Stable ~Blood Moon~ 3", "Hateno Ancient Tech Lab ~Blood Moon~", "Dueling Peaks", "Farosh", "Great Fairy Fountain - Cotera 1", "Great Fairy Fountain - Cotera 2", "Divine Beast vah Ruta", "Temple of Time ~ Stamina Vessel", "Woodland Tower 1", "Woodland Tower 2", "Korok Forest - Master Sword", "Thundra Plateau 1", "Thundra Plateau 2", "Sanidin Park Ruins ~Double Rainbow~", "Shae Loya Shrine", "Lanayru Wetlands ~Blood Moon~", "(near) Flight Range ~ Frozen Horse", "Hebra - Aurora 1", "Hebra - Aurora 2", "Karkariko Village ~ Cookpot", "Faron ~ Floating Boulder", "The Seven Heroines", "Kara Kara Bazaar ~Blood Moon~", "Gerudo Tower ~Blood Moon~", "Deya Village Ruins ~ Floating Rock 1", "Deya Village Ruins ~ Floating Rock 2", "Spirit Orb Recieved", "Karkariko Village ~ Heart Container", "Korok Forest"]
+		},
+		sm3dw_bf: {
+			opt: [],
+			name1: ["sm3dw_courseClear_1", "sm3dw_courseClear_2", "sm3dw_courseClear_3", "sm3dw_underwater-clearPipes", "bf_crispClimbCastle-lighthouse", "bf_furyBowser-appearing", "bf_furyBowser-shell-spinning_1", "bf_furyBowser-shell-spinning_2", "bf_furyMode_1", "bf_furyMode_2", "bf_furyMode_3", "bf_furyMode_4", "bf_furyMode_5", "bf_furyMode_6", "bf_furyMode_7", "bf_furyMode_furyBowser-glowing", "bf_gigabell", "bf_scamperShores-lighthouse"],
+			name2: ["Course Clear 1", "Course Clear 2", "Course Clear 3", "Underwater Clear Pipes Adventure", "Crisp Climb Castle - lighthouse", "Fury Bowser (appearing)", "Fury Bowser (shell spinning) 1",	"Fury Bowser (shell spinning) 2", "Fury Mode 1", "Fury Mode 2", "Fury Mode 3", "Fury Mode 4", "Fury Mode 5", "Fury Mode 6", "Fury Mode 7", "Fury Mode - Fury Bowser (glowing)", "Gigabell", "Scamper Shores - lighthouse"]
+		},
+		smg: {
+			opt: [],
+			name1: ["smg_battlerockGalaxy_1", "smg_battlerockGalaxy_2", "smg_battlerockGalaxy_3", "smg_battlerockGalaxy_4", "smg_battlerockGalaxy_5", "smg_battlerockGalaxy_6", "smg_fieryStronghold-bowser", "smg_ghostlyGalaxy", "smg_rosalinaStorytime"],
+			name2: ["Battlerock Galaxy 1", "Battlerock Galaxy 2", "Battlerock Galaxy 3", "Battlerock Galaxy 4", "Battlerock Galaxy 5", "Battlerock Galaxy 6", "Bowser (The Fiery Stronghold)", "Ghostly Galaxy", "Rosalina Storytime"]
+		},
+		smo: {
+			opt: [],
+			name1: ["smo_bonneton-peach", "smo_bonneton-peach", "smo_bowserBattle1_1", "smo_bowserBattle1_2", "smo_bowserBattle1_3", "smo_honeyluneRidge-earth", "smo_honeyluneRidge-starBit", "smo_lakeLamode-binoculars--sky", "smo_map-moonKingdom", "smo_mountVolbono-crazyCap", "smo_mushroomKingdom-goombaTower", "smo_mushroomKingdom-tailTree", "smo_ndc-cityHall",	"smo_ndc-fest--start", "smo_peachsCastle-throne-mario"],
+			name2: ["Bonneton - Peach in the Cap Kingdom", "Bonneton - Peach in the Cap Kingdom", "Bowser Battle 1 ~Nimbus Arena Showdown~ 1", "Bowser Battle 1 ~Nimbus Arena Showdown~ 2", "Bowser Battle 1 ~Nimbus Arena Showdown~ 3", "Honeylune Ridge - Looking at Earth", "Honeylune Ridge - Star Bit (regional coins)", "Lake Lamode - Binoculars ~sky~", "Map - Path to Moon Kingdom", "Mount Volbono - Crazy Cap", "Mushroom Kingdom - Goomba Tower", "Mushroom Kingdom - Tail Tree", "New Donk City - City Hall", "New Donk City - Traditional Festival ~start~", "Peach's Castle - Mario sitting on the throne"]
+		},
+		smp: {
+			opt: [],
+			name1: ["smp_~yeah~", "smp_actionHighlight"],
+			name2: ["~Yeah!~", "Action Highlight"]
+		},
 	}
-];
-[_optReset.type, _optReset.value, _optReset.id, _optReset.onclick] = ["reset", "Reset", "optReset", function del() { sessionStorage.clear() }];
-[_optRand.type, _optRand.value, _optRand.id, _optRand.onclick] = ["button", "Random", "optRand",
-	function() {
-		var _musRand = Math.floor(Math.random() * (mus_smg.length + mus_mk8d.length + mus_smo.length));
-		if (_musRand < mus_smg.length) sessionStorage.setItem("music", mus_smg[_musRand].value)
-		else if (_musRand >= mus_smg.length && _musRand < (mus_smg.length + mus_mk8d.length)) sessionStorage.setItem("music", mus_mk8d[_musRand - mus_smg.length].value)
-		else if (_musRand >= (mus_smg.length + mus_mk8d.length) && _musRand < (mus_smg.length + mus_mk8d.length + mus_smo.length)) sessionStorage.setItem("music", mus_smo[_musRand - mus_smg.length - mus_mk8d.length].value)
-		else console.error("Invalid number thrown in random music selector algorithm:", _musRand);
+};
 
-		var _grassRand = Math.floor(Math.random() * grass.length);
-		if (_grassRand < grass.length) sessionStorage.setItem("grass", grass[_grassRand].value)
-		else console.error("Invalid number thrown in random grass (box background) selector algorithm:", _grassRand);
+for (let i = 0; i < 4; i++)
+	opt.br.push(document.createElement("br"));
+for (let i = 0; i < opt.lbl.name.length; i++) {
+	opt.lbl._.push(document.createElement("label"));
+	opt.lbl._[i].innerHTML = opt.lbl.name[i];
+} for (let i = 0; i < opt.sel.title.length; i++) {
+	opt.sel._.push(document.createElement("select"));
+	opt.sel._[i].title = opt.sel.title[i];
+} for (let i = 0; i < opt.placehld.name.length; i++) {
+	opt.placehld._.push(document.createElement("option"));
+	[opt.placehld._[i].value, opt.placehld._[i].innerHTML] = [null, opt.placehld.name[i]];
+} for (let i = 0; i < opt.inp.type.length; i++) {
+	opt.inp._.push(document.createElement("input"));
+	[opt.inp._[i].type, opt.inp._[i].value, opt.inp._[i].id, opt.inp._[i].placeholder, opt.inp._[i].onclick] = [opt.inp.type[i], opt.inp.val[i], opt.inp.id[i], opt.inp.placehld[i], opt.inp.onclick[i]];
+}
 
-		var _bgRand = Math.floor(Math.random() * (bg_acnh.length + bg_bf.length + bg_sm3dw.length + bg_smg.length + bg_smo.length + bg_smp.length));
-		if (_bgRand < bg_acnh.length) sessionStorage.setItem("bg", bg_acnh[_bgRand].value)
-		else if (_bgRand >= bg_acnh.length && _bgRand < (bg_acnh.length + bg_bf.length)) sessionStorage.setItem("bg", bg_bf[_bgRand - bg_acnh.length].value)
-		else if (_bgRand >= (bg_acnh.length + bg_bf.length) && _bgRand < (bg_acnh.length + bg_bf.length + bg_sm3dw.length)) sessionStorage.setItem("bg", bg_sm3dw[_bgRand - bg_acnh.length - bg_bf.length].value)
-		else if (_bgRand >= (bg_acnh.length + bg_bf.length + bg_sm3dw.length) && _bgRand < (bg_acnh.length + bg_bf.length + bg_sm3dw.length + bg_smg.length)) sessionStorage.setItem("bg", bg_smg[_bgRand - bg_acnh.length - bg_bf.length - bg_sm3dw.length].value)
-		else if (_bgRand >= (bg_acnh.length + bg_bf.length + bg_sm3dw.length + bg_smg.length) && _bgRand < (bg_acnh.length + bg_bf.length + bg_sm3dw.length + bg_smg.length + bg_smo.length)) sessionStorage.setItem("bg", bg_smo[_bgRand - bg_acnh.length - bg_bf.length - bg_sm3dw.length - bg_smg.length].value)
-		else if (_bgRand >= (bg_acnh.length + bg_bf.length + bg_sm3dw.length + bg_smg.length + bg_smo.length) && _bgRand < (bg_acnh.length + bg_bf.length + bg_sm3dw.length + bg_smg.length + bg_smo.length)) sessionStorage.setItem("bg", bg_smp[_bgRand - bg_acnh.length - bg_bf.length - bg_sm3dw.length - bg_smg.length - bg_smo.length].value)
-		else console.error("Invalid number thrown in random background selector algorithm:", _bgRand);
+opt.aud.controls = opt.aud.autoplay = opt.aud.loop = true;
+[opt.aud.preload, opt.aud.style.display] = ["auto", "none"];
+opt.audSrc.type = "audio/mpeg";
+if (opt.aud.paused) opt.aud.play();
 
-		window.location.reload();
+opt.lbl._[0].htmlFor = opt.sel._[0].name = opt.lbl._[1].htmlFor = opt.inp._[0].name = "music";
+for (let i = 0; i < opt.mus.name.length; i++) {
+	opt.mus._.push(document.createElement("optgroup"));
+	opt.mus._[i].label = opt.mus.name[i];
+} for (let i = 0; i < opt.mus.smg.name.length; i++) {
+	opt.mus.smg.opt.push(document.createElement("option"));
+	opt.mus.smg.opt[i].value = opt.mus.smg.opt[i].innerHTML = opt.mus.smg.name[i];
+} for (let i = 0; i < opt.mus.mk8d.name.length; i++) {
+	opt.mus.mk8d.opt.push(document.createElement("option"));
+	opt.mus.mk8d.opt[i].value = opt.mus.mk8d.opt[i].innerHTML = opt.mus.mk8d.name[i];
+} for (let i = 0; i < opt.mus.smo.name1.length; i++) {
+	opt.mus.smo.opt.push(document.createElement("option"));
+	[opt.mus.smo.opt[i].value, opt.mus.smo.opt[i].innerHTML] = [opt.mus.smo.name1[i], opt.mus.smo.name2[i]];
+}
+
+opt.lbl._[2].htmlFor = opt.sel._[1].name = "grass";
+for (let i = 0; i < opt.grass.name1.length; i++) {
+	opt.grass.opt.push(document.createElement("option"));
+	[opt.grass.opt[i].value, opt.grass.opt[i].innerHTML] = [opt.grass.name1[i], opt.grass.name2[i]];
+}
+
+opt.lbl._[3].htmlFor = opt.sel._[2].name = "bg";
+for (let i = 0; i < 6; i++) {
+	opt.bg._.push(document.createElement("optgroup"));
+	opt.bg._[i].label = opt.bg.name[i];
+} for (let i = 0; i < opt.bg.acnh.name1.length; i++) {
+	opt.bg.acnh.opt.push(document.createElement("option"));
+	[opt.bg.acnh.opt[i].value, opt.bg.acnh.opt[i].innerHTML] = [opt.bg.acnh.name1[i], opt.bg.acnh.name2[i]];
+} for (let i = 0; i < opt.bg.botw.name1.length; i++) {
+	opt.bg.botw.opt.push(document.createElement("option"));
+	[opt.bg.botw.opt[i].value, opt.bg.botw.opt[i].innerHTML] = [opt.bg.botw.name1[i], opt.bg.botw.name2[i]];
+} for (let i = 0; i < opt.bg.sm3dw_bf.name1.length; i++) {
+	opt.bg.sm3dw_bf.opt.push(document.createElement("option"));
+	[opt.bg.sm3dw_bf.opt[i].value, opt.bg.sm3dw_bf.opt[i].innerHTML] = [opt.bg.sm3dw_bf.name1[i], opt.bg.sm3dw_bf.name2[i]];
+} for (let i = 0; i < opt.bg.smg.name1.length; i++) {
+	opt.bg.smg.opt.push(document.createElement("option"));
+	[opt.bg.smg.opt[i].value, opt.bg.smg.opt[i].innerHTML] = [opt.bg.smg.name1[i], opt.bg.smg.name2[i]];
+} for (let i = 0; i < opt.bg.smo.name1.length; i++) {
+	opt.bg.smo.opt.push(document.createElement("option"));
+	[opt.bg.smo.opt[i].value, opt.bg.smo.opt[i].innerHTML] = [opt.bg.smo.name1[i], opt.bg.smo.name2[i]];
+} for (let i = 0; i < opt.bg.smp.name1.length; i++) {
+	opt.bg.smp.opt.push(document.createElement("option"));
+	[opt.bg.smp.opt[i].value, opt.bg.smp.opt[i].innerHTML] = [opt.bg.smp.name1[i], opt.bg.smp.name2[i]];
+}
+
+// music options
+opt.sel._[0].appendChild(opt.placehld._[0]);
+for (let i = 0; i < opt.mus.smg.name.length; i++)
+	opt.mus._[0].appendChild(opt.mus.smg.opt[i]);
+for (let i = 0; i < opt.mus.mk8d.name.length; i++)
+	opt.mus._[1].appendChild(opt.mus.mk8d.opt[i]);
+for (let i = 0; i < opt.mus.smo.name1.length; i++)
+	opt.mus._[2].appendChild(opt.mus.smo.opt[i]);
+for (let i = 0; i < opt.mus.name.length; i++)
+	opt.sel._[0].appendChild(opt.mus._[i]);
+opt.form.appendChild(opt.lbl._[0]);
+opt.form.appendChild(opt.sel._[0]);
+opt.form.appendChild(opt.br[0]);
+opt.form.appendChild(opt.lbl._[1]);
+opt.form.appendChild(opt.inp._[0]);
+opt.form.appendChild(opt.br[1]);
+
+// box background options
+opt.sel._[1].appendChild(opt.placehld._[1]);
+for (let i = 0; i < opt.grass.name1.length; i++)
+	opt.sel._[1].appendChild(opt.grass.opt[i]);
+opt.form.appendChild(opt.lbl._[2]);
+opt.form.appendChild(opt.sel._[1]);
+opt.form.appendChild(opt.br[2]);
+
+// background options
+opt.sel._[2].appendChild(opt.placehld._[2]);
+for (let i = 0; i < opt.bg.acnh.name1.length; i++)
+	opt.bg._[0].appendChild(opt.bg.acnh.opt[i]);
+for (let i = 0; i < opt.bg.botw.name1.length; i++)
+	opt.bg._[1].appendChild(opt.bg.botw.opt[i]);
+for (let i = 0; i < opt.bg.sm3dw_bf.name1.length; i++)
+	opt.bg._[2].appendChild(opt.bg.sm3dw_bf.opt[i]);
+for (let i = 0; i < opt.bg.smg.name1.length; i++)
+	opt.bg._[3].appendChild(opt.bg.smg.opt[i]);
+for (let i = 0; i < opt.bg.smo.name1.length; i++)
+	opt.bg._[4].appendChild(opt.bg.smo.opt[i]);
+for (let i = 0; i < opt.bg.smp.name1.length; i++)
+	opt.bg._[5].appendChild(opt.bg.smp.opt[i]);
+for (let i = 0; i < opt.bg.name.length; i++)
+	opt.sel._[2].appendChild(opt.bg._[i]);
+opt.form.appendChild(opt.lbl._[3]);
+opt.form.appendChild(opt.sel._[2]);
+opt.form.appendChild(opt.br[3]);
+
+// set, reset, random buttons
+for (let i = 1; i < opt.inp.type.length; i++)
+	opt.form.appendChild(opt.inp._[i]);
+
+$(function () {
+	if (opt.mus._sav.ss != null) {
+		// opt.audSrc.src = "/assets/music/" + opt.mus._sav.ss + ".mp3";
+		opt.audSrc.src = getData.ss + ".mp3";
+		opt.aud.appendChild(opt.audSrc);
+		console.log("💾Retrieved the song you selected from session storage:", opt.mus._sav.ss);
+	} else if (opt.mus._sav.param != null) {
+		// opt.audSrc.src = "/assets/music/" + opt.mus._sav.param + ".mp3";
+		opt.audSrc.src = getData.param + ".mp3";
+		opt.aud.appendChild(opt.audSrc);
+		console.log("🔗Using song provided in url:", opt.mus._sav.param);
 	}
-];
 
-_optForm.appendChild(_optSet);
-_optForm.appendChild(_optReset);
-_optForm.appendChild(_optRand);
+	if (opt.grass._sav.ss != null) {
+		opt.grass._elem.style.backgroundImage = "url('/assets/grass/" + opt.grass._sav.ss + ".png')";
+		console.log("💾Retrieved the grass you selected from session storage:", opt.grass._sav.ss);
+	} else if (opt.grass._sav.param != null) {
+		opt.grass._elem.style.backgroundImage = "url('/assets/grass/" + opt.grass._sav.param + ".png')";
+		console.log("🔗Using grass provided in url for box styling:", opt.grass._sav.param);
+	} else
+		[opt.grass._elem.style.backgroundImage, opt.grass._elem.style.backgroundSize, opt.grass._elem.style.backgroundAttachment, opt.grass._elem.style.backgroundRepeat] = ["url('assets/grass/" + null + ".png')", "cover", "fixed", "no-repeat"];
+
+	if (opt.bg._sav.ss != null) {
+		opt.bg._elem.style.backgroundImage = "url('/assets/background/" + opt.bg._sav.ss + ".jpg')";
+		console.log("💾Retrieved the background you selected from session storage:", opt.bg._sav.ss);
+	} else if (opt.bg._sav.param != null) {
+		opt.bg._elem.style.backgroundImage = "url('/assets/background/" + opt.bg._sav.param + ".jpg')";
+		console.log("🔗Using background provided in url for box styling:", opt.bg._sav.param);
+	} else
+		opt.bg._elem.style.backgroundImage = "url('/assets/background/" + null + ".jpg')";
+});
