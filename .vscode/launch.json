@@ -7,7 +7,7 @@
             "runtimeArgs": [
                 "--remote-debugging-port=9222"
             ],
-            "url": "c:\\Users\\ethan\\Documents\\GitHub\\repos\\reper2.github.io\\index.html", // Provide your project's url to finish configuring
+            "url": "127.0.0.1:2633\\",
             "presentation": {
                 "hidden": true
             }
@@ -20,7 +20,7 @@
                 "--headless",
                 "--remote-debugging-port=9222"
             ],
-            "url": "c:\\Users\\ethan\\Documents\\GitHub\\repos\\reper2.github.io\\index.html", // Provide your project's url to finish configuring
+            "url": "127.0.0.1:2633\\",
             "presentation": {
                 "hidden": true
             }
@@ -29,7 +29,7 @@
             "type": "vscode-edge-devtools.debug",
             "name": "Open Edge DevTools",
             "request": "attach",
-            "url": "c:\\Users\\ethan\\Documents\\GitHub\\repos\\reper2.github.io\\index.html", // Provide your project's url to finish configuring
+            "url": "127.0.0.1:2633\\",
             "presentation": {
                 "hidden": true
             }

@@ -16,23 +16,18 @@
  */
 
 "use strict";
+/* eslint-disable no-undef */
 
-const copy = {
-	_: document.getElementById("copy"),
+const urlUd = {
+	_: document.getElementById("urlUpdate"),
 	btn: document.createElement("button"),
-	tt: document.createElement("span"),
-	link: window.location.href
+	tt: document.createElement("span")
 };
 
-copy._.onclick = () => {
-	navigator.clipboard.writeText(copy.link);
-	console.log("📋Added to clipboard:", copy.link);
-	alert("Copied link: " + copy.link);
-};
+[urlUd._.className, urlUd._.onclick] = ["tooltip", () => window.location.href = "./?music=" + encodeURIComponent(opt.mus._sav.ss) + "&grass=" + encodeURIComponent(opt.grass._sav.ss) + "&bg=" + encodeURIComponent(opt.bg._sav.ss)];
+urlUd._.className = "tooltip";
+urlUd.btn.innerHTML = "🔄️🔗";
+[urlUd.tt.className, urlUd.tt.innerHTML] = ["tooltiptext", "Update URL with new params (Ctrl+U)"];
 
-copy._.className = "tooltip";
-copy.btn.innerHTML = "📋";
-[copy.tt.className, copy.tt.innerHTML] = ["tooltiptext", "Copy Link (Ctrl+C)"];
-
-copy.btn.appendChild(copy.tt);
-copy._.appendChild(copy.btn);
+urlUd.btn.appendChild(urlUd.tt);
+urlUd._.appendChild(urlUd.btn);

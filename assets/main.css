@@ -1,3 +1,4 @@
+/* tags and other universal styles */
 @font-face {
     font-family: 'Super Mario 256';
     src: url('SuperMario256.ttf')
@@ -9,19 +10,19 @@ body {
     background: #000;
     background-attachment: fixed;
     background-size: cover;
+    background-repeat: no-repeat;
     overflow-x: hidden;
+    overflow-y: auto;
 }
 
-.hideY {
-    overflow-y: hidden;
+header, main, footer {
+    text-align: -webkit-center;
 }
 
+header,
 h1,
 h2,
 h3,
-h4,
-h5,
-h6,
 p,
 a,
 span,
@@ -37,25 +38,170 @@ a {
     text-decoration: none
 }
 
+button {
+    border-radius: 3vmin;
+    block-size: 12vmin;
+}
+
+select {
+    background-color: lightblue;
+    border-color: black;
+}
+
+input {
+    background-color: skyblue;
+}
+
+kbd {
+    background-color: #eee;
+    border-radius: 3px;
+    border: 1px solid #b4b4b4;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
+    color: #333;
+    font-size: .85em;
+    font-weight: 700;
+    line-height: 1;
+    padding: 2px 4px;
+    white-space: nowrap;
+}
+
+/* classes */
+.boxBtn {
+    border-radius: 2vmin;
+}
+
+.socialLogo {
+    margin-right: 10px;
+}
+
+.tooltip {
+    position: relative;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+    -webkit-text-stroke-width: 0;
+    background-color: #333;
+    border-radius: 6px;
+    padding: 5px 0;
+    width: 120px;
+    top: 100%;
+    left: 50%;
+    margin-left: -60px;
+    transition: opacity 0.3;
+    z-index: 1;
+}
+
+.tooltip .tooltiptext::after {
+    content: " ";
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #333 transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.kb-list {
+    text-align: left;
+    color: cyan;
+}
+
+.kb-hint {
+    color: inherit;
+}
+
+.flex {
+    display: flex;
+    justify-content: center;
+}
+
+.gold {
+    color: gold
+}
+
+/* ids */
+#grassBox {
+    font-size: 3.5vmin;
+    width: 70vmin;
+    border-radius: 1vmin;
+    background-position: center;
+    margin: 10px;
+}
+
 #learnmore {
     color: rgb(0, 174, 255);
     text-decoration: underline;
 }
 
+#back img {
+    top: 2vmin;
+    font-size: 8vmin;
+    width: 8vmin;
+    left: 2vmin;
+}
+
+#optForm {
+    margin: 4px;
+}
+
+#music {
+    margin: 3px;
+}
+
+/* mixed */
+select,
+input {
+    font-family: sans-serif;
+}
+
+button,
 .boxBtn {
     background-color: lightskyblue;
     outline-color: initial;
-    border-radius: 2vmin;
-    font-size: 4vmin;
+}
+
+button,
+.kbd-hint {
+    font-size: 5vmin;
+}
+
+button:hover,
+input:hover {
+    transform: translateY(-1vh)
+}
+
+#grassBox,
+.boxBtn {
     padding: 8px;
 }
 
+.tooltip .tooltiptext,
 #grassBox {
-    font-size: 3.5vmin;
-    padding: 8px;
-    width: 70vmin;
-    border-radius: 1vmin;
     text-align: center;
+}
+
+.bottom,
+.tooltip .tooltiptext,
+.boxBtn {
+    font-size: 3vmin;
+}
+
+#back img,
+.tooltip .tooltiptext,
+.tooltip .tooltiptext::after {
+    position: absolute;
+}
+
+kbd,
+.tooltip {
+    display: inline-block;
 }
 
 .appIcon,
@@ -65,7 +211,6 @@ a {
     border-radius: 30%;
     filter: drop-shadow(0.5vh 0.5vh 0.15vh rgba(0, 0, 0, 0.6));
     cursor: pointer;
-    z-index: 1;
     -webkit-user-select: none;
     user-select: none;
     pointer-events: all;
@@ -78,114 +223,4 @@ a {
 .appIcon:focus-visible,
 a:focus-visible .appIcon {
     animation: bounceButton 0.25s ease-in-out forwards
-}
-
-.bottom {
-    text-align: center;
-    left: 2vmin;
-    font-size: 4vmin;
-}
-
-.rel {
-    position: relative
-}
-
-.flex {
-    display: flex;
-    justify-content: center;
-}
-
-#back img {
-    left: 2vmin;
-    top: 2vmin;
-    position: absolute;
-    font-size: 8vmin;
-    width: 8vmin;
-}
-
-button {
-    background-color: lightskyblue;
-    outline-color: initial;
-    border-radius: 3vmin;
-    font-size: 5vmin;
-    block-size: 12vmin;
-}
-
-button:hover,
-input:hover {
-    transform: translateY(-1vh)
-}
-
-.tooltip {
-    position: relative;
-    display: inline-block;
-}
-
-.tooltip .tooltiptext {
-    visibility: hidden;
-    width: 30vmin;
-    font-size: 4vmin;
-    background-color: #555;
-    text-align: center;
-    border-radius: 6vmin;
-    padding: 5vmin;
-    position: absolute;
-    z-index: 1;
-    bottom: 150%;
-    left: 50%;
-    margin-left: -20vmin;
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.tooltip .tooltiptext::after {
-    content: "";
-    left: 50%;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #555 transparent transparent transparent;
-}
-
-.tooltip:hover .tooltiptext {
-    visibility: visible;
-    opacity: 1;
-}
-
-select {
-    background-color: dodgerblue;
-    font-family: sans-serif;
-    border-color: black;
-}
-
-input {
-    font-family: sans-serif;
-    background-color: lightblue;
-}
-
-kbd {
-    background-color: #eee;
-    border-radius: 3px;
-    border: 1px solid #b4b4b4;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
-    color: #333;
-    display: inline-block;
-    font-size: .85em;
-    font-weight: 700;
-    line-height: 1;
-    padding: 2px 4px;
-    white-space: nowrap;
-}
-
-.kb-list {
-    text-align: left;
-    color: cyan;
-}
-
-.kb-hint {
-    font-size: 5vmin;
-    color: inherit;
-}
-
-.gold {
-    color: gold;
 }
