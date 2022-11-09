@@ -1,48 +1,69 @@
-// The whole purpose of this is... https://developer.chrome.com/blog/autoplay/ and also greet the user and inform them about keyboard shortcuts
-const checkFirstVisit = sessionStorage.getItem("session_visited");
-if (checkFirstVisit == null) {
-	alert("Welcome to Reper2's Website!\nPress Ctrl+/ for a list of keyboard shortcuts.");
-	sessionStorage.setItem("session_visited", "true");
+/**
+ * Copyright 2022 Reper2
+ * 
+ * Licensed under the MIT License;
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * 		https://github.com/Reper2/reper2.github.io/LICENSE
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *   
+ */
+
+"use strict";
+
+const sw = {
+	sessStart: sessionStorage.getItem("session_started"),
+	i: {
+		_: document.getElementById("install"),
+		btn: document.createElement("button"),
+		tt: document.createElement("span"),
+		msg: "Thank you for installing the app!"
+	}
+};
+
+if (sw.sessStart != "true") {
+	alert("Welcome to Reper2's Epic Website!\nPress Ctrl+/ for a list of keybinds.");
+	sessionStorage.setItem("session_started", "true");
 }
 
 onload = () => {
 	if ("serviceWorker" in navigator) {
-		navigator.serviceWorker.register("/sw.js").then(function (registration) {
+		navigator.serviceWorker.register("/sw.js").then((registration) => {
 			console.log("ServiceWorker registration successful with scope:", registration.scope);
 			if (registration.installing) console.log("Service worker installing");
 			if (registration.waiting) console.log("Service worker installed");
 			if (registration.active) console.log("Service worker active");
-		}).catch(function (err) { console.error("ServiceWorker registration failed:", err); });
+		}).catch((err) => console.error("ServiceWorker registration failed:", err));
 	}
 
-	// Only execute if app is not already installed
 	if (!matchMedia("(display-mode: standalone)").matches) {
-		const [installDiv, installBtn, installTooltip] = [document.getElementById("install"), document.createElement("button"), document.createElement("span")];
+		let deferredPrompt;
+		onbeforeinstallprompt = (e) => deferredPrompt = e;
 
-		installDiv.className = "tooltip";
-		installBtn.innerHTML = "📲";
-		[installTooltip.className, installTooltip.id, installTooltip.innerHTML] = ["tooltiptext", "install-tooltip", "Install App (Ctrl+I)"];
+		sw.i._.onclick = async () => {
+			if (deferredPrompt !== null) {
+				deferredPrompt.prompt();
+				const { outcome } = await deferredPrompt.userChoice;
+				if (outcome === "accepted") deferredPrompt = null;
+			}
+		};
 
-		installBtn.appendChild(installTooltip);
-		installDiv.appendChild(installBtn);
+		sw.i._.className = "tooltip";
+		sw.i.btn.innerHTML = "📲";
+		[sw.i.tt.className, sw.i.tt.innerHTML] = ["tooltiptext", "Install App (Ctrl+I)"];
+
+		sw.i.btn.appendChild(sw.i.tt);
+		sw.i._.appendChild(sw.i.btn);
 	}
 };
 
-let deferredPrompt;
-onbeforeinstallprompt = (e) => deferredPrompt = e;
-
-// eslint-disable-next-line no-undef
-install.addEventListener("click", async () => {
-	if (deferredPrompt !== null) {
-		deferredPrompt.prompt();
-		const { outcome } = await deferredPrompt.userChoice;
-		if (outcome === "accepted") deferredPrompt = null;
-	}
-});
-
 onappinstalled = () => {
-	var msg = "Thank you for installing the app!";
-	alert(msg);
-	console.log("🙏🏼" + msg);
+	console.log(sw.i.msg);
 	console.warn("Reload to remove the install button.");
 };
