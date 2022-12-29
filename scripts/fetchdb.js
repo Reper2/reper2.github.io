@@ -1,26 +1,9 @@
-/**
- * Copyright 2022 Reper2
- * 
- * Licensed under the MIT License;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- * 		https://github.com/Reper2/reper2.github.io/LICENSE
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *   
- */
-
 "use strict";
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 
 const fetchdb = {
-	arr0: opt.mus.smg.name.concat(opt.mus.mk8d.name, opt.mus.smo.name1),
+	arr0: opt.mus.smg.name.concat(opt.mus.mk8d.name, opt.mus.smo.name1, opt.mus.secret),
 	arr1: [
 		"cesiiref/1-01 Overture",
 		"ibjjbtkd/1-02 The Star Festival",
@@ -231,29 +214,46 @@ const fetchdb = {
 		"zhdbslwrzc/2-17 Bound Bowl GP",
 		"anjcxrbyiv/3-17 RC Car Challenge",
 		"iheqokvpgo/3-16 Let's Play Slots",
-		"gpwirqulgq/3-18 Koopa Trace-Walking"
+		"gpwirqulgq/3-18 Koopa Trace-Walking",
+
+		"zuqbchpyvo/1-02 Wild World",
+		"agwwefweus/2-06 K.K. Jazz (Radio)",
+		"gxluakfreh/2-47 Go K.K. Rider! (Radio)",
+		"aotcbbpotg/2-61 K.K. Dixie (Radio)",
+		"dtbcnwlmvl/2-69 Agent K.K. (Radio)",
+		"ncnvnhvrze/2-80 Space K.K. (Radio)",
+		"fftixgzsli/2-89 Bubblegum K.K. (Radio)",
+
+		"dcydyhxcou/3-63 New Years Event - One Hour Left...",
+		"vldhizbrba/3-64 New Years Event - 30 Minutes Left...",
+		"ryyfsocuzi/3-65 New Years Event - 10 Minutes Left...",
+		"lzbhxagszs/3-66 New Years Event - 5 Minutes Left...",
+		"tgfkofmfqk/3-68 New Years Event - New Years Eve! Midnight",
+		"vjwxbysqtw/3-69 New Years Event - New Years Eve! 200 a.m."
 	]
 };
 
 for (let i = 0; i < opt.mus.smg.name.length; i++)
-	fetchdb.arr1[i] = "super-mario-galaxy/" + fetchdb.arr1[i];
+	fetchdb.arr1[i] = "https://vgmsite.com/soundtracks/super-mario-galaxy/" + fetchdb.arr1[i];
 for (let i = opt.mus.smg.name.length; i < opt.mus.smg.name.length + 56; i++)
-	fetchdb.arr1[i] = "mario-kart-8/" + fetchdb.arr1[i];
+	fetchdb.arr1[i] = "https://vgmsite.com/soundtracks/mario-kart-8/" + fetchdb.arr1[i];
 for (let i = opt.mus.smg.name.length + 56; i < opt.mus.smg.name.length + 64; i++)
-	fetchdb.arr1[i] = "mario-kart-8-deluxe-booster-course-pass-wave-1/" + fetchdb.arr1[i];
+	fetchdb.arr1[i] = "https://vgmsite.com/soundtracks/mario-kart-8-deluxe-booster-course-pass-wave-1/" + fetchdb.arr1[i];
 for (let i = opt.mus.smg.name.length + 64; i < opt.mus.smg.name.length + 72; i++)
-	fetchdb.arr1[i] = "mario-kart-8-deluxe-booster-course-pass-wave-2-switch-gamerip-2022/" + fetchdb.arr1[i];
+	fetchdb.arr1[i] = "https://vgmsite.com/soundtracks/mario-kart-8-deluxe-booster-course-pass-wave-2-switch-gamerip-2022/" + fetchdb.arr1[i];
 for (let i = opt.mus.smg.name.length + 72; i < opt.mus.smg.name.length + opt.mus.mk8d.name.length; i++)
-	fetchdb.arr1[i] = "mario-kart-8/" + fetchdb.arr1[i];
+	fetchdb.arr1[i] = "https://vgmsite.com/soundtracks/mario-kart-8/" + fetchdb.arr1[i];
 for (let i = opt.mus.smg.name.length + opt.mus.mk8d.name.length; i < opt.mus.smg.name.length + opt.mus.mk8d.name.length + opt.mus.smo.name1.length; i++)
-	fetchdb.arr1[i] = "super-mario-odyssey-original-soundtrack/" + fetchdb.arr1[i];
-for (let i = 0; i < fetchdb.arr1.length; i++)
-	fetchdb.arr1[i] = "https://vgmsite.com/soundtracks/" + fetchdb.arr1[i];
+	fetchdb.arr1[i] = "https://vgmsite.com/soundtracks/super-mario-odyssey-original-soundtrack/" + fetchdb.arr1[i];
+for (let i = opt.mus.smg.name.length + opt.mus.mk8d.name.length + opt.mus.smo.name1.length; i < opt.mus.smg.name.length + opt.mus.mk8d.name.length + opt.mus.smo.name1.length + 7; i++)
+	fetchdb.arr1[i] = "https://vgmsite.com/soundtracks/animal-crossing-k.k.-slider-complete-songs-collection/" + fetchdb.arr1[i];
+for (let i = opt.mus.smg.name.length + opt.mus.mk8d.name.length + opt.mus.smo.name1.length + 7; i < opt.mus.smg.name.length + opt.mus.mk8d.name.length + opt.mus.smo.name1.length + opt.mus.secret.length; i++)
+	fetchdb.arr1[i] = "https://vgmsite.com/soundtracks/animal-crossing-new-horizons-2020-switch-gamerip/" + fetchdb.arr1[i];
 
-var getData_arr0 = {
+var _getData = {
 	ss: fetchdb.arr0.indexOf(opt.mus._sav.ss),
 	param: fetchdb.arr0.indexOf(opt.mus._sav.param)
 }; const getData = {
-	ss: fetchdb.arr1[getData_arr0.ss],
-	param: fetchdb.arr1[getData_arr0.param]
+	ss: fetchdb.arr1[_getData.ss],
+	param: fetchdb.arr1[_getData.param]
 };
