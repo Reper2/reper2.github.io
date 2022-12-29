@@ -1,19 +1,3 @@
-/**
- * Copyright 2022 Reper2
- * 
- * Licensed under the MIT License;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- * 		https://github.com/Reper2/reper2.github.io/LICENSE
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 "use strict";
 /* eslint-disable semi */
 /* eslint-disable no-undef */
@@ -37,16 +21,16 @@ const opt = {
 		_: [],
 		type: ["text", "submit", "reset", "button"],
 		val: [null, "Set", "Reset", "Random"],
-		id: [null, "optSet", "optReset", "optRand"],
+		id: ["", "optSet", "optReset", "optRand"],
 		placehld: ["enter song name", null, null, null],
 		onclick: [
 			() => {
-				sessionStorage.setItem("music", opt.inp._[0].value);
+				sessionStorage.setItem("music", opt.inp._[0].value || opt.sel._[0].value);
 				sessionStorage.setItem("grass", opt.sel._[1].value);
 				sessionStorage.setItem("bg", opt.sel._[2].value);
 			},
 			() => {
-				sessionStorage.setItem("music", opt.sel._[0].value);
+				sessionStorage.setItem("music", opt.inp._[0].value || opt.sel._[0].value);
 				sessionStorage.setItem("grass", opt.sel._[1].value);
 				sessionStorage.setItem("bg", opt.sel._[2].value);
 			},
@@ -58,28 +42,20 @@ const opt = {
 					b: Math.floor(Math.random() * (opt.bg.acnh.name1.length + opt.bg.botw.name1.length + opt.bg.sm3dw_bf.name1.length + opt.bg.smg.name1.length + opt.bg.smo.name1.length + opt.bg.smp.name1.length))
 				};
 
-				if (r.m < opt.mus.smg.name.length) // Super Mario Galaxy
-					sessionStorage.setItem("music", opt.mus.smg.name[r.m])
-				else if (r.m >= opt.mus.smg.name.length && r.m < opt.mus.smg.name.length + opt.mus.mk8d.name.length) // Mario Kart 8 Deluxe
-					sessionStorage.setItem("music", opt.mus.mk8d.name[r.m - opt.mus.smg.name.length])
-				else if (r.m >= opt.mus.smg.name.length + opt.mus.mk8d.name.length && r.m < opt.mus.smg.name.length + opt.mus.mk8d.name.length + opt.mus.smo.name1.length) // Super Mario Odyssey
-					sessionStorage.setItem("music", opt.mus.smo.name1[r.m - opt.mus.smg.name.length - opt.mus.mk8d.name.length]);
+				(r.m < opt.mus.smg.name.length) ? sessionStorage.setItem("music", opt.mus.smg.name[r.m]) // Super Mario Galaxy
+					: (r.m >= opt.mus.smg.name.length && r.m < opt.mus.smg.name.length + opt.mus.mk8d.name.length) ? sessionStorage.setItem("music", opt.mus.mk8d.name[r.m - opt.mus.smg.name.length]) // Mario Kart 8 Deluxe
+						: (r.m >= opt.mus.smg.name.length + opt.mus.mk8d.name.length && r.m < opt.mus.smg.name.length + opt.mus.mk8d.name.length + opt.mus.smo.name1.length) ? sessionStorage.setItem("music", opt.mus.smo.name1[r.m - opt.mus.smg.name.length - opt.mus.mk8d.name.length]) // Super Mario Odyssey
+							: null;
 
 				sessionStorage.setItem("grass", opt.grass.name1[r.g]);
 
-				if (r.b < opt.bg.acnh.name1.length) // Animal Crossing
-					sessionStorage.setItem("bg", opt.bg.acnh.name1[r.b])
-				else if (r.b >= opt.bg.acnh.name1.length && r.b < opt.bg.acnh.name1.length + opt.bg.botw.name1.length) // Breath of the Wild
-					sessionStorage.setItem("bg", opt.bg.botw.name1[r.b - opt.bg.acnh.name1.length])
-				else if (r.b >= opt.bg.acnh.name1.length + opt.bg.botw.name1.length && r.b < opt.bg.acnh.name1.length + opt.bg.botw.name1.length + opt.bg.sm3dw_bf.name1.length) // Super Mario 3D World
-					sessionStorage.setItem("bg", opt.bg.sm3dw_bf.name1[r.b - opt.bg.acnh.name1.length - opt.bg.botw.name1.length])
-				else if (r.b >= opt.bg.acnh.name1.length + opt.bg.botw.name1.length + opt.bg.sm3dw_bf.name1.length && r.b < opt.bg.acnh.name1.length + opt.bg.botw.name1.length + opt.bg.sm3dw_bf.name1.length + opt.bg.smg.name1.length) // Super Mario Galaxy
-					sessionStorage.setItem("bg", opt.bg.smg.name1[r.b - opt.bg.acnh.name1.length - opt.bg.botw.name1.length - opt.bg.sm3dw_bf.name1.length])
-				else if (r.b >= opt.bg.acnh.name1.length + opt.bg.botw.name1.length + opt.bg.sm3dw_bf.name1.length + opt.bg.smg.name1.length && r.b < opt.bg.acnh.name1.length + opt.bg.botw.name1.length + opt.bg.sm3dw_bf.name1.length + opt.bg.smg.name1.length + opt.bg.smo.name1.length) // Super Mario Odyssey
-					sessionStorage.setItem("bg", opt.bg.smo.name1[r.b - opt.bg.acnh.name1.length - opt.bg.botw.name1.length - opt.bg.sm3dw_bf.name1.length - opt.bg.smg.name1.length])
-				else if (r.b >= opt.bg.acnh.name1.length + opt.bg.botw.name1.length + opt.bg.sm3dw_bf.name1.length + opt.bg.smg.name1.length + opt.bg.smo.name1.length && r.b < opt.bg.acnh.name1.length + opt.bg.botw.name1.length + opt.bg.sm3dw_bf.name1.length + opt.bg.smg.name1.length + opt.bg.smo.name1.length) // Super Mario Party
-					sessionStorage.setItem("bg", opt.bg.smp.name1[r.b - opt.bg.acnh.name1.length - opt.bg.botw.name1.length - opt.bg.sm3dw_bf.name1.length - opt.bg.smg.name1.length - opt.bg.smo.name1.length]);
-
+				(r.b < opt.bg.acnh.name1.length) ? sessionStorage.setItem("bg", opt.bg.acnh.name1[r.b]) // Animal Crossing
+					: (r.b >= opt.bg.acnh.name1.length && r.b < opt.bg.acnh.name1.length + opt.bg.botw.name1.length) ? sessionStorage.setItem("bg", opt.bg.botw.name1[r.b - opt.bg.acnh.name1.length]) // Breath of the Wild
+						: (r.b >= opt.bg.acnh.name1.length + opt.bg.botw.name1.length && r.b < opt.bg.acnh.name1.length + opt.bg.botw.name1.length + opt.bg.sm3dw_bf.name1.length) ? sessionStorage.setItem("bg", opt.bg.sm3dw_bf.name1[r.b - opt.bg.acnh.name1.length - opt.bg.botw.name1.length]) // Super Mario 3D World
+							: (r.b >= opt.bg.acnh.name1.length + opt.bg.botw.name1.length + opt.bg.sm3dw_bf.name1.length && r.b < opt.bg.acnh.name1.length + opt.bg.botw.name1.length + opt.bg.sm3dw_bf.name1.length + opt.bg.smg.name1.length) ? sessionStorage.setItem("bg", opt.bg.smg.name1[r.b - opt.bg.acnh.name1.length - opt.bg.botw.name1.length - opt.bg.sm3dw_bf.name1.length]) // Super Mario Galaxy
+								: (r.b >= opt.bg.acnh.name1.length + opt.bg.botw.name1.length + opt.bg.sm3dw_bf.name1.length + opt.bg.smg.name1.length && r.b < opt.bg.acnh.name1.length + opt.bg.botw.name1.length + opt.bg.sm3dw_bf.name1.length + opt.bg.smg.name1.length + opt.bg.smo.name1.length) ? sessionStorage.setItem("bg", opt.bg.smo.name1[r.b - opt.bg.acnh.name1.length - opt.bg.botw.name1.length - opt.bg.sm3dw_bf.name1.length - opt.bg.smg.name1.length]) // Super Mario Odyssey
+									: (r.b >= opt.bg.acnh.name1.length + opt.bg.botw.name1.length + opt.bg.sm3dw_bf.name1.length + opt.bg.smg.name1.length + opt.bg.smo.name1.length && r.b < opt.bg.acnh.name1.length + opt.bg.botw.name1.length + opt.bg.sm3dw_bf.name1.length + opt.bg.smg.name1.length + opt.bg.smo.name1.length) ? sessionStorage.setItem("bg", opt.bg.smp.name1[r.b - opt.bg.acnh.name1.length - opt.bg.botw.name1.length - opt.bg.sm3dw_bf.name1.length - opt.bg.smg.name1.length - opt.bg.smo.name1.length]) // Super Mario Party
+										: null;
 				window.location.href = "./?music=" + encodeURIComponent(opt.mus._sav.ss) + "&grass=" + encodeURIComponent(opt.grass._sav.ss) + "&bg=" + encodeURIComponent(opt.bg._sav.ss);
 			}
 		]
@@ -107,6 +83,7 @@ const opt = {
 			name1: ["Bonneton", "Fossil Falls", "Fossil Falls (8-Bit)", "Fossil Falls Dinosaur", "Tostarena Ruins", "Tostarena Ruins (8-Bit)", "Tostarena Night", "Tostarena Night (8-Bit)", "Tostarena Town", "Tostarena Jaxi", "Steam Gardens", "Steam Gardens (8-Bit)", "Steam Gardens Sherm", "Lake Lamode 1", "Lake Lamode 1 (8-Bit)", "Lake Lamode 2", "Lake Lamode Underwater Passage", "Forgotten Isle 1", "Forgotten Isle 2", "Forgotten Isle 1 (8-Bit)", "New Donk City Night 1", "New Donk City Night 2", "New Donk City Daytime", "New Donk City Cafe", "New Donk City (Band Performance)", "NDC Festival", "NDC Festival (8-Bit)", "Bubblaine", "Bubblaine Underwater", "Bubblaine (8-Bit)", "Shiveria Town", "Shiveria Race-Course Entrance", "Mount Volbono", "Mount Volbono (8-Bit)", "Mount Volbono Town", "Bowser's Castle 1", "Bowser's Castle 1 (8-Bit)", "Bowser's Castle 2", "Honeylune Ridge", "Honeylune Ridge (8-Bit)", "Honeylune Ridge Caves", "Honeylune Ridge Wedding Hall", "Honeylune Ridge Collapse", "Honeylune Ridge Collapse (8-Bit)", "Honeylune Ridge Escape", "Honeylune Ridge Escape (Japanese)", "Honeylune Ridge Escape (8-Bit)", "Peach's Castle", "Broodals Battle", "Madame Broode Battle", "Knucklotec Battle", "Torkdrift Battle", "Mechawiggler Battle", "Mollusque-Lanceur Battle", "Mollusque-Lanceur Battle (8-Bit)", "Cookatiel Battle", "Ruined Dragon Battle", "RoboBrood Battle", "Bowser Battle 1", "Bowser Battle 2", "Run, Jump, Throw! 1", "Run, Jump, Throw! 2", "Run, Jump, Throw! 2 (8-Bit)", "Subterranean 1", "Subterranean 1 (8-Bit)", "Caves", "Ice", "Another World", "Ruins", "Ruins (8-Bit)", "Projection Room Above Ground", "Projection Room Underground", "Above the Clouds", "To the Next Kingdom", "Shop", "Race", "RC Car", "Spinning Slots", "Climatic Duel!"],
 			name2: ["Bonneton", "Fossil Falls", "Fossil Falls (8-Bit)", "Fossil Falls: Dinosaur", "Tostarena: Ruins", "Tostarena: Ruins (8-Bit)", "Tostarena: Night", "Tostarena: Night (8-Bit)", "Tostarena: Town", "Tostarena: Jaxi", "Steam Gardens", "Steam Gardens (8-Bit)", "Steam Gardens: Sherm", "Lake Lamode 1", "Lake Lamode 1 (8-Bit)", "Lake Lamode 2", "Lake Lamode: Underwater Passage", "Forgotten Isle 1", "Forgotten Isle 2", "Forgotten Isle 1 (8-Bit)", "New Donk City: Night 1", "New Donk City: Night 2", "New Donk City: Daytime", "New Donk City: Cafe", "New Donk City (Band Performance)", "NDC Festival", "NDC Festival (8-Bit)", "Bubblaine", "Bubblaine: Underwater", "Bubblaine (8-Bit)", "Shiveria: Town", "Shiveria: Race-Course Entrance", "Mount Volbono", "Mount Volbono (8-Bit)", "Mount Volbono: Town", "Bowser's Castle 1", "Bowser's Castle 1 (8-Bit)", "Bowser's Castle 2", "Honeylune Ridge", "Honeylune Ridge (8-Bit)", "Honeylune Ridge: Caves", "Honeylune Ridge: Wedding Hall", "Honeylune Ridge: Collapse", "Honeylune Ridge: Collapse (8-Bit)", "Honeylune Ridge: Escape", "Honeylune Ridge: Escape (Japanese)", "Honeylune Ridge: Escape (8-Bit)", "Peach's Castle", "Broodals Battle", "Madame Broode Battle", "Knucklotec Battle", "Torkdrift Battle", "Mechawiggler Battle", "Mollusque-Lanceur Battle", "Mollusque-Lanceur Battle (8-Bit)", "Cookatiel Battle", "Ruined Dragon Battle", "RoboBrood Battle", "Bowser Battle 1", "Bowser Battle 2", "Run, Jump, Throw! 1", "Run, Jump, Throw! 2", "Run, Jump, Throw! 2 (8-Bit)", "Subterranean 1", "Subterranean 1 (8-Bit)", "Caves", "Ice", "Another World", "Ruins", "Ruins (8-Bit)", "Projection Room: Above Ground", "Projection Room: Underground", "Above the Clouds", "To the Next Kingdom", "Shop", "Race", "RC Car", "Spinning Slots", "Climatic Duel!"]
 		},
+		secret: ["Agent K.K.", "Bubblegum K.K.", "Go K.K. Rider!", "K.K. Dixie", "K.K. Jazz", "Space K.K.", "Wild World", "New Years Event - One Hour Left", "New Years Event - 30 Minutes Left", "New Years Event - 10 Minutes Left", "New Years Event - 5 Minutes Left", "New Years Event - New Years Eve! Midnight", "New Years Event - New Years Eve! 200 a.m."]
 	},
 
 	grass: {
@@ -130,13 +107,13 @@ const opt = {
 		name: ["Animal Crossing: New Horizons", "Breath of the Wild", "Super Mario 3D World + Bowser's Fury", "Super Mario Galaxy", "Super Mario Odyssey", "Super Mario Party"],
 		acnh: {
 			opt: [],
-			name1: ["acnh_fwShow_1", "acnh_fwShow_2", "acnh_fwShow_3", "acnh_fwShow_4",	"acnh_fwShow-bowser", "acnh_fwShow-luigi_1", "acnh_fwShow-luigi_2", "acnh_fwShow-mario_1", "acnh_fwShow-mario_2", "acnh_fwShow-peach+bowser", "acnh_fwShow-peach+luigi", "acnh_fwShow-smoMario", "acnh_fwShow-smoMoon", "acnh_fwShow-starFrag", "acnh_hhp_curlysCodespace", "acnh_hhp_reper2+wardell-moonlight", "acnh_hhp_skyhighCityApartment"],
-			name2: ["Fireworks Show 1", "Fireworks Show 2", "Fireworks Show 3", "Fireworks Show 4", "Fireworks Show - Bowser Firework", "Fireworks Show - Luigi Firework 1", "Fireworks Show - Luigi Firework 2", "Fireworks Show - Mario Firework 1", "Fireworks Show - Mario Firework 2", "Fireworks Show - Peach + Bowser Firework", "Fireworks Show - Peach + Luigi Firework", "Fireworks Show - Mario (Odyssey) Firework", "Fireworks Show - Power Moon Firework", "Fireworks Show - Star Fragment Firework", "HHP - Curly's Codespace", "HHP - Reper2 & Wardell in Moonlight", "HHP - Sky-High City Apartment"]
+			name1: ["acnh_campsite_1", "acnh_campsite_2", "acnh_camspite_3", "acnh_castleEntrance", "acnh_castleThrone", "acnh_celeste", "acnh_cherryBlossomForest", "acnh_cherryBlossomPark_1", "acnh_cherryBlossomPark_2", "acnh_cherryBlossomPark_3", "acnh_cosmosCedarForest-west_1", "acnh_cosmosCedarForest-west_2", "acnh_fancyDinnerWithMaple_1", "acnh_fancyDinnerWithMaple_2", "acnh_flowerFieldSpacePath-billowClouds", "acnh_fountainFw", "acnh_fwShow_1", "acnh_fwShow_2", "acnh_fwShow_3", "acnh_fwShow-bowser", "acnh_fwShow-luigi_1", "acnh_fwShow-luigi_2", "acnh_fwShow-mario_1", "acnh_fwShow-mario_2", "acnh_fwShow-peach+bowser", "acnh_fwShow-peach+luigi", "acnh_fwShow-smoMario", "acnh_fwShow-smoMoon", "acnh_fwShow-starFrag", "acnh_glitchedInFireFlower", "acnh_glowingMossFalls", "acnh_glowingMossShrine_1", "acnh_glowingMossShrine_2", "acnh_glowingMossValley", "acnh_hhp_anActualGym", "acnh_hhp_cafe", "acnh_hhp_curlysCodespace_1", "acnh_hhp_curlysCodespace_2", "acnh_hhp_hospital-waitingRoom", "acnh_hhp_lighthouseLifestyle", "acnh_hhp_myCuttingEdgeKeep_1", "acnh_hhp_myCuttingEdgeKeep_2", "acnh_hhp_myOldSummertimeShelter_1", "acnh_hhp_myOldSummertimeShelter_2", "acnh_hhp_myVeryOwnTalentAgency", "acnh_hhp_sittingInTheMoonlight", "acnh_hhp_skyhighCityApartment_1", "acnh_hhp_skyHighCityApartment_2", "acnh_hhpEntrance", "acnh_hyacinthFieldFountain", "acnh_hyacinthFieldFounatin-fwShow", "acnh_hyacinthFieldFountain-nyeFw", "acnh_icecreamAtHarvsIsland", "acnh_marioArea-nyeFw", "acnh_mayDayTour-rover", "acnh_mumGardenBench_1", "acnh_mumGardenBench_2", "acnh_museum-critter_1", "acnh_museum-critter_2", "acnh_museum-critter_3", "acnh_museum-critter_4", "acnh_museum-critter_5", "acnh_museum-fish_1", "acnh_museum-fish_2", "acnh_museum-fish_3", "acnh_museum-fish_4", "acnh_museum-fish_5", "acnh_museum-fish_6", "acnh_museum-fish_7", "acnh_museum-fish_8", "acnh_northEasternShore", "acnh_park", "acnh_pinkCosmosCanyon", "acnh_ponchoSinging", "acnh_riversideGarden", "acnh_roadsideCampsite_1", "acnh_roadsideCampsite_2", "acnh_southWesternShore", "acnh_spaceArea", "acnh_starWishing_1", "acnh_starWishing_2", "acnh_starWishing_3", "acnh_statueOfLiberty", "acnh_walkingInWater_1", "acnh_walkingInWater_2", "acnh_walkingInWater_3", "acnh_walkingInWater_4", "acnh_walkingInWater_5", "acnh_walkingInWater_6", "acnh_walkingInWater_7", "acnh_walkingInWater_8", "acnh_walkingInWater_9", "acnh_weddingSeasonPic", "acnh_wisp--spiritScatter"],
+			name2: ["Campsite _1", "Campsite _2", "Camspite _3", "Castle Entrance", "Castle Throne", "Celeste", "Cherry Blossom Forest", "Cherry Blossom Park _1", "Cherry Blossom Park _2", "Cherry Blossom Park _3", "Cosmos Cedar Forest - West _1", "Cosmos Cedar Forest - West _2", "Fancy Dinner with Maple _1", "Fancy Dinner with Maple _2", "Flower Field Space Path ~Billow Clouds~",	"Fountain Fireworks", "Fireworks Show _1", "Fireworks Show _2", "Fireworks Show _3", "Fireworks Show - Bowser Firework", "Fireworks Show - Luigi Firework _1", "Fireworks Show - Luigi Firework _2", "Fireworks Show - Mario Firework _1", "Fireworks Show - Mario Firework _2", "Fireworks Show - Peach + Bowser Firework", "Fireworks Show - Peach + Luigi Firework", "Fireworks Show - Mario (Odyssey) Firework", "Fireworks Show - Power Moon Firework", "Fireworks Show - Star Fragment Firework", "Glitched in Fire Flower (OOB glitch)", "Glowing Moss Falls", "Glowing Moss Shrine _1", "Glowing Moss Shrine _2", "Glowing Moss Valley", "HHP - An Actual Gym", "HHP - Curly's Codespace _1", "HHP - Curly's Codespace _2", "HHP - Hospital - Waiting Room", "HHP - Lighthouse Lifestyle",	"HHP - My Cutting Edge Keep _1", "HHP - My Cutting Edge Keep _2", "HHP - My Old Summertime Shelter _1", "HHP - My Old Summertime Shelter _2", "HHP - My Very Own Talent Agency", "HHP -- Sitting in the Moonlight", "HHP - Sky-High City Apartment _1", "HHP - Sky-High City Apartment _2", "HHP Entrance (night)", "Hyacinth Field Fountain", "Hyacinth Field Fountain - Fireworks Show", "Hyacinth Field Fountain - New Years Event", "Ice cream at Harv's Island", "Mario Area - New Years Event", "May Day Tour - Rover", "Mum Garden Bench _1", "Mum Garden Bench _2", "Museum - Critter Exhibit _1", "Museum - Critter Exhibit _2", "Museum - Critter Exhibit _3", "Museum - Critter Exhibit _4", "Museum - Critter Exhibit _5", "Museum - Fish Exhibit _1", "Museum - Fish Exhibit _2", "Museum - Fish Exhibit _3", "Museum - Fish Exhibit _4", "Museum - Fish Exhibit _5", "Museum - Fish Exhibit _6", "Museum - Fish Exhibit _7", "Museum - Fish Exhibit _8", "Eastern Shore", "Park", "Pink Cosmos Canyon", "Poncho Singing", "Riverside Garden", "Roadside Campsite _1", "Roadside Campsite _2", "South-Western Shore", "Space Area", "Star Wishing _1", "Star Wishing _2", "Star Wishing _3", "Statue of Liberty", "Walking in Water _1", "Walking in Water _2", "Walking in Water _3", "Walking in Water _4", "Walking in Water _5", "Walking in Water _6", "Walking in Water _7", "Walking in Water _8", "Walking in Water _9", "Wedding Season Pic", "Wisp ~Spirit Scatter~"]
 		},
 		botw: {
 			opt: [],
 			name1: ["botw_duelingPeaksStable", "botw_duelingPeaksStable--bloodMoon_1", "botw_duelingPeaksStable--bloodMoon_2", "botw_duelingPeaksStable--bloodMoon_3", "botw_hatenoAncientTechLab--bloodMoon", "botw_duelingPeaks", "botw_farosh", "botw_fairy-cotera_1", "botw_fairy-cotera_2", "botw_ruta", "botw_tot--staminaVessel", "botw_woodlandTower_1", "botw_woodlandTower_2", "botw_korokForest-masterSword", "botw_thundraPlateau_1", "botw_thundraPlateau_2", "botw_sanidinParkRuins--doubleRainbow", "botw_shaeLoyaShrine", "botw_lanayruWetlands--bloodMoon", "botw_nearFlightRange--frozenHorse", "botw_hebra-aurora_1", "botw_hebra-aurora_2", "botw_karkarikoVillage--cookpot", "botw_faron--floatingBoulder", "botw_7heroines", "botw_karaKaraBazaar--bloodMoon", "botw_gerudoTower--bloodMoon", "botw_deyaVilageRuins--floatingRock_1", "botw_deyaVilageRuins--floatingRock_2", "botw_spiritOrbReceived", "botw_karkarikoVillage--heartContainer", "botw_korokForest"],
-			name2: ["Dueling Peaks Stable", "Dueling Peaks Stable ~Blood Moon~ 1", "Dueling Peaks Stable ~Blood Moon~ 2", "Dueling Peaks Stable ~Blood Moon~ 3", "Hateno Ancient Tech Lab ~Blood Moon~", "Dueling Peaks", "Farosh", "Great Fairy Fountain - Cotera 1", "Great Fairy Fountain - Cotera 2", "Divine Beast vah Ruta", "Temple of Time ~ Stamina Vessel", "Woodland Tower 1", "Woodland Tower 2", "Korok Forest - Master Sword", "Thundra Plateau 1", "Thundra Plateau 2", "Sanidin Park Ruins ~Double Rainbow~", "Shae Loya Shrine", "Lanayru Wetlands ~Blood Moon~", "(near) Flight Range ~ Frozen Horse", "Hebra - Aurora 1", "Hebra - Aurora 2", "Karkariko Village ~ Cookpot", "Faron ~ Floating Boulder", "The Seven Heroines", "Kara Kara Bazaar ~Blood Moon~", "Gerudo Tower ~Blood Moon~", "Deya Village Ruins ~ Floating Rock 1", "Deya Village Ruins ~ Floating Rock 2", "Spirit Orb Recieved", "Karkariko Village ~ Heart Container", "Korok Forest"]
+			name2: ["Dueling Peaks Stable", "Dueling Peaks Stable ~Blood Moon~ 1", "Dueling Peaks Stable ~Blood Moon~ 2", "Dueling Peaks Stable ~Blood Moon~ 3", "Hateno Ancient Tech Lab ~Blood Moon~", "Dueling Peaks", "Farosh", "Great Fairy Fountain - Cotera 1", "Great Fairy Fountain - Cotera 2", "Divine Beast vah Ruta", "Temple of Time ~ Stamina Vessel", "Woodland Tower 1", "Woodland Tower 2", "Korok Forest - Master Sword", "Thundra Plateau 1", "Thundra Plateau 2", "Sanidin Park Ruins ~Double Rainbow~", "Shae Loya Shrine", "Lanayru Wetlands ~Blood Moon~", "(near) Flight Range ~ Frozen Horse", "Hebra - Aurora 1", "Hebra - Aurora 2", "Karkariko Village ~ Cookpot", "Faron ~ Floating Boulder", "The Seven Heroines", "Kara Kara Bazaar ~Blood Moon~", "Gerudo Tower ~Blood Moon~", "Deya Village Ruins ~ Floating Rock _1", "Deya Village Ruins ~ Floating Rock 2", "Spirit Orb Recieved", "Karkariko Village ~ Heart Container", "Korok Forest"]
 		},
 		sm3dw_bf: {
 			opt: [],
@@ -171,7 +148,7 @@ for (let i = 0; i < opt.lbl.name.length; i++) {
 	opt.sel._[i].title = opt.sel.title[i];
 } for (let i = 0; i < opt.placehld.name.length; i++) {
 	opt.placehld._.push(document.createElement("option"));
-	[opt.placehld._[i].value, opt.placehld._[i].innerHTML] = [null, opt.placehld.name[i]];
+	[opt.placehld._[i].value, opt.placehld._[i].innerHTML] = ["", opt.placehld.name[i]];
 } for (let i = 0; i < opt.inp.type.length; i++) {
 	opt.inp._.push(document.createElement("input"));
 	[opt.inp._[i].type, opt.inp._[i].value, opt.inp._[i].id, opt.inp._[i].placeholder, opt.inp._[i].onclick] = [opt.inp.type[i], opt.inp.val[i], opt.inp.id[i], opt.inp.placehld[i], opt.inp.onclick[i]];
@@ -180,7 +157,7 @@ for (let i = 0; i < opt.lbl.name.length; i++) {
 opt.aud.controls = opt.aud.autoplay = opt.aud.loop = true;
 [opt.aud.preload, opt.aud.style.display] = ["auto", "none"];
 opt.audSrc.type = "audio/mpeg";
-if (opt.aud.paused) opt.aud.play();
+opt.aud.paused ? opt.aud.play() : null;
 
 opt.lbl._[0].htmlFor = opt.sel._[0].name = opt.lbl._[1].htmlFor = opt.inp._[0].name = "music";
 for (let i = 0; i < opt.mus.name.length; i++) {
@@ -280,14 +257,12 @@ $(function () {
 	if (opt.mus._sav.ss != null) {
 		// opt.audSrc.src = "/assets/music/" + opt.mus._sav.ss + ".mp3";
 		opt.audSrc.src = getData.ss + ".mp3";
-		opt.aud.appendChild(opt.audSrc);
 		console.log("💾Retrieved the song you selected from session storage:", opt.mus._sav.ss);
 	} else if (opt.mus._sav.param != null) {
 		// opt.audSrc.src = "/assets/music/" + opt.mus._sav.param + ".mp3";
 		opt.audSrc.src = getData.param + ".mp3";
-		opt.aud.appendChild(opt.audSrc);
 		console.log("🔗Using song provided in url:", opt.mus._sav.param);
-	}
+	} opt.aud.appendChild(opt.audSrc);
 
 	if (opt.grass._sav.ss != null) {
 		opt.grass._elem.style.backgroundImage = "url('/assets/grass/" + opt.grass._sav.ss + ".png')";
@@ -296,14 +271,14 @@ $(function () {
 		opt.grass._elem.style.backgroundImage = "url('/assets/grass/" + opt.grass._sav.param + ".png')";
 		console.log("🔗Using grass provided in url for box styling:", opt.grass._sav.param);
 	} else
-		[opt.grass._elem.style.backgroundImage, opt.grass._elem.style.backgroundSize, opt.grass._elem.style.backgroundAttachment, opt.grass._elem.style.backgroundRepeat] = ["url('assets/grass/" + null + ".png')", "cover", "fixed", "no-repeat"];
+		[opt.grass._elem.style.backgroundImage, opt.grass._elem.style.backgroundSize, opt.grass._elem.style.backgroundAttachment, opt.grass._elem.style.backgroundRepeat] = ["url('assets/grass/.png')", "cover", "fixed", "no-repeat"];
 
 	if (opt.bg._sav.ss != null) {
 		opt.bg._elem.style.backgroundImage = "url('/assets/background/" + opt.bg._sav.ss + ".jpg')";
 		console.log("💾Retrieved the background you selected from session storage:", opt.bg._sav.ss);
 	} else if (opt.bg._sav.param != null) {
 		opt.bg._elem.style.backgroundImage = "url('/assets/background/" + opt.bg._sav.param + ".jpg')";
-		console.log("🔗Using background provided in url for box styling:", opt.bg._sav.param);
+		console.log("🔗Using background provided in url:", opt.bg._sav.param);
 	} else
-		opt.bg._elem.style.backgroundImage = "url('/assets/background/" + null + ".jpg')";
+		opt.bg._elem.style.backgroundImage = "url('/assets/background/.jpg')";
 });
