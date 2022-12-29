@@ -17,7 +17,7 @@ package-lock.json
 # Internal
 _/
 _cmd/
-assets/music/
+assets/music/*
 app.lnk
 info.txt
 
