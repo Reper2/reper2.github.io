@@ -6,9 +6,6 @@
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 
-# vscode ext: Microsoft Edge Tools
-.hintrc
-
 # vscode ext: Compile Hero
 dist/
 scripts/dist/
