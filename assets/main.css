@@ -4,6 +4,30 @@
     src: url('SuperMario256.ttf')
 }
 
+header {
+    font-size: 1.5em;
+    margin-top: 2vmin;
+    margin-bottom: 2vmin;
+
+    background: linear-gradient(
+        45deg,
+        cyan,
+        #A5F2F3,
+        #B3E7F4,
+        #DDF9F1,
+        #E25C46,
+        #E42217,
+        #CF1020,
+        #AA0033
+    );
+
+    background-clip: text;
+    -webkit-background-clip: text; /* required for Chrome/Safari */
+
+    color: transparent;
+    -webkit-text-fill-color: transparent; /* Safari compatibility */
+}
+
 body {
     margin: 0;
     padding: 0;

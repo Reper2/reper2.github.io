@@ -1,72 +1,71 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Keybinds - Reper2's Epic Website</title>
-    <link href="assets/main.css" rel="stylesheet" type="text/css">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EGBMJBFWQF"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
+  <meta charset="utf-8">
+  <title>Keybinds - Frosty Volcano Summit</title>
+  <link href="/assets/main.css" rel="stylesheet" type="text/css">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-EGBMJBFWQF"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
 
-        gtag('config', 'G-EGBMJBFWQF');
-    </script>
-    <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
-    <link rel="manifest" type="application/manifest+json" href="site.webmanifest">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta id="meta-title" property="og:title" content="Keybinds - Reper2's ACNH Website">
-    <meta id="meta-desc" property="og:description" content="List of all the keybinds that you can use.">
-    <meta property="og:site_name" content="Reper2's Epic Website | reper2.github.io">
-    <meta name="theme-color" content="#14d8ee">
+    gtag('config', 'G-EGBMJBFWQF');
+  </script>
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+  <link rel="manifest" type="application/manifest+json" href="site.webmanifest">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta id="meta-title" property="og:title" content="Keybinds - Frosty Volcano Summit">
+  <meta id="meta-desc" property="og:description" content="List of all the keybinds that you can use.">
+  <meta property="og:site_name" content="Frosty Volcano Summit | reper2.github.io">
+  <meta name="theme-color" content="#14d8ee">
 </head>
 
 <body id="_bg">
-    <header>Reper2's Epic Website</header>
-    <main>
-        <div id="back"></div>
-        <div id="grassBox">
-            <h1>Keybinds</h1>
-            <p class="kb-list">
-                <kbd>Ctrl</kbd><kbd>/</kbd> Open Keybind List<br>
-                <kbd>Alt</kbd><kbd>S</kbd> Show Audio Controls<br>
-                <kbd>Alt</kbd><kbd>H</kbd> Hide Audio Controls<br>
-                <kbd>Ctrl</kbd><kbd>I</kbd> Install App<br>
-                <kbd>Alt</kbd><kbd>U</kbd> Update URL<br>
-                <kbd>Ctrl</kbd><kbd>C</kbd> Copy Link<br>
-                <kbd>L</kbd> View License<br>
-                <kbd>Enter</kbd> Confirm Selection<br>
-                <kbd>Backspace</kbd> Reset Selection<br>
-                <kbd>?</kbd> Random Selection<br>
-                <kbd>X</kbd> Open Source Code<br>
-                <br>
-            </p>
-        </div>
+  <header>Frosty Volcano Summit</header>
+  <main>
+    <div id="back"></div>
+    <div id="grassBox">
+      <h1>Keybinds</h1>
+      <p class="kb-list">
+        <kbd>Ctrl</kbd><kbd>/</kbd> Open Keybind List<br>
+        <kbd>Alt</kbd><kbd>S</kbd> Show Audio Controls<br>
+        <kbd>Alt</kbd><kbd>H</kbd> Hide Audio Controls<br>
+        <kbd>Ctrl</kbd><kbd>I</kbd> Install App<br>
+        <kbd>Alt</kbd><kbd>U</kbd> Update URL<br>
+        <kbd>Ctrl</kbd><kbd>C</kbd> Copy Link<br>
+        <kbd>Alt+L</kbd> View License<br>
+        <kbd>Enter</kbd> Confirm Selection<br>
+        <kbd>Alt+R</kbd> Reset Selection<br>
+        <kbd>?</kbd> Random Selection<br>
+        <kbd>X</kbd> Open Source Code<br>
+        <br>
+      </p>
+    </div>
 
-        <form id="optForm"></form>
-        <div class="flex">
-            <div id="audctrls"></div>
-            <div id="install"></div>
-            <div id="urlUpdate"></div>
-            <div id="copy"></div>
-        </div>
-        <audio id="music"></audio>
-    </main>
-    <footer id="footer" class="bottom"></footer>
+    <form id="optForm"></form>
+    <div class="flex">
+      <div id="audctrls"></div>
+      <div id="install"></div>
+      <div id="urlUpdate"></div>
+      <div id="copy"></div>
+    </div>
+    <audio id="music"></audio>
+  </main>
+  <footer id="footer" class="bottom"></footer>
 </body>
-<script type="application/javascript" src="scripts/jquery.min.js"></script>
-<script type="application/javascript" src="scripts/iconify.min.js"></script>
-
-<script type="application/javascript" src="/scripts/app.js"></script>
-<script type="application/javascript" src="/scripts/audctrls.js"></script>
-<script type="application/javascript" src="/scripts/back.js"></script>
-<script type="application/javascript" src="/scripts/copyBtn.js"></script>
-<script type="application/javascript" src="/scripts/fetchdb.js"></script>
-<script type="application/javascript" src="/scripts/footer.js"></script>
-<script type="application/javascript" src="/scripts/kb.js"></script>
-<script type="application/javascript" src="/scripts/sw-installer.js"></script>
+<script type="application/javascript" src="/app/lib/jquery.min.js"></script>
+<script type="module" src="/app/dist/sw-installer.js"></script>
+<script type="module" src="/app/dist/keybinds.js"></script>
+<script type="module" src="/app/dist/app.js"></script>
+<script type="module" src="/app/dist/audctrls.js"></script>
+<script type="module" src="/app/dist/url-updater.js"></script>
+<script type="application/javascript" src="/app/dist/back.js"></script>
+<script type="module" src="/app/dist/copyLinkBtn.js"></script>
+<script type="module" src="/app/dist/footer.js"></script>
 
 </html>

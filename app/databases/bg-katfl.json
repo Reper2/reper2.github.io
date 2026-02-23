@@ -1,0 +1,18 @@
+[
+    {"type":"directory","name":".","contents":[
+        {"type":"file","name":"2023012123143900_c.jpg"},
+        {"type":"file","name":"2023012123151200_c.jpg"},
+        {"type":"file","name":"2023012123165200_c.jpg"},
+        {"type":"file","name":"2023012123173800_c.jpg"},
+        {"type":"file","name":"2023012123181200_c.jpg"},
+        {"type":"file","name":"2023012123183700_c.jpg"},
+        {"type":"file","name":"2023012123184200_c.jpg"},
+        {"type":"file","name":"2023012123192200_c.jpg"},
+        {"type":"file","name":"2023012123193400_c.jpg"},
+        {"type":"file","name":"2023012123194000_c.jpg"},
+        {"type":"file","name":"2023012123200000_c.jpg"},
+        {"type":"file","name":"2023012123232000_c.jpg"},
+        {"type":"file","name":"2023012123251700_c.jpg"}
+    ]}
+,    {"type":"report","directories":1,"files":13}
+]
