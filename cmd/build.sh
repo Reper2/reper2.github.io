@@ -74,7 +74,7 @@ echo
 echo "YOU MUST FIX MODULE EXTENSIONS YOURSELF"
 echo
 bash /Users/ethan/Documents/GitHub_2026/reper2.github.io/cmd/resolver.sh
-sleep 20s
+sleep 10s
 echo
 for i in {30..100}
 do

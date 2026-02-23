@@ -11,7 +11,7 @@ done
 echo
 
 echo
-echo "Initializing the comet engine for interstellar caching and offline support..."
+echo "Initialising the comet engine for interstellar caching and offline support..."
 for i in {1..49}
 do
     printf "\r💫Fetching comet medals for exchange: %3d" "$i"
