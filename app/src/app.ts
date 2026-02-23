@@ -154,7 +154,7 @@ export function pushOpts(obj: HTMLOptionElement[], data: Database.Obj1): void {
   for (let i = 0; i < data.contents.length; i++) {
     const option = document.createElement("option");
     option.value = data.contents[i].name.replace(/\.[^/.]+$/, ""); // Remove file extension for value
-    option.innerHTML = data.contents[i].name.replace(/\.[^/.]+$/, ""); // Remove file extension for display
+    option.innerHTML = data.contents[i].name;
     obj.push(option);
   }
 }
@@ -167,7 +167,7 @@ export function pushOpts(obj: HTMLOptionElement[], data: Database.Obj1): void {
 export function pushGrassOpts(obj: HTMLOptionElement[], data: Grass.Config["db"]): void {
   for (let i = 0; i < data.src.length; i++) {
     const option = document.createElement("option");
-    option.value = data.name[i];
+    option.value = data.src[i];
     option.innerHTML = data.name[i];
     obj.push(option);
   }
@@ -234,7 +234,15 @@ $(function () {
     opt.mus.opt[i] = [];
 
     // Create options for each file
-    pushOpts(opt.mus.opt[i], opt.mus.db[0]);
+    for (let j = 0; j < album.contents.length; j++) {
+      const file = album.contents[j];
+
+      const option = document.createElement("option");
+      option.value = file.name.replace(/\.[^/.]+$/, ""); // Remove file extension for value
+      option.textContent = file.name.replace(/\.[^/.]+$/, ""); // Remove file extension for display
+
+      opt.mus.opt[i].push(option);
+    }
   }
 
   // Create option elements for selecting box background
