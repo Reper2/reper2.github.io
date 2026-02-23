@@ -5,21 +5,18 @@
 !.vscode/launch.json
 !.vscode/extensions.json
 !.vscode/*.code-snippets
-
-# vscode ext: Compile Hero
-dist/
-scripts/dist/
+.eslintrc.json
 
 # Node
 node_modules/
 package-lock.json
 
 # Internal
-_/
-_cmd/
-assets/music/*
+# cmd/
 app.lnk
 info.txt
 
 # System Files
 desktop.ini
+.DS_Store
+Thumbs.db

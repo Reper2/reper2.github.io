@@ -1,0 +1,25 @@
+[
+    {"type":"directory","name":".","contents":[
+        {"type":"file","name":"2024122520092800_c.jpg"},
+        {"type":"file","name":"2024122520093000_c.jpg"},
+        {"type":"file","name":"2024122520094900_c.jpg"},
+        {"type":"file","name":"2024122903505900_c.jpg"},
+        {"type":"file","name":"2024122906211200_c.jpg"},
+        {"type":"file","name":"2024123101175500_c.jpg"},
+        {"type":"file","name":"2024123101175900_c.jpg"},
+        {"type":"file","name":"2024123101184300_c.jpg"},
+        {"type":"file","name":"2024123102474700_c.jpg"},
+        {"type":"file","name":"2024123103513600_c.jpg"},
+        {"type":"file","name":"2024123105110800_c.jpg"},
+        {"type":"file","name":"2025011014232600_c.jpg"},
+        {"type":"file","name":"2025011111402300_c.jpg"},
+        {"type":"file","name":"2025011118365400_c.jpg"},
+        {"type":"file","name":"2025011118370700_c.jpg"},
+        {"type":"file","name":"2025011702462100_c.jpg"},
+        {"type":"file","name":"2025011716013100_c.jpg"},
+        {"type":"file","name":"2025011716024500_c.jpg"},
+        {"type":"file","name":"2025011716152800_c.jpg"},
+        {"type":"file","name":"2025011716210900_c.jpg"}
+    ]}
+,    {"type":"report","directories":1,"files":20}
+]

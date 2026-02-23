@@ -1,0 +1,9 @@
+[
+    {"type":"directory","name":".","contents":[
+        {"type":"file","name":"2022110615234500_c.jpg"},
+        {"type":"file","name":"2023112421380500_c.jpg"},
+        {"type":"file","name":"2023112421391500_c.jpg"},
+        {"type":"file","name":"2024043019064400_c.jpg"}
+    ]}
+,    {"type":"report","directories":1,"files":4}
+]
