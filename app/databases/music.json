@@ -1,6 +1,6 @@
 [
     {"type":"directory","name":"../assets/music/","contents":[
-        {"type":"directory","name":"acnh","contents":[
+        {"type":"directory","name":"Animal Crossing New Horizons","contents":[
             {"type":"file","name":"Agent K.K..mp3"},
             {"type":"file","name":"Bubblegum K.K..mp3"},
             {"type":"file","name":"Go K.K. Rider!.mp3"},
@@ -15,7 +15,7 @@
             {"type":"file","name":"Space K.K..mp3"},
             {"type":"file","name":"Wild World.mp3"}
         ]},
-        {"type":"directory","name":"mk8dx","contents":[
+        {"type":"directory","name":"Mario Kart 8 Deluxe","contents":[
             {"type":"file","name":"3DS Alpine Pass.mp3"},
             {"type":"file","name":"3DS DK Jungle.mp3"},
             {"type":"file","name":"3DS Neo Bowser City.mp3"},
@@ -103,7 +103,7 @@
             {"type":"file","name":"Wii Wario's Gold Mine.mp3"},
             {"type":"file","name":"Yoshi's Island.mp3"}
         ]},
-        {"type":"directory","name":"smg","contents":[
+        {"type":"directory","name":"Super Mario Galaxy","contents":[
             {"type":"file","name":"Airship Armada.mp3"},
             {"type":"file","name":"Attack of the Airships.mp3"},
             {"type":"file","name":"Battlerock Galaxy.mp3"},
@@ -137,7 +137,7 @@
             {"type":"file","name":"The Star Festival.mp3"},
             {"type":"file","name":"Waltz of the Boos.mp3"}
         ]},
-        {"type":"directory","name":"smg2","contents":[
+        {"type":"directory","name":"Super Mario Galaxy 2","contents":[
             {"type":"file","name":"Beat Block Galaxy.mp3"},
             {"type":"file","name":"Boss Blitz Galaxy.mp3"},
             {"type":"file","name":"Bowser Jr.'s Fort.mp3"},
@@ -182,7 +182,7 @@
             {"type":"file","name":"Wild Glide Galaxy.mp3"},
             {"type":"file","name":"Yoshi Star Galaxy.mp3"}
         ]},
-        {"type":"directory","name":"smo","contents":[
+        {"type":"directory","name":"Super Mario Odyssey","contents":[
             {"type":"file","name":"Bonneton.mp3"},
             {"type":"file","name":"Bubblaine Underwater.mp3"},
             {"type":"file","name":"Bubblaine.mp3"},
@@ -201,7 +201,7 @@
             {"type":"file","name":"Tostarena Ruins.mp3"},
             {"type":"file","name":"Tostarena Town.mp3"}
         ]},
-        {"type":"directory","name":"tl","contents":[
+        {"type":"directory","name":"Tomodachi Life","contents":[
             {"type":"file","name":"A Kid is Born.mp3"},
             {"type":"file","name":"Afternoon on the Island.mp3"},
             {"type":"file","name":"Amusement Park.mp3"},
