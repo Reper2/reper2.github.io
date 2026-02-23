@@ -1,0 +1,15 @@
+[
+    {"type":"directory","name":".","contents":[
+        {"type":"file","name":"2023122810412600_c.jpg"},
+        {"type":"file","name":"2023122820531100_c.jpg"},
+        {"type":"file","name":"2023122820545400_c.jpg"},
+        {"type":"file","name":"2023122820550900_c.jpg"},
+        {"type":"file","name":"2023122820553600_c.jpg"},
+        {"type":"file","name":"2023122820554500_c.jpg"},
+        {"type":"file","name":"2023122821032400_c.jpg"},
+        {"type":"file","name":"2023122821033700_c.jpg"},
+        {"type":"file","name":"2023122821034000_c.jpg"},
+        {"type":"file","name":"2023122821043100_c.jpg"}
+    ]}
+,    {"type":"report","directories":1,"files":10}
+]

@@ -1,0 +1,19 @@
+{
+  "title": "Album Data",
+  "description": "Data for each group.",
+  "type": "object",
+  "properties": {
+    "src": {
+      "description": "Array of source urls for each item.",
+      "type": "array"
+    },
+    "name": {
+      "description": "Display name for this item.",
+      "type": "array"
+    }
+  },
+  "required": [
+    "src",
+    "name"
+  ]
+}

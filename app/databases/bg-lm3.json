@@ -1,0 +1,33 @@
+[
+    {"type":"directory","name":".","contents":[
+        {"type":"file","name":"2022122816435600_c.jpg"},
+        {"type":"file","name":"2022122900321700_c.jpg"},
+        {"type":"file","name":"2022122900561500_c.jpg"},
+        {"type":"file","name":"2022122901191200_c.jpg"},
+        {"type":"file","name":"2022122901194900_c.jpg"},
+        {"type":"file","name":"2022122912404300_c.jpg"},
+        {"type":"file","name":"2022122912540600_c.jpg"},
+        {"type":"file","name":"2022122912570100_c.jpg"},
+        {"type":"file","name":"2022122913452100_c.jpg"},
+        {"type":"file","name":"2022122915181600_c.jpg"},
+        {"type":"file","name":"2022122915183100_c.jpg"},
+        {"type":"file","name":"2022122915463100_c.jpg"},
+        {"type":"file","name":"2022122915471100_c.jpg"},
+        {"type":"file","name":"2022122915471400_c.jpg"},
+        {"type":"file","name":"2022122915515700_c.jpg"},
+        {"type":"file","name":"2022122915521900_c.jpg"},
+        {"type":"file","name":"2022122915540200_c.jpg"},
+        {"type":"file","name":"2022122915541300_c.jpg"},
+        {"type":"file","name":"2022122915550400_c.jpg"},
+        {"type":"file","name":"2022122915553400_c.jpg"},
+        {"type":"file","name":"2022122915555000_c.jpg"},
+        {"type":"file","name":"2022122915560200_c.jpg"},
+        {"type":"file","name":"2022122915561300_c.jpg"},
+        {"type":"file","name":"2022122915595400_c.jpg"},
+        {"type":"file","name":"2022122916120700_c.jpg"},
+        {"type":"file","name":"2022122916122900_c.jpg"},
+        {"type":"file","name":"2022122916124000_c.jpg"},
+        {"type":"file","name":"2022122916140200_c.jpg"}
+    ]}
+,    {"type":"report","directories":1,"files":28}
+]
