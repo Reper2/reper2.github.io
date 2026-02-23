@@ -128,14 +128,14 @@ export function pushOpts(obj, data) {
     for (let i = 0; i < data.contents.length; i++) {
         const option = document.createElement("option");
         option.value = data.contents[i].name.replace(/\.[^/.]+$/, "");
-        option.innerHTML = data.contents[i].name.replace(/\.[^/.]+$/, "");
+        option.innerHTML = data.contents[i].name;
         obj.push(option);
     }
 }
 export function pushGrassOpts(obj, data) {
     for (let i = 0; i < data.src.length; i++) {
         const option = document.createElement("option");
-        option.value = data.name[i];
+        option.value = data.src[i];
         option.innerHTML = data.name[i];
         obj.push(option);
     }
@@ -179,7 +179,13 @@ $(function () {
         const album = parent.contents[i];
         pushOptGroups(opt.mus._, [album.name]);
         opt.mus.opt[i] = [];
-        pushOpts(opt.mus.opt[i], opt.mus.db[0]);
+        for (let j = 0; j < album.contents.length; j++) {
+            const file = album.contents[j];
+            const option = document.createElement("option");
+            option.value = file.name.replace(/\.[^/.]+$/, "");
+            option.textContent = file.name.replace(/\.[^/.]+$/, "");
+            opt.mus.opt[i].push(option);
+        }
     }
     pushGrassOpts(opt.grass.opt, opt.grass.db);
     for (let i = 0; i < opt.mus._.length; i++) {
