@@ -5,7 +5,7 @@
 }
 
 header {
-    font-size: 1.5em;
+    font-size: clamp(1.2rem, 3vw, 2.5rem);
     margin-top: 2vmin;
     margin-bottom: 2vmin;
 
