@@ -1,6 +1,6 @@
-﻿import { opt } from "./app.js";
+﻿import { app } from "./app.js";
 export default function updateURL() {
-    window.location.href = "./?music=" + encodeURIComponent(opt.mus.sav.ss) + "&grass=" + encodeURIComponent(opt.grass.sav.ss);
+    window.location.href = "./?music=" + encodeURIComponent(app.mus.sav.ss) + "&grass=" + encodeURIComponent(app.grass.sav.ss);
 }
 const urlUd = {
     _: document.getElementById("urlUpdate"),
