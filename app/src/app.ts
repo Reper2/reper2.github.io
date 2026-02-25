@@ -1,7 +1,7 @@
 import { Background, Database, Grass, Music } from "../lib/db-typings";
 import { fetchDB } from "./core";
 
-export const opt = {
+export const app = {
   form: <HTMLFormElement>document.getElementById("optForm"),
   lbl: {
     _: <HTMLLabelElement[]>[],
@@ -27,9 +27,9 @@ export const opt = {
       (): void => submit(),
       (): void => sessionStorage.clear(), // Reset all saved customisations
       (): void => {
-        const musicPicker = new RandomPicker(opt.mus.db[0].contents.map(album => album.name));
+        const musicPicker = new RandomPicker(app.mus.db[0].contents.map(album => album.name));
         musicPicker.pick(
-          k => opt.mus.db[0].contents.find(album => album.name === k)!.contents,
+          k => app.mus.db[0].contents.find(album => album.name === k)!.contents,
           (k, file: Database.File) => {
             const cleanName = file.name
               .split(/[?#]/)[0]
@@ -37,14 +37,14 @@ export const opt = {
               .replace(/\.[^/.]+$/, "");
 
             sessionStorage.setItem("music", cleanName);
-            opt.mus.srcElem.src = `/assets/music/${k}/${file.name}`;
+            app.mus.srcElem.src = `/assets/music/${k}/${file.name}`;
             console.log(`🎵Randomly selected track from ${k}:`, cleanName);
           },
         );
 
-        sessionStorage.setItem("grass", opt.grass.db.src[Math.floor(Math.random() * opt.grass.db.src.length)]);
+        sessionStorage.setItem("grass", app.grass.db.src[Math.floor(Math.random() * app.grass.db.src.length)]);
 
-        window.location.href = "./?music=" + encodeURIComponent(opt.mus.sav.ss) + "&grass=" + encodeURIComponent(opt.grass.sav.ss);
+        window.location.href = "./?music=" + encodeURIComponent(app.mus.sav.ss) + "&grass=" + encodeURIComponent(app.grass.sav.ss);
       }
     ]
   },
@@ -103,34 +103,34 @@ export const opt = {
 };
 
 function submit() {
-  sessionStorage.setItem("music", opt.inp._[0].value || opt.sel._[0].value);
-  sessionStorage.setItem("grass", opt.sel._[1].value);
-  sessionStorage.setItem("bg", opt.sel._[2].value);
+  sessionStorage.setItem("music", app.inp._[0].value || app.sel._[0].value);
+  sessionStorage.setItem("grass", app.sel._[1].value);
+  sessionStorage.setItem("bg", app.sel._[2].value);
 }
 
 for (let i = 0; i < 4; i++)
-  opt.br.push(document.createElement("br"));
-for (let i = 0; i < opt.lbl.name.length; i++) {
-  opt.lbl._.push(document.createElement("label"));
-  opt.lbl._[i].innerHTML = opt.lbl.name[i];
+  app.br.push(document.createElement("br"));
+for (let i = 0; i < app.lbl.name.length; i++) {
+  app.lbl._.push(document.createElement("label"));
+  app.lbl._[i].innerHTML = app.lbl.name[i];
 }
-for (let i = 0; i < opt.sel.title.length; i++) {
-  opt.sel._.push(document.createElement("select"));
-  opt.sel._[i].title = opt.sel.title[i];
+for (let i = 0; i < app.sel.title.length; i++) {
+  app.sel._.push(document.createElement("select"));
+  app.sel._[i].title = app.sel.title[i];
 }
-for (let i = 0; i < opt.placehld.name.length; i++) {
-  opt.placehld._.push(document.createElement("option"));
-  [opt.placehld._[i].value, opt.placehld._[i].innerHTML] = ["", opt.placehld.name[i]];
+for (let i = 0; i < app.placehld.name.length; i++) {
+  app.placehld._.push(document.createElement("option"));
+  [app.placehld._[i].value, app.placehld._[i].innerHTML] = ["", app.placehld.name[i]];
 }
-for (let i = 0; i < opt.inp.type.length; i++) {
-  opt.inp._.push(document.createElement("input"));
-  [opt.inp._[i].type, opt.inp._[i].value, opt.inp._[i].id, opt.inp._[i].placeholder, opt.inp._[i].onclick] = [opt.inp.type[i], opt.inp.val[i], opt.inp.id[i], opt.inp.placehld[i], opt.inp.onclick[i]];
+for (let i = 0; i < app.inp.type.length; i++) {
+  app.inp._.push(document.createElement("input"));
+  [app.inp._[i].type, app.inp._[i].value, app.inp._[i].id, app.inp._[i].placeholder, app.inp._[i].onclick] = [app.inp.type[i], app.inp.val[i], app.inp.id[i], app.inp.placehld[i], app.inp.onclick[i]];
 }
 
-opt.mus.elem.controls = opt.mus.elem.autoplay = opt.mus.elem.loop = true;
-[opt.mus.elem.preload, opt.mus.elem.style.display] = ["auto", "none"];
-opt.mus.srcElem.type = "audio/mpeg";
-opt.mus.elem.paused ? opt.mus.elem.play() : null;
+app.mus.elem.controls = app.mus.elem.autoplay = app.mus.elem.loop = true;
+[app.mus.elem.preload, app.mus.elem.style.display] = ["auto", "none"];
+app.mus.srcElem.type = "audio/mpeg";
+app.mus.elem.paused ? app.mus.elem.play() : null;
 
 /**
  * Creates option group elements and sets their properties.
@@ -150,21 +150,7 @@ function pushOptGroups(elems: HTMLOptGroupElement[], labels: string[]): void {
  * @param elems Array of empty arrays to push option elements to.
  * @param data Object with properties `src` and `name`, each arrays of data for each option.
  */
-export function pushOpts(obj: HTMLOptionElement[], data: Database.Obj1): void {
-  for (let i = 0; i < data.contents.length; i++) {
-    const option = document.createElement("option");
-    option.value = data.contents[i].name.replace(/\.[^/.]+$/, ""); // Remove file extension for value
-    option.innerHTML = data.contents[i].name;
-    obj.push(option);
-  }
-}
-
-/**
- * Creates option elements and sets their properties.
- * @param elems Array of empty arrays to push option elements to.
- * @param data Object with properties `src` and `name`, each arrays of data for each option.
- */
-export function pushGrassOpts(obj: HTMLOptionElement[], data: Grass.Config["db"]): void {
+function pushGrassOpts(obj: HTMLOptionElement[], data: Grass.Config["db"]): void {
   for (let i = 0; i < data.src.length; i++) {
     const option = document.createElement("option");
     option.value = data.src[i];
@@ -173,8 +159,8 @@ export function pushGrassOpts(obj: HTMLOptionElement[], data: Grass.Config["db"]
   }
 }
 
-opt.lbl._[0].htmlFor = opt.sel._[0].name = opt.lbl._[1].htmlFor = opt.inp._[0].name = "music";
-opt.lbl._[2].htmlFor = opt.sel._[1].name = "grass";
+app.lbl._[0].htmlFor = app.sel._[0].name = app.lbl._[1].htmlFor = app.inp._[0].name = "music";
+app.lbl._[2].htmlFor = app.sel._[1].name = "grass";
 
 
 /**
@@ -182,13 +168,13 @@ opt.lbl._[2].htmlFor = opt.sel._[1].name = "grass";
  * @param sav Whether you are checking a soundtrack name against the value in session storage or url parameter.
  */
 function findSoundtrack(sav: string): void {
-  opt.mus.srcElem.src = "";
-  for (let i = 0; i < opt.mus.db[0].contents.length; i++) {
-    const album = opt.mus.db[0].contents[i];
+  app.mus.srcElem.src = "";
+  for (let i = 0; i < app.mus.db[0].contents.length; i++) {
+    const album = app.mus.db[0].contents[i];
 
     for (let j = 0; j < album.contents.length; j++) {
       if (album.contents[j].name.replace(/\.[^/.]+$/, "") === sav) {
-        opt.mus.srcElem.src = "../../assets/music/" + album.name + "/" + album.contents[j].name;
+        app.mus.srcElem.src = "../../assets/music/" + album.name + "/" + album.contents[j].name;
         return;
       }
     }
@@ -198,7 +184,7 @@ function findSoundtrack(sav: string): void {
 
 type Name = string | number;
 
-export class RandomPicker {
+class RandomPicker {
   constructor(private names: Name[]) { }
 
   private randomItem<T>(arr: T[]): T {
@@ -222,16 +208,16 @@ export class RandomPicker {
 
 $(function () {
   // Create option elements for selecting music
-  const parent = opt.mus.db[0]; // ParentObj
+  const parent = app.mus.db[0]; // ParentObj
 
   for (let i = 0; i < parent.contents.length; i++) {
     const album = parent.contents[i]; // Obj1
 
     // Create optgroup
-    pushOptGroups(opt.mus._, [album.name]);
+    pushOptGroups(app.mus._, [album.name]);
 
     // Initialize option array for this album
-    opt.mus.opt[i] = [];
+    app.mus.opt[i] = [];
 
     // Create options for each file
     for (let j = 0; j < album.contents.length; j++) {
@@ -241,64 +227,64 @@ $(function () {
       option.value = file.name.replace(/\.[^/.]+$/, ""); // Remove file extension for value
       option.textContent = file.name.replace(/\.[^/.]+$/, ""); // Remove file extension for display
 
-      opt.mus.opt[i].push(option);
+      app.mus.opt[i].push(option);
     }
   }
 
   // Create option elements for selecting box background
-  pushGrassOpts(opt.grass.opt, opt.grass.db);
+  pushGrassOpts(app.grass.opt, app.grass.db);
 
   // Add the music selector to the html
-  for (let i = 0; i < opt.mus._.length; i++) {
-    const optgroup = opt.mus._[i];
+  for (let i = 0; i < app.mus._.length; i++) {
+    const optgroup = app.mus._[i];
 
-    for (const option of opt.mus.opt[i]) {
+    for (const option of app.mus.opt[i]) {
       optgroup.appendChild(option);
     }
 
-    opt.sel._[0].appendChild(optgroup);
+    app.sel._[0].appendChild(optgroup);
   }
-  opt.form.appendChild(opt.lbl._[0]);
-  opt.form.appendChild(opt.sel._[0]);
-  opt.form.appendChild(opt.br[0]);
-  opt.form.appendChild(opt.lbl._[1]);
-  opt.form.appendChild(opt.inp._[0]);
-  opt.form.appendChild(opt.br[1]);
+  app.form.appendChild(app.lbl._[0]);
+  app.form.appendChild(app.sel._[0]);
+  app.form.appendChild(app.br[0]);
+  app.form.appendChild(app.lbl._[1]);
+  app.form.appendChild(app.inp._[0]);
+  app.form.appendChild(app.br[1]);
 
   // Add the box background selector to the html 
-  opt.sel._[1].appendChild(opt.placehld._[1]);
-  for (let i = 0; i < opt.grass.db.src.length; i++) {
-    opt.sel._[1].appendChild(opt.grass.opt[i]);
+  app.sel._[1].appendChild(app.placehld._[1]);
+  for (let i = 0; i < app.grass.db.src.length; i++) {
+    app.sel._[1].appendChild(app.grass.opt[i]);
   }
-  opt.form.appendChild(opt.lbl._[2]);
-  opt.form.appendChild(opt.sel._[1]);
-  opt.form.appendChild(opt.br[2]);
+  app.form.appendChild(app.lbl._[2]);
+  app.form.appendChild(app.sel._[1]);
+  app.form.appendChild(app.br[2]);
 
   // Add the set, reset, and random buttons to the html
-  for (let i = 1; i < opt.inp.type.length; i++) opt.form.appendChild(opt.inp._[i]);
+  for (let i = 1; i < app.inp.type.length; i++) app.form.appendChild(app.inp._[i]);
 
   // Get saved data and use it
-  if (opt.mus.sav.ss != null) {
-    findSoundtrack(opt.mus.sav.ss);
-    console.log("💾Retrieved the song you selected from session storage:", opt.mus.sav.ss);
-  } else if (opt.mus.sav.param != null) {
-    findSoundtrack(opt.mus.sav.param);
-    console.log("🔗Using song provided in url:", opt.mus.sav.param);
-  } opt.mus.elem.appendChild(opt.mus.srcElem);
+  if (app.mus.sav.ss != null) {
+    findSoundtrack(app.mus.sav.ss);
+    console.log("💾Retrieved the song you selected from session storage:", app.mus.sav.ss);
+  } else if (app.mus.sav.param != null) {
+    findSoundtrack(app.mus.sav.param);
+    console.log("🔗Using song provided in url:", app.mus.sav.param);
+  } app.mus.elem.appendChild(app.mus.srcElem);
 
-  if (opt.grass.sav.ss != null) {
-    opt.grass.elem.style.backgroundImage = "url('/assets/grass/" + opt.grass.sav.ss + ".png')";
-    console.log("💾Retrieved the grass you selected from session storage:", opt.grass.sav.ss);
-  } else if (opt.grass.sav.param != null) {
-    opt.grass.elem.style.backgroundImage = "url('/assets/grass/" + opt.grass.sav.param + ".png')";
-    console.log("🔗Using grass provided in url for box styling:", opt.grass.sav.param);
-  } else opt.grass.elem.style.backgroundImage = "url('/assets/grass/" + opt.grass.db.src[0] + ".png')";
+  if (app.grass.sav.ss != null) {
+    app.grass.elem.style.backgroundImage = "url('/assets/grass/" + app.grass.sav.ss + ".png')";
+    console.log("💾Retrieved the grass you selected from session storage:", app.grass.sav.ss);
+  } else if (app.grass.sav.param != null) {
+    app.grass.elem.style.backgroundImage = "url('/assets/grass/" + app.grass.sav.param + ".png')";
+    console.log("🔗Using grass provided in url for box styling:", app.grass.sav.param);
+  } else app.grass.elem.style.backgroundImage = "url('/assets/grass/" + app.grass.db.src[0] + ".png')";
 
-  const bgPicker = new RandomPicker(opt.bg.game);
+  const bgPicker = new RandomPicker(app.bg.game);
   bgPicker.pick(
-    k => opt.bg.db[k][0].contents,
+    k => app.bg.db[k][0].contents,
     (k, file: Database.File) => {
-      opt.bg.elem.style.backgroundImage =
+      app.bg.elem.style.backgroundImage =
         `url('https://raw.githubusercontent.com/reper2/switch-album/${k}/${file.name}')`;
       console.log(`🎮Randomly selected background from ${k}:`, file.name);
     },
