@@ -9,11 +9,11 @@ export const app = {
   },
   sel: {
     _: <HTMLSelectElement[]>[],
-    title: ["select a song from the dropdown then click SET", "select grass (box background) then click SET"]
+    title: ["select a soundtrack from the dropdown then click SET", "select grass (box background) then click SET"]
   },
   placehld: {
     _: <HTMLOptionElement[]>[],
-    name: ["-- select song --", "-- select grass --"]
+    name: ["-- select soundtrack --", "-- select grass --"]
   },
   br: <HTMLBRElement[]>[],
   inp: {
@@ -80,6 +80,7 @@ export const app = {
       katfl: await fetchDB("bg-katfl"),
       lm3: await fetchDB("bg-lm3"),
       mk8dx: await fetchDB("bg-mk8dx"),
+      mkw: await fetchDB("bg-mkw"),
       mps: await fetchDB("bg-mps"),
       miitopia: await fetchDB("bg-miitopia"),
       pm_ttyd: await fetchDB("bg-pm-ttyd"),
@@ -93,12 +94,13 @@ export const app = {
       smo: await fetchDB("bg-smo"),
       smp: await fetchDB("bg-smp"),
       ssbu: await fetchDB("bg-ssbu"),
+      tlltd: await fetchDB("bg-tlltd"),
       loz_botw: await fetchDB("bg-loz-botw"),
       loz_eow: await fetchDB("bg-loz-eow"),
       loz_ss: await fetchDB("bg-loz-ss"),
       loz_totk: await fetchDB("bg-loz-totk")
     },
-    game: ["acnh", "dkb", "hw_aoi", "katfl", "lm3", "mk8dx", "mps", "miitopia", "pm_ttyd", "pik4", "poke_la", "poke_sword", "sm3da", "sm3dw_bf", "smbw", "smg2", "smo", "smp", "ssbu", "loz_botw", "loz_eow", "loz_ss", "loz_totk"]
+    game: ["acnh", "dkb", "hw_aoi", "katfl", "lm3", "mk8dx", "mkw", "mps", "miitopia", "pm_ttyd", "pik4", "poke_la", "poke_sword", "sm3da", "sm3dw_bf", "smbw", "smg2", "smo", "smp", "ssbu", "tlltd", "loz_botw", "loz_eow", "loz_ss", "loz_totk"]
   }
 };
 
@@ -207,6 +209,11 @@ class RandomPicker {
 }
 
 $(function () {
+  // add placholders first
+  for (let i = 0; i < app.sel._.length; i++) {
+    app.sel._[i].appendChild(app.placehld._[i]);
+  }
+
   // Create option elements for selecting music
   const parent = app.mus.db[0]; // ParentObj
 
@@ -251,7 +258,7 @@ $(function () {
   app.form.appendChild(app.inp._[0]);
   app.form.appendChild(app.br[1]);
 
-  // Add the box background selector to the html 
+  // Add the box background selector to the html
   app.sel._[1].appendChild(app.placehld._[1]);
   for (let i = 0; i < app.grass.db.src.length; i++) {
     app.sel._[1].appendChild(app.grass.opt[i]);
@@ -273,12 +280,12 @@ $(function () {
   } app.mus.elem.appendChild(app.mus.srcElem);
 
   if (app.grass.sav.ss != null) {
-    app.grass.elem.style.backgroundImage = "url('/assets/grass/" + app.grass.sav.ss + ".png')";
+    app.grass.elem.style.backgroundImage = "url('/images/grass/" + app.grass.sav.ss + ".png')";
     console.log("💾Retrieved the grass you selected from session storage:", app.grass.sav.ss);
   } else if (app.grass.sav.param != null) {
-    app.grass.elem.style.backgroundImage = "url('/assets/grass/" + app.grass.sav.param + ".png')";
+    app.grass.elem.style.backgroundImage = "url('/images/grass/" + app.grass.sav.param + ".png')";
     console.log("🔗Using grass provided in url for box styling:", app.grass.sav.param);
-  } else app.grass.elem.style.backgroundImage = "url('/assets/grass/" + app.grass.db.src[0] + ".png')";
+  } else app.grass.elem.style.backgroundImage = "url('/images/grass/" + app.grass.db.src[0] + ".png')";
 
   const bgPicker = new RandomPicker(app.bg.game);
   bgPicker.pick(

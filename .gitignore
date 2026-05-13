@@ -10,9 +10,9 @@
 # Node
 node_modules/
 package-lock.json
+*.tsbuildinfo
 
 # Internal
-# cmd/
 app.lnk
 info.txt
 
@@ -20,3 +20,11 @@ info.txt
 desktop.ini
 .DS_Store
 Thumbs.db
+
+# Secret Dev Files
+app/lib/debugger-class-typings.d.ts
+app/src/debug-secret.ts
+app/dist/debug-secret.js
+cmd/debug-secret.js
+cmd/debug-notes.txt
+cmd/encrypt-eggs.js

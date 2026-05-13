@@ -5,6 +5,7 @@
   <meta charset="utf-8">
   <title>Other Links - Frosty Volcano Summit</title>
   <link href="/assets/main.css" rel="stylesheet" type="text/css">
+  <link href="/assets/eggs.css" rel="stylesheet" type="text/css">
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-EGBMJBFWQF"></script>
   <script>
@@ -14,6 +15,7 @@
 
     gtag('config', 'G-EGBMJBFWQF');
   </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
   <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
@@ -21,7 +23,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta id="meta-title" property="og:title" content="Other Links - Frosty Volcano Summit">
   <meta id="meta-desc" property="og:description"
-    content="This page has all of Sherbet Penguin / Ethan's profile links. Frosty Volcano Summit includes info about me, social links, software library, and more.">
+    content="This page has all of Ethan's profile links. Frosty Volcano Summit includes info about me, social links, software library, and more.">
   <meta id="meta-image" name="og:image" itemprop="image" content="https://reper2.github.io/meta.png">
   <meta property="og:site_name" content="Frosty Volcano Summit | reper2.github.io">
   <meta property="twitter:card" content="summary_large_image">
@@ -32,10 +34,14 @@
   <header>Frosty Volcano Summit</header>
   <main>
     <div id="back"></div>
+    <div class="egg" data-egg="fvsSocials_aboveTitle">
+        <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
+        <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
+      </div>
     <h1 width="7vmin">Other Links</h1>
     <div id="grassBox">
       <a href="https://www.youtube.com/@sp.eth2976" title="Sherbet Penguin - YouTube">
-        <img src="/assets/social-logos/youtube.svg" class="link" alt="youtube_logo">
+        <img src="//social-logos/youtube.svg" class="link" alt="youtube_logo">
       </a>
 
       <a href="https://github.com/Reper2" title="Reper2 - GitHub">
@@ -43,24 +49,25 @@
       </a>
 
       <a href="https://dodocodes.com/user/Reper2_acnh" title="Reper2_acnh - DodoCodes">
-        <img src="/assets/social-logos/dodo-logo.png" class="link" alt="dodocodes_logo">
+        <img src="/images/social-logos/dodo-logo.png" class="link" alt="dodocodes_logo">
       </a>
 
       <a href="https://nookazon.com/profile/2566680955" title="Reper2 - Nookazon">
-        <img src="/assets/social-logos/Nookazon_logo.png" class="link" alt="nookazon_logo">
+        <img src="/images/social-logos/Nookazon_logo.png" class="link" alt="nookazon_logo">
       </a>
 
       <a href="https://discord.gg/XfJaKWCHKK" title="Maple Koala - Discord">
-        <img src="/assets/social-logos/Discord-Symbol-Blurple.svg" class="link" alt="discord_logo">
+        <img src="/images/social-logos/Discord-Symbol-Blurple.svg" class="link" alt="discord_logo">
       </a>
 
       <a href="https://www.reddit.com/user/Reper2" title="Reper2 - Reddit">
-        <img src="/assets/social-logos/reddit-logo.webp" class="link" alt="reddit_logo">
+        <img src="/images/social-logos/reddit-logo.webp" class="link" alt="reddit_logo">
       </a>
 
-      <a href="https://instagram.com/ethangraham2633" title="Ethan Graham - Instagram">
-        <img src="/assets/social-logos/Instagram_logo.png" class="link" alt="instagram_logo">
-      </a>
+      <div class="egg" data-egg="fvsSocials">
+        <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
+        <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
+      </div>
 
       <a href="https://islaatlas.com/en/" title="Isla Atlas - SCBI Club Network">
         <img src="https://islaatlas.com/images/logos/logoia_350x133px.png" class="link" alt="ia_logo">
@@ -68,11 +75,19 @@
     </div>
 
     <form id="optForm"></form>
+    <div class="egg" data-egg="fvsSocials_underForm">
+      <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
+      <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
+    </div>
     <div id="buttons" class="flex">
       <div id="audctrls"></div>
       <div id="install"></div>
       <div id="urlUpdate"></div>
       <div id="copy"></div>
+    </div>
+    <div class="egg" data-egg="fvsSocials_underBtns">
+      <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
+      <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
     </div>
     <audio id="music"></audio>
   </main>
@@ -82,6 +97,8 @@
 <script type="module" src="/app/dist/sw-installer.js"></script>
 <script type="module" src="/app/dist/keybinds.js"></script>
 <script type="module" src="/app/dist/app.js"></script>
+<script type="module" src="/app/dist/eggs.js"></script>
+<script type="module" src="/app/dist/debug-secret.js"></script>
 <script type="module" src="/app/dist/audctrls.js"></script>
 <script type="module" src="/app/dist/url-updater.js"></script>
 <script type="application/javascript" src="/app/dist/back.js"></script>

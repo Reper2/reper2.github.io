@@ -2,93 +2,114 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <title>Software Library - Frosty Volcano Summit</title>
-    <link href="/assets/main.css" rel="stylesheet" type="text/css">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EGBMJBFWQF"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
+  <meta charset="UTF-8">
+  <title>Software Library - Frosty Volcano Summit</title>
+  <link href="/assets/main.css" rel="stylesheet" type="text/css">
+  <link href="/assets/eggs.css" rel="stylesheet" type="text/css">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-EGBMJBFWQF"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
 
-        gtag('config', 'G-EGBMJBFWQF');
-    </script>
-    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
-    <link rel="manifest" type="application/manifest+json" href="/site.webmanifest">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta id="meta-title" property="og:title" content="Software Library - Frosty Volcano Summit">
-    <meta id="meta-desc" property="og:description"
-        content="The software library provides navigation to my other websites, as well as software that you can download. Frosty Volcano Summit includes info about me, social links, software library, and more.">
-    <meta id="meta-image" name="og:image" itemprop="image" content="https://reper2.github.io/meta.png">
-    <meta property="og:site_name" content="Frosty Volcano Summit | reper2.github.io">
-    <meta property="twitter:card" content="summary_large_image">
-    <meta name="theme-color" content="#14d8ee">
+    gtag('config', 'G-EGBMJBFWQF');
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="manifest" type="application/manifest+json" href="/site.webmanifest">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta id="meta-title" property="og:title" content="Software Library - Frosty Volcano Summit">
+  <meta id="meta-desc" property="og:description"
+    content="The software library provides navigation to my other websites, as well as software that you can download or view.
+    Frosty Volcano Summit includes my public portfolio, social links, software library, and more.
+    Start the Egg Hunt for hidden surprises!">
+  <meta id="meta-image" name="og:image" itemprop="image" content="https://reper2.github.io/meta.png">
+  <meta property="og:site_name" content="Frosty Volcano Summit | reper2.github.io">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#14d8ee">
 </head>
 
 <body id="_bg">
-    <header>Frosty Volcano Summit</header>
-    <main>
-        <div id="back"></div>
-        <h1>Software Library</h1>
-        <div id="grassBox">
-            <a href="/" title="Frosty Volcano Summit">
-                <img src="/logo.png" class="appIcon" alt="fvs_logo">
-            </a>
+  <header>Frosty Volcano Summit</header>
+  <main>
+    <div id="back"></div>
+    <h1>Software Library</h1>
+    <div id="grassBox">
+      <a href="/" title="Frosty Volcano Summit">
+        <img src="/logo.png" class="appIcon" alt="fvs_logo">
+      </a>
 
-            <a href="/acnh/" title="Reper2's ACNH Website">
-                <img src="/acnh/logo.png" class="appIcon" alt="reper2-acnh_logo">
-            </a>
+      <a href="/acnh/" title="Reper2's ACNH Website">
+        <img src="/acnh/logo.png" class="appIcon" alt="reper2-acnh_logo">
+      </a>
 
-            <a href="/acnh-apps/" title="ACNH Apps">
-                <img src="/acnh-apps/icons/apple-touch-icon.png" class="appIcon" alt="acnh-apps_logo">
-            </a>
+      <div class="egg" data-egg="softwareRow1">
+        <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
+        <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
+      </div>
 
-            <a href="/nintendo-album/" title="Reper2's Nintendo Album">
-                <img src="/acnh/assets/nookPhone-app_native/camera.png" class="appIcon"
-                    alt="reper2-nintendo-album_logo">
-            </a>
+      <a href="/acnh-apps/" title="ACNH Apps">
+        <img src="/acnh-apps/images/apple-touch-icon.png" class="appIcon" alt="acnh-apps_logo">
+      </a>
 
-            <br>
+      <a href="/nintendo-album/" title="Reper2's Nintendo Album">
+        <img src="/acnh/assets/nookPhone-app_native/camera.png" class="appIcon" alt="reper2-nintendo-album_logo">
+      </a>
 
-            <a href="/mario-texture-pack/" title="Mario Texture Pack">
-                <img src="/mario-texture-pack/logo.png" class="appIcon" alt="mario-texture-pack_logo">
-            </a>
+      <br>
 
-            <a href="/holiday-album/" title="Holiday Album">
-                <img src="https://raw.githubusercontent.com/reper2/holiday-album/master/photos/F65EA14D-8E42-4F19-8C92-A497B8DC41EC_1_105_c.jpeg" class="appIcon" alt="holiday-album_logo">
-            </a>
+      <a href="/mario-texture-pack/" title="Mario Texture Pack">
+        <img src="/mario-texture-pack/logo.png" class="appIcon" alt="mario-texture-pack_logo">
+      </a>
 
-            <a href="/chem-calc/" title="ChemCalc">
-                <img src="/chem-calc/icons/apple-touch-icon.png" class="appIcon" alt="chem-calc_logo">
-            </a>
+      <a href="/holiday-album/" title="Holiday Album">
+        <img
+          src="https://raw.githubusercontent.com/reper2/holiday-album/master/photos/F65EA14D-8E42-4F19-8C92-A497B8DC41EC_1_105_c.jpeg"
+          class="appIcon" alt="holiday-album_logo">
+      </a>
 
-            <a href="/desktop-clock/" title="Desktop Clock">
-                <img src="/desktop-clock/icons/apple-touch-icon.png" class="appIcon" alt="clock_logo">
-            </a>
+      <div class="egg" data-egg="softwareRow2">
+        <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
+        <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
+      </div>
 
-            <a href="/mobile-clock/" title="Mobile Clock">
-                <img src="/mobile-clock/icons/apple-touch-icon.png" class="appIcon" alt="clock_logo">
-            </a>
-        </div>
+      <a href="/desktop-clock/" title="Desktop Clock">
+        <img src="/desktop-clock/images/apple-touch-icon.png" class="appIcon" alt="clock_logo">
+      </a>
 
-        <form id="optForm"></form>
-        <div class="flex">
-            <div id="audctrls"></div>
-            <div id="install"></div>
-            <div id="urlUpdate"></div>
-            <div id="copy"></div>
-        </div>
-        <audio id="music"></audio>
-    </main>
-    <footer id="footer" class="bottom"></footer>
+      <a href="/mobile-clock/" title="Mobile Clock">
+        <img src="/mobile-clock/images/apple-touch-icon.png" class="appIcon" alt="clock_logo">
+      </a>
+    </div>
+
+    <form id="optForm"></form>
+    <div class="egg" data-egg="fvsSoftware_underForm">
+      <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
+      <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
+    </div>
+    <div class="flex">
+      <div id="audctrls"></div>
+      <div id="install"></div>
+      <div id="urlUpdate"></div>
+      <div id="copy"></div>
+    </div>
+    <div class="egg" data-egg="fvsSoftware_aboveFooter">
+      <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
+      <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
+    </div>
+    <audio id="music"></audio>
+  </main>
+  <footer id="footer" class="bottom"></footer>
 </body>
 <script type="application/javascript" src="/app/lib/jquery.min.js"></script>
 <script type="module" src="/app/dist/sw-installer.js"></script>
 <script type="module" src="/app/dist/keybinds.js"></script>
 <script type="module" src="/app/dist/app.js"></script>
+<script type="module" src="/app/dist/eggs.js"></script>
+<script type="module" src="/app/dist/debug-secret.js"></script>
 <script type="module" src="/app/dist/audctrls.js"></script>
 <script type="module" src="/app/dist/url-updater.js"></script>
 <script type="application/javascript" src="/app/dist/back.js"></script>

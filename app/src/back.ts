@@ -15,5 +15,5 @@ back._.onclick = () => {
   else window.location.href = "../../";
 };
 
-[back.btn.src, back.btn.title] = ["/assets/back.png", "Back (Alt+◁)"];
+[back.btn.src, back.btn.title] = ["/images/back.png", "Back (Alt+◁)"];
 back._.appendChild(back.btn);

@@ -1,10 +1,11 @@
 {
+  "name": "frosty-volcano-summit",
+  "version": "26.5.0",
   "devDependencies": {
-    "iconify": "^1.4.0",
-    "iconify-icon": "^3.0.2",
+    "javascript-obfuscator": "^5.4.2",
     "typescript": "^5.9.3",
     "workbox": "^0.0.0",
-    "workbox-cli": "^7.4.0"
+    "workbox-cli": "^2.1.3"
   },
   "dependencies": {
     "@types/jquery": "^3.5.33",
@@ -12,6 +13,11 @@
     "eslint": "^10.0.0",
     "jquery": "^4.0.0",
     "tslint": "^5.20.1",
-    "window": "^4.2.7"
+    "window": "^1.0.0"
+  },
+  "scripts": {
+    "build": "tsc -p ./app/tsconfig.json",
+    "resolveModules": "node ./cmd/module-refiner.js",
+    "obfuscate": "javascript-obfuscator ./app/dist --output ./app/dist --compact true --self-defending true"
   }
 }

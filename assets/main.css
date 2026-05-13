@@ -1,7 +1,7 @@
 /* tags and other universal styles */
 @font-face {
     font-family: 'Super Mario 256';
-    src: url('SuperMario256.ttf')
+    src: url('./SuperMario256.ttf')
 }
 
 header {

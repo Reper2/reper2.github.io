@@ -1,16 +1,1 @@
-﻿import { app } from "./app.js";
-export default function updateURL() {
-    window.location.href = "./?music=" + encodeURIComponent(app.mus.sav.ss) + "&grass=" + encodeURIComponent(app.grass.sav.ss);
-}
-const urlUd = {
-    _: document.getElementById("urlUpdate"),
-    btn: document.createElement("button"),
-    tt: document.createElement("span")
-};
-[urlUd._.className, urlUd._.onclick] = ["tooltip", () => updateURL()];
-urlUd._.className = "tooltip";
-urlUd.btn.innerHTML = "🔄️🔗";
-[urlUd.tt.className, urlUd.tt.innerHTML] = ["tooltiptext", "Update URL with new params (Ctrl+U)"];
-urlUd.btn.appendChild(urlUd.tt);
-urlUd._.appendChild(urlUd.btn);
-//# sourceMappingURL=url-updater.js.map
+const a10_0x53ee00=a10_0x46e0;(function(_0xc3f20f,_0x263e1f){const _0x5b9752=a10_0x46e0,_0x5b8ac7=_0xc3f20f();while(!![]){try{const _0x4bf41c=-parseInt(_0x5b9752(0xc5))/0x1+-parseInt(_0x5b9752(0xb4))/0x2*(parseInt(_0x5b9752(0xcf))/0x3)+parseInt(_0x5b9752(0xbb))/0x4*(parseInt(_0x5b9752(0xc6))/0x5)+parseInt(_0x5b9752(0xbc))/0x6*(-parseInt(_0x5b9752(0xb6))/0x7)+-parseInt(_0x5b9752(0xc0))/0x8*(parseInt(_0x5b9752(0xd0))/0x9)+parseInt(_0x5b9752(0xc1))/0xa*(-parseInt(_0x5b9752(0xce))/0xb)+parseInt(_0x5b9752(0xb5))/0xc;if(_0x4bf41c===_0x263e1f)break;else _0x5b8ac7['push'](_0x5b8ac7['shift']());}catch(_0xd2b972){_0x5b8ac7['push'](_0x5b8ac7['shift']());}}}(a10_0x3f63,0x4d856));import{app}from'./app.js';function a10_0x46e0(_0x2e3171,_0xac4c2b){_0x2e3171=_0x2e3171-0xb2;const _0x50ed8a=a10_0x3f63();let _0x131466=_0x50ed8a[_0x2e3171];return _0x131466;}export default function updateURL(){const _0x41738=a10_0x46e0,_0x2f36f5=(function(){let _0x17994e=!![];return function(_0x33d029,_0x27a957){const _0x382e53=_0x17994e?function(){const _0x528ccc=a10_0x46e0;if(_0x27a957){const _0x1c1b1e=_0x27a957[_0x528ccc(0xc7)](_0x33d029,arguments);return _0x27a957=null,_0x1c1b1e;}}:function(){};return _0x17994e=![],_0x382e53;};}()),_0xfd345=_0x2f36f5(this,function(){const _0xf2757d=a10_0x46e0;return _0xfd345[_0xf2757d(0xb7)]()[_0xf2757d(0xcb)](_0xf2757d(0xb9))['toString']()[_0xf2757d(0xbf)](_0xfd345)[_0xf2757d(0xcb)](_0xf2757d(0xb9));});_0xfd345(),window['location']['href']=_0x41738(0xc9)+encodeURIComponent(app['mus'][_0x41738(0xca)]['ss'])+_0x41738(0xc4)+encodeURIComponent(app['grass'][_0x41738(0xca)]['ss']);}function a10_0x3f63(){const _0x561007=['100846FyyTWp','6475428rJrhgr','2758JmgwqR','toString','Update\x20URL\x20with\x20new\x20params\x20(Ctrl+U)','(((.+)+)+)+$','tooltip','76hieagJ','384KNqbbK','urlUpdate','className','constructor','153224KTQICD','9990pLaxbn','innerHTML','🔄️🔗','&grass=','399494thTYJW','131245ApNYLA','apply','btn','./?music=','sav','search','getElementById','onclick','407gayUFb','12qURcaH','27BSrBYN','createElement','appendChild'];a10_0x3f63=function(){return _0x561007;};return a10_0x3f63();}const urlUd={'_':document[a10_0x53ee00(0xcc)](a10_0x53ee00(0xbd)),'btn':document['createElement']('button'),'tt':document[a10_0x53ee00(0xb2)]('span')};[urlUd['_'][a10_0x53ee00(0xbe)],urlUd['_'][a10_0x53ee00(0xcd)]]=[a10_0x53ee00(0xba),()=>updateURL()],urlUd['_']['className']=a10_0x53ee00(0xba),urlUd[a10_0x53ee00(0xc8)][a10_0x53ee00(0xc2)]=a10_0x53ee00(0xc3),[urlUd['tt'][a10_0x53ee00(0xbe)],urlUd['tt'][a10_0x53ee00(0xc2)]]=['tooltiptext',a10_0x53ee00(0xb8)],urlUd[a10_0x53ee00(0xc8)][a10_0x53ee00(0xb3)](urlUd['tt']),urlUd['_'][a10_0x53ee00(0xb3)](urlUd['btn']);

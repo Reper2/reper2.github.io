@@ -1,4 +1,21 @@
 # Frosty Volcano Summit
-![logo](logo.png)  
+![logo](/images/logo.png)  
 
 My website includes a library of all my software (well the ones I've published publicly, I have a few that I keep locally only), lots of customisation features to enhance your experience on the website, a bit of info about me, a handful of keybinds for your accessibility, and a couple of social links you probably didn't know I had.
+
+## Easter Eggs! [26.5.0 Beta]
+![eggbox](/images/hidden_block.png)
+I have started hiding Easter eggs across my websites. For now, there is no pleasing reward yet when you find them all, but you can have some fun clicking them. I have made it as hard as possible to cheat/hack, and designed it so it would be faster for you to collect all the eggs than to learn and cheat the system. More info on this will be available when it is finished. My Animal Crossing website is still yet to have a massive update and a Tomodachi Life project will be released in a few months. I will be adding eggs to the clocks soon...
+The eggs system is made up of canonical strings, which are hashed and used to attempt to decrypt the reward. The final object of all eggs being collected is the encryption/decryption key, with the auth tag of course. The compiled JavaScript is obfuscated so that it is almost impossible to hack on the website itself. The code is compact and self-defending. Any tricks to prettify the code will cause it to crash or enter an infinite loop.
+
+## Clocks
+I have published [mobile](https://github.com/Reper2/mobile-clock) and [desktop](https://github.com/Reper2/desktop-clock) clocks. Try them out! The mobile clock is really nice to have in the background when you're working as it uses real photos I've taken on holidays, and besides the gradient animation on the text, the clock is unlikely to distract you. The desktop clock on the other hand can be great to use on your tv or monitor while you're gaming. Unless you are immune to wanting to play video games when you see video game content, it's best not to use this one when you're focusing.
+
+## Backgrounds
+The backgrounds on this website, among some of my others, are fetched from [switch_album](https://github.com/Reper2/switch-album)
+
+## Progressive Web App functionality
+If your browser supports it, you can install the web app and hop on the website offline. Only cached backgrounds will load without an internet connection though, as they are fetched, rather than pre-cached in the service worker.
+
+## Music
+All soundtracks and Animal Crossing terrain textures present on the website are owned by [Nintendo](https://www.nintendo.com/au/).
