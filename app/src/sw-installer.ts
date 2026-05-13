@@ -18,11 +18,11 @@ onload = () => {
     navigator.serviceWorker.register("/sw.js").then((reg) => {
       console.groupCollapsed("Service Worker Status");
       if (reg.installing) {
-        console.log("Service worker installing");
+        console.log("service worker installing...");
       } if (reg.waiting) {
-        console.log("Service worker installed");
+        console.log("service worker installed");
       } if (reg.active) {
-        console.log("Service worker active");
+        console.log("service worker active");
       }
       console.log("Service Worker registration successful with scope:", reg.scope);
       console.groupEnd();

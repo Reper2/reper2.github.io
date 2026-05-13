@@ -2,9 +2,10 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <title>Home - Frosty Volcano Summit</title>
   <link href="/assets/main.css" rel="stylesheet" type="text/css">
+  <link href="/assets/eggs.css" rel="stylesheet" type="text/css">
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-EGBMJBFWQF"></script>
   <script>
@@ -14,14 +15,15 @@
 
     gtag('config', 'G-EGBMJBFWQF');
   </script>
-  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
   <link rel="manifest" type="application/manifest+json" href="/site.webmanifest">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta id="meta-title" property="og:title" content="Frosty Volcano Summit">
   <meta id="meta-desc" property="og:description"
-    content="This is Sherbet Penguin (Ethan/Reper2)'s official website. Here you can find information about me, my projects, and more.">
+    content="This is Ethan/Reper2's official website. Here you can find information about me, my projects, and more.">
   <meta id="meta-image" name="og:image" itemprop="image" content="https://reper2.github.io/meta.png">
   <meta property="og:site_name" content="Frosty Volcano Summit | reper2.github.io">
   <meta property="twitter:card" content="summary_large_image">
@@ -29,6 +31,10 @@
 </head>
 
 <body id="_bg">
+  <div class="egg" data-egg="fvsHome_aboveHeader">
+    <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
+    <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
+  </div>
   <header>Frosty Volcano Summit</header>
   <main>
     <div id="grassBox">
@@ -40,22 +46,34 @@
         <span class="gold">Studying:</span> Bachelor of Information Technology (Cyber Security)<br>
         <br>
         <span class="gold">Hobbies:</span> Programming, Console Gaming, LEGO<br>
-        <span class="gold">Favourite Themes:</span> Ice, Fire, Space, Islands<br>
-        <br>
+        <span class="gold">Favourite Themes:</span> Ice, Fire, Space, Islands
+      </p>
+      <div class="egg" data-egg="firstEgg">
+        <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
+        <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
+      </div>
+      <p>
         <span class="gold">Favourite Animals:</span> Penguins, Sea Turtles, Pandas<br>
         <span class="gold">Favourite Pokemon:</span> Piplup, Squirtle, Pancham, Charmander<br>
         <span class="gold">Favourite Game Franchises:</span> Mario, Zelda, Pokemon<br>
-        <span class="gold">Favourite Games:</span> Super Mario Galaxy 1 + 2, Animal Crossing: New Horizons, The Legend of Zelda: Breath of the
-        Wild, Pokemon Legends: Arceus
+        <span class="gold">Favourite Games:</span> Super Mario Galaxy 1 + 2, Animal Crossing: New Horizons, The Legend
+        of Zelda: Breath of the Wild, Pokemon Legends: Arceus
         <br>
         <span class="gold">Favourite Music Artists:</span> Billy Joel, EWF, George Michael, David Bowie<br>
         <span class="gold">Favourite Song:</span> September — EWF
         <br><br>
         <span class="gold">SW-1847-3699-7280</span>
       </p>
+      <div class="egg" data-egg="switchFC">
+        <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
+        <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon!">
+      </div>
       <a rel="noopener noreferrer" id="learnmore" target="_blank" href="https://github.com/Reper2"
         title="Location: Reper2 - GitHub (https://github.com/Reper2)">Learn more</a>
       <br><br>
+      <span id="eggCounter"></span>
+      <p id="egg-reward"></p>
+      <br>
       <div class="boxBtn">
         <a href="/software" title="Location: Software Library (https://reper2.github.io/software)">Software Library</a>
         <br>
@@ -64,6 +82,10 @@
     </div>
 
     <form id="optForm"></form>
+    <div class="egg" data-egg="fvsHomeUnderForm">
+      <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
+      <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon!">
+    </div>
     <div class="flex">
       <div id="audctrls"></div>
       <div id="install"></div>
@@ -78,6 +100,8 @@
 <script type="module" src="/app/dist/sw-installer.js"></script>
 <script type="module" src="/app/dist/keybinds.js"></script>
 <script type="module" src="/app/dist/app.js"></script>
+<script type="module" src="/app/dist/eggs.js"></script>
+<script type="module" src="/app/dist/debug-secret.js"></script>
 <script type="module" src="/app/dist/audctrls.js"></script>
 <script type="module" src="/app/dist/url-updater.js"></script>
 <script type="module" src="/app/dist/copyLinkBtn.js"></script>

@@ -5,6 +5,7 @@
   <meta charset="utf-8">
   <title>Keybinds - Frosty Volcano Summit</title>
   <link href="/assets/main.css" rel="stylesheet" type="text/css">
+  <link href="/assets/eggs.css" rel="stylesheet" type="text/css">
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-EGBMJBFWQF"></script>
   <script>
@@ -26,6 +27,10 @@
 </head>
 
 <body id="_bg">
+  <div class="egg" data-egg="fvsKeys_aboveHeader">
+    <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
+    <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
+  </div>
   <header>Frosty Volcano Summit</header>
   <main>
     <div id="back"></div>
@@ -36,14 +41,22 @@
         <kbd>Alt</kbd><kbd>S</kbd> Show Audio Controls<br>
         <kbd>Alt</kbd><kbd>H</kbd> Hide Audio Controls<br>
         <kbd>Ctrl</kbd><kbd>I</kbd> Install App<br>
-        <kbd>Alt</kbd><kbd>U</kbd> Update URL<br>
-        <kbd>Ctrl</kbd><kbd>C</kbd> Copy Link<br>
-        <kbd>Alt+L</kbd> View License<br>
-        <kbd>Enter</kbd> Confirm Selection<br>
-        <kbd>Alt+R</kbd> Reset Selection<br>
-        <kbd>?</kbd> Random Selection<br>
-        <kbd>X</kbd> Open Source Code<br>
-        <br>
+      <div class="egg" data-egg="fvsKeys_underInstallKey">
+        <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
+        <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
+      </div>
+      <kbd>Alt</kbd><kbd>U</kbd> Update URL<br>
+      <kbd>Ctrl</kbd><kbd>C</kbd> Copy Link<br>
+      <kbd>Alt+L</kbd> View License<br>
+      <kbd>Enter</kbd> Confirm Selection<br>
+      <kbd>Alt+R</kbd> Reset Selection<br>
+      <kbd>?</kbd> Random Selection<br>
+      <kbd>X</kbd> Open Source Code<br>
+      <div class="egg" data-egg="fvsKeybinds_underList">
+        <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
+        <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
+      </div>
+      <br>
       </p>
     </div>
 
@@ -55,6 +68,10 @@
       <div id="copy"></div>
     </div>
     <audio id="music"></audio>
+    <div class="egg" data-egg="fvsKeybinds_underAudCtrls">
+    <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
+    <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
+  </div>
   </main>
   <footer id="footer" class="bottom"></footer>
 </body>
@@ -62,6 +79,8 @@
 <script type="module" src="/app/dist/sw-installer.js"></script>
 <script type="module" src="/app/dist/keybinds.js"></script>
 <script type="module" src="/app/dist/app.js"></script>
+<script type="module" src="/app/dist/eggs.js"></script>
+<script type="module" src="/app/dist/debug-secret.js"></script>
 <script type="module" src="/app/dist/audctrls.js"></script>
 <script type="module" src="/app/dist/url-updater.js"></script>
 <script type="application/javascript" src="/app/dist/back.js"></script>
