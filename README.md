@@ -1,7 +1,7 @@
 # Frosty Volcano Summit
 ![logo](/images/logo.png)  
 
-My website includes a library of all my publically realeased software, lots of customisation features to enhance your experience on the website, a bit of info about me, a handful of keybinds for your accessibility, Easter eggs to find and collect, and a couple of social links.
+My website includes a library of all my publically realeased software, lots of customisation features to enhance your experience on the website, a bit of info about me, a handful of key binds for your accessibility, Easter eggs to find and collect, and a couple of social links.
 
 ## Easter Eggs! [26.5.0 Beta]
 ![eggbox](/images/hidden_block.png)
@@ -12,7 +12,7 @@ The eggs system is made up of canonical strings, which are hashed and used to at
 I have published [mobile](https://github.com/Reper2/mobile-clock) and [desktop](https://github.com/Reper2/desktop-clock) clocks. Try them out! The mobile clock is really nice to have in the background when you're working as it uses real photos I've taken on holidays, and besides the gradient animation on the text, the clock is unlikely to distract you. The desktop clock on the other hand can be great to use on your tv or monitor while you're gaming. Unless you are immune to wanting to play video games when you see video game content, it's best not to use this one when you're focusing.
 
 ## Backgrounds
-The backgrounds on this website, among some of my others, are fetched from [switch_album](https://github.com/Reper2/switch-album)
+The backgrounds on this website, among some of my others, are fetched from [switch-album](https://github.com/Reper2/switch-album)
 
 ## Progressive Web App functionality
 If your browser supports it, you can install the web app and hop on the website offline. Only cached backgrounds will load without an internet connection though, as they are fetched, rather than pre-cached in the service worker.
