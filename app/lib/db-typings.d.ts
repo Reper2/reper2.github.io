@@ -41,7 +41,6 @@ export namespace Background {
    * and the second is an object containing metadata about the directory.
    */
   type DatabaseStructure = { [key: string]: [Database.Obj1, Database.Obj2] };
-
   /**
    * The configuration object for the background object.
    * Contains the element to which the background will be applied, the database of backgrounds,

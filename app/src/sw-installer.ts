@@ -48,7 +48,7 @@ onload = () => {
     };
 
     sw.i._.className = "tooltip";
-    sw.i.btn.innerHTML = "📲";
+    sw.i.btn.innerHTML = "🌐📲";
     [sw.i.tt.className, sw.i.tt.innerHTML] = ["tooltiptext", "Install App (Ctrl+I)"];
 
     sw.i.btn.appendChild(sw.i.tt);

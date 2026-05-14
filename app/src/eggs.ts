@@ -5,11 +5,11 @@ type EggState = Record<string, {
 }>;
 
 const STORAGE_KEY = "eggs";
-const TOTAL_EGGS = 36;
+const TOTAL_EGGS = 50;
 
 export const PAYLOAD = {
-  iv: new Uint8Array([166,17,67,183,202,94,185,177,27,242,35,177]),
-  data: new Uint8Array([1,8,99,209,157,239,177,182,153,225,109,4,231,80,87,169,8,25,98,245,217,68,84,139,185,91,5,192,220,10,111,245,84,19,113,185,146,84,191,156,170,144,5,86,26,48,43,25,151,197,183,237,142,212,112,207,89,196,72,4,192,110,72,73,196,211,67,222,143,84,199,17,117,2,163,171,225,214,135,143,137,56,143,169,203,121,119,146,246,183,14,17,248,54,171,151,18,164,41,60,234,9])
+  iv: new Uint8Array([213,104,49,253,101,152,81,140,20,242,151,37]),
+  data: new Uint8Array([74,136,234,119,144,230,218,88,41,226,178,224,40,73,11,182,13,238,82,165,142,179,216,45,67,32,209,167,141,152,134,190,126,123,81,236,105,149,217,114,58,167,182,132,49,153,177,51,18,124,204,11,102,61,175,124,226,71,204,73,151,22,90,9,199,211,110,40,213,40,95,40,113,65,107,44,75,238,251,183,223,187,211,124,160,83,61,142,208,173,109,152,77,100,131,124,0,11,8,5,191,189])
 };
 
 /**
@@ -141,8 +141,10 @@ function initEggs(): void {
 }
 
 function updateCounter(state: EggState): void {
+  const counterElem = document.getElementById("eggCounter");
+  if (!counterElem) return;
   const found = Object.values(state).filter(e => e.unlocked).length;
-  document.getElementById("eggCounter")!.textContent =
+  counterElem.textContent =
     `Easter eggs found: ${found} / ${TOTAL_EGGS}`;
 }
 
@@ -152,5 +154,18 @@ function showReward(text: string): void {
 }
 
 initEggs();
+
+const resetBtn = {
+  _: <HTMLDivElement>document.getElementById("resetEggs"),
+  btn: document.createElement("button"),
+  tt: document.createElement("span")
+};
+
+resetBtn._.className = "tooltip";
+[resetBtn.btn.innerHTML, resetBtn.btn.onclick] = ["🥚🗑️", (): void => { localStorage.setItem("eggs", "{}"), location.reload(); }];
+[resetBtn.tt.innerHTML, resetBtn.tt.className] = ["Reset All Eggs (Ctrl+Z)", "tooltiptext"];
+
+resetBtn.btn.appendChild(resetBtn.tt);
+resetBtn._.appendChild(resetBtn.btn);
 
 export { TOTAL_EGGS, EggState, saveEggs, loadEggs, sha256, updateCounter, showReward, resolvePath };

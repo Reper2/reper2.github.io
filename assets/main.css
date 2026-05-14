@@ -1,46 +1,48 @@
 /* tags and other universal styles */
 @font-face {
-    font-family: 'Super Mario 256';
-    src: url('./SuperMario256.ttf')
+  font-family: 'Super Mario 256';
+  src: url('./SuperMario256.ttf')
 }
 
 header {
-    font-size: clamp(1.2rem, 3vw, 2.5rem);
-    margin-top: 2vmin;
-    margin-bottom: 2vmin;
+  font-size: clamp(1.2rem, 3vw, 2.5rem);
+  margin-top: 2vmin;
+  margin-bottom: 2vmin;
 
-    background: linear-gradient(
-        45deg,
-        cyan,
-        #A5F2F3,
-        #B3E7F4,
-        #DDF9F1,
-        #E25C46,
-        #E42217,
-        #CF1020,
-        #AA0033
-    );
+  background: linear-gradient(45deg,
+      cyan,
+      #A5F2F3,
+      #B3E7F4,
+      #DDF9F1,
+      #E25C46,
+      #E42217,
+      #CF1020,
+      #AA0033);
 
-    background-clip: text;
-    -webkit-background-clip: text; /* required for Chrome/Safari */
+  background-clip: text;
+  -webkit-background-clip: text;
+  /* required for Chrome/Safari */
 
-    color: transparent;
-    -webkit-text-fill-color: transparent; /* Safari compatibility */
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  /* Safari compatibility */
 }
 
 body {
-    margin: 0;
-    padding: 0;
-    background: #000;
-    background-attachment: fixed;
-    background-size: cover;
-    background-repeat: no-repeat;
-    overflow-x: hidden;
-    overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  background: #000;
+  background-attachment: fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
-header, main, footer {
-    text-align: -webkit-center;
+header,
+main,
+footer {
+  text-align: -webkit-center;
 }
 
 header,
@@ -52,199 +54,209 @@ a,
 span,
 button,
 label {
-    font-family: 'Super Mario 256', sans-serif;
-    color: white;
-    -webkit-text-stroke-width: 0.2vmin;
-    -webkit-text-stroke-color: black;
+  font-family: 'Super Mario 256', sans-serif;
+  color: white;
+  -webkit-text-stroke-width: 0.2vmin;
+  -webkit-text-stroke-color: black;
 }
 
 a {
-    text-decoration: none
+  text-decoration: none
 }
 
 button {
-    border-radius: 3vmin;
-    block-size: 12vmin;
+  border-radius: 3vmin;
+  block-size: 12vmin;
+  margin: 1vmin;
 }
 
 select {
-    background-color: lightblue;
-    border-color: black;
+  background-color: lightblue;
+  border-color: black;
 }
 
 input {
-    background-color: skyblue;
+  background-color: skyblue;
 }
 
 kbd {
-    background-color: #eee;
-    border-radius: 3px;
-    border: 1px solid #b4b4b4;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
-    color: #333;
-    font-size: .85em;
-    font-weight: 700;
-    line-height: 1;
-    padding: 2px 4px;
-    white-space: nowrap;
+  background-color: #eee;
+  border-radius: 3px;
+  border: 1px solid #b4b4b4;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
+  color: #333;
+  font-size: .85em;
+  font-weight: 700;
+  line-height: 1;
+  padding: 2px 4px;
+  white-space: nowrap;
 }
 
 /* classes */
 .boxBtn {
-    border-radius: 2vmin;
+  border-radius: 2vmin;
 }
 
 .socialLogo {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 .tooltip {
-    position: relative;
+  position: relative;
 }
 
 .tooltip .tooltiptext {
-    visibility: hidden;
-    font-family: Arial, Helvetica, sans-serif;
-    -webkit-text-stroke-width: 0;
-    background-color: #333;
-    border-radius: 6px;
-    padding: 5px 0;
-    width: 120px;
-    top: 100%;
-    left: 50%;
-    margin-left: -60px;
-    transition: opacity 0.3;
-    z-index: 1;
+  visibility: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-text-stroke-width: 0;
+  background-color: #333;
+  border-radius: 6px;
+  padding: 5px 0;
+  width: 120px;
+  top: 100%;
+  left: 50%;
+  margin-left: -60px;
+  transition: opacity 0.3;
+  z-index: 1;
 }
 
 .tooltip .tooltiptext::after {
-    content: " ";
-    bottom: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: transparent transparent #333 transparent;
+  content: " ";
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #333 transparent;
 }
 
 .tooltip:hover .tooltiptext {
-    visibility: visible;
-    opacity: 1;
+  visibility: visible;
+  opacity: 1;
 }
 
 .kb-list {
-    text-align: left;
-    color: cyan;
+  text-align: left;
+  color: cyan;
 }
 
 .kb-hint {
-    color: inherit;
+  color: inherit;
 }
 
 .flex {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .gold {
-    color: gold
+  color: gold
 }
 
 /* ids */
 #grassBox {
-    font-size: 3.5vmin;
-    width: 70vmin;
-    border-radius: 1vmin;
-    background-position: center;
-    margin: 10px;
+  font-size: 3.5vmin;
+  width: 70vmin;
+  border-radius: 1vmin;
+  background-position: center;
+  margin: 10px;
 }
 
 #learnmore {
-    color: rgb(0, 174, 255);
-    text-decoration: underline;
+  color: rgb(0, 174, 255);
+  text-decoration: underline;
 }
 
 #back img {
-    top: 2vmin;
-    font-size: 8vmin;
-    width: 8vmin;
-    left: 2vmin;
+  top: 2vmin;
+  font-size: 8vmin;
+  width: 8vmin;
+  left: 2vmin;
 }
 
 #optForm {
-    margin: 4px;
+  margin: 4px;
 }
 
 #music {
-    margin: 3px;
+  margin: 3px;
 }
 
 /* mixed */
 select,
 input {
-    font-family: sans-serif;
+  font-family: sans-serif;
 }
 
 button,
 .boxBtn {
-    background-color: lightskyblue;
-    outline-color: initial;
+  background-color: lightskyblue;
+  outline-color: initial;
 }
 
 button,
 .kbd-hint {
-    font-size: 5vmin;
+  font-size: 5vmin;
 }
 
-button:hover,
-input:hover {
-    transform: translateY(-1vh)
+/* Only apply hover transform on devices that support a real hover state (mouse) */
+@media (hover: hover) {
+  button:hover,
+  input:hover {
+    transform: translateY(-1vh);
+  }
+}
+
+/* Use :active for mobile feedback instead */
+button:active,
+input:active {
+  transform: scale(0.95); /* Shrinks slightly when pressed, works great on touch */
 }
 
 #grassBox,
 .boxBtn {
-    padding: 8px;
+  padding: 8px;
 }
 
 .tooltip .tooltiptext,
 #grassBox {
-    text-align: center;
+  text-align: center;
 }
 
 .bottom,
 .tooltip .tooltiptext,
 .boxBtn {
-    font-size: 3vmin;
+  font-size: 3vmin;
 }
 
 #back img,
 .tooltip .tooltiptext,
 .tooltip .tooltiptext::after {
-    position: absolute;
+  position: absolute;
 }
 
 kbd,
 .tooltip {
-    display: inline-block;
+  display: inline-block;
 }
 
 .appIcon,
 .link {
-    margin-bottom: 1vmin;
-    margin-top: 1vmin;
-    border-radius: 30%;
-    filter: drop-shadow(0.5vh 0.5vh 0.15vh rgba(0, 0, 0, 0.6));
-    cursor: pointer;
-    -webkit-user-select: none;
-    user-select: none;
-    pointer-events: all;
-    transition-duration: 0.07s;
-    transition-timing-function: ease-in-out;
-    width: 10vmin;
+  margin-bottom: 1vmin;
+  margin-top: 1vmin;
+  border-radius: 30%;
+  filter: drop-shadow(0.5vh 0.5vh 0.15vh rgba(0, 0, 0, 0.6));
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: all;
+  transition-duration: 0.07s;
+  transition-timing-function: ease-in-out;
+  width: 10vmin;
 }
 
 .appIcon:active,
 .appIcon:focus-visible,
 a:focus-visible .appIcon {
-    animation: bounceButton 0.25s ease-in-out forwards
+  animation: bounceButton 0.25s ease-in-out forwards
 }
