@@ -25,6 +25,4 @@ Thumbs.db
 app/lib/debugger-class-typings.d.ts
 app/src/debug-secret.ts
 app/dist/debug-secret.js
-cmd/debug-secret.js
-cmd/debug-notes.txt
 cmd/encrypt-eggs.js
