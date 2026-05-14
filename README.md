@@ -1,7 +1,7 @@
 # Frosty Volcano Summit
 ![logo](/images/logo.png)  
 
-My website includes a library of all my software (well the ones I've published publicly, I have a few that I keep locally only), lots of customisation features to enhance your experience on the website, a bit of info about me, a handful of keybinds for your accessibility, and a couple of social links you probably didn't know I had.
+My website includes a library of all my publically realeased software, lots of customisation features to enhance your experience on the website, a bit of info about me, a handful of keybinds for your accessibility, Easter eggs to find and collect, and a couple of social links.
 
 ## Easter Eggs! [26.5.0 Beta]
 ![eggbox](/images/hidden_block.png)
