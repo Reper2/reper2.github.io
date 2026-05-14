@@ -9,16 +9,12 @@ const footer = {
   }
 };
 
-/* -----------------------------
-   Copyright Section
--------------------------------- */
-
 footer.cr.license.title = "View License (Alt+L)";
 footer.cr.license.href = "https://github.com/Reper2/reper2.github.io/blob/master/LICENSE";
 footer.cr.license.target = "_blank";
 footer.cr.license.rel = "noopener noreferrer";
 
-footer.cr.txt.textContent = "(c) 2021-2026 Reper2";
+footer.cr.txt.textContent = "(c) 2021-2026 Reper2/Ethan. All rights reserved.";
 
 footer.cr.license.appendChild(footer.cr.txt);
 footer.elem.appendChild(footer.cr.license);

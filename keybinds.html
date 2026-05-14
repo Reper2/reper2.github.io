@@ -15,9 +15,9 @@
 
     gtag('config', 'G-EGBMJBFWQF');
   </script>
-  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
   <link rel="manifest" type="application/manifest+json" href="site.webmanifest">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta id="meta-title" property="og:title" content="Keybinds - Frosty Volcano Summit">
@@ -27,13 +27,13 @@
 </head>
 
 <body id="_bg">
-  <div class="egg" data-egg="fvsKeys_aboveHeader">
-    <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
-    <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
-  </div>
   <header>Frosty Volcano Summit</header>
   <main>
     <div id="back"></div>
+    <div class="egg" data-egg="fvsKeys_aboveTitle">
+      <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
+      <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
+    </div>
     <div id="grassBox">
       <h1>Keybinds</h1>
       <p class="kb-list">
@@ -41,17 +41,20 @@
         <kbd>Alt</kbd><kbd>S</kbd> Show Audio Controls<br>
         <kbd>Alt</kbd><kbd>H</kbd> Hide Audio Controls<br>
         <kbd>Ctrl</kbd><kbd>I</kbd> Install App<br>
+      </p>
       <div class="egg" data-egg="fvsKeys_underInstallKey">
         <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
         <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
       </div>
-      <kbd>Alt</kbd><kbd>U</kbd> Update URL<br>
-      <kbd>Ctrl</kbd><kbd>C</kbd> Copy Link<br>
-      <kbd>Alt+L</kbd> View License<br>
-      <kbd>Enter</kbd> Confirm Selection<br>
-      <kbd>Alt+R</kbd> Reset Selection<br>
-      <kbd>?</kbd> Random Selection<br>
-      <kbd>X</kbd> Open Source Code<br>
+      <p class="kb-list">
+        <kbd>Ctrl</kbd><kbd>C</kbd> Copy Link<br>
+        <kbd>Alt+L</kbd> View License<br>
+        <kbd>Enter</kbd> Confirm Selection<br>
+        <kbd>Alt+R</kbd> Reset Selection<br>
+        <kbd>?</kbd> Random Selection<br>
+        <kbd>X</kbd> Open Source Code<br>
+        <kbd>Ctrl</kbd><kbd>Z</kbd> Reset All Eggs<br>
+      </p>
       <div class="egg" data-egg="fvsKeybinds_underList">
         <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
         <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
@@ -64,14 +67,14 @@
     <div class="flex">
       <div id="audctrls"></div>
       <div id="install"></div>
-      <div id="urlUpdate"></div>
       <div id="copy"></div>
+      <div id="resetEggs"></div>
     </div>
     <audio id="music"></audio>
     <div class="egg" data-egg="fvsKeybinds_underAudCtrls">
-    <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
-    <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
-  </div>
+      <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
+      <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
+    </div>
   </main>
   <footer id="footer" class="bottom"></footer>
 </body>

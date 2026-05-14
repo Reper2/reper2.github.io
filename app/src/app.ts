@@ -23,9 +23,20 @@ export const app = {
     id: ["", "optSet", "optReset", "optRand"],
     placehld: ["enter song name", "", "", ""],
     onclick: [
-      (): void => submit(),
-      (): void => submit(),
-      (): void => sessionStorage.clear(), // Reset all saved customisations
+      (e: MouseEvent): void => {
+        e.preventDefault();
+        submit();
+        updateUrl();
+      },
+      (e: MouseEvent): void => {
+        e.preventDefault();
+        submit();
+        updateUrl();
+      },
+      (): void => {
+        sessionStorage.clear();
+        updateUrl();
+      },
       (): void => {
         const musicPicker = new RandomPicker(app.mus.db[0].contents.map(album => album.name));
         musicPicker.pick(
@@ -43,8 +54,7 @@ export const app = {
         );
 
         sessionStorage.setItem("grass", app.grass.db.src[Math.floor(Math.random() * app.grass.db.src.length)]);
-
-        window.location.href = "./?music=" + encodeURIComponent(app.mus.sav.ss) + "&grass=" + encodeURIComponent(app.grass.sav.ss);
+        updateUrl();
       }
     ]
   },
@@ -107,7 +117,6 @@ export const app = {
 function submit() {
   sessionStorage.setItem("music", app.inp._[0].value || app.sel._[0].value);
   sessionStorage.setItem("grass", app.sel._[1].value);
-  sessionStorage.setItem("bg", app.sel._[2].value);
 }
 
 for (let i = 0; i < 4; i++)
@@ -126,7 +135,17 @@ for (let i = 0; i < app.placehld.name.length; i++) {
 }
 for (let i = 0; i < app.inp.type.length; i++) {
   app.inp._.push(document.createElement("input"));
-  [app.inp._[i].type, app.inp._[i].value, app.inp._[i].id, app.inp._[i].placeholder, app.inp._[i].onclick] = [app.inp.type[i], app.inp.val[i], app.inp.id[i], app.inp.placehld[i], app.inp.onclick[i]];
+  const input = app.inp._[i];
+
+  [input.type, input.value, input.id, input.placeholder] =
+    [app.inp.type[i], app.inp.val[i], app.inp.id[i], app.inp.placehld[i]];
+
+  // Capture the event 'e' here and pass it to the handler
+  input.onclick = (e: MouseEvent) => {
+    if (app.inp.onclick[i]) {
+      app.inp.onclick[i](e);
+    }
+  };
 }
 
 app.mus.elem.controls = app.mus.elem.autoplay = app.mus.elem.loop = true;
@@ -182,6 +201,34 @@ function findSoundtrack(sav: string): void {
     }
   }
   console.error("Invalid session storage value:", sav);
+}
+
+function updateUrl(): void {
+  const url = new URL(window.location.href);
+
+  // 1. Get FRESH values from storage, not the old app object properties
+  const music = sessionStorage.getItem("music");
+  const grass = sessionStorage.getItem("grass");
+
+  // 2. Only update if we actually have values
+  if (music) {
+    url.searchParams.set("music", music);
+    findSoundtrack(music); // Update the internal <source> tag
+  }
+
+  if (grass) {
+    url.searchParams.set("grass", grass);
+    app.grass.elem.style.backgroundImage = `url('/images/grass/${grass}.png')`;
+  }
+
+  // 3. Update the address bar
+  window.history.pushState({}, '', url);
+
+  // 4. The "Magic Kick"
+  app.mus.elem.load();
+  app.mus.elem.play().catch(e => console.warn("Autoplay block:", e));
+
+  console.log("🚀 Forge Sync Complete:", url.search);
 }
 
 type Name = string | number;

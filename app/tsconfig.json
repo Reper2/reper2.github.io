@@ -12,7 +12,7 @@
     "forceConsistentCasingInFileNames": true,
     "rootDir": "./src",
     "outDir": "./dist",
-    "sourceMap": false,
+    "sourceMap": true,
     "inlineSourceMap": false,
     "inlineSources": false,
     "emitBOM": false,
