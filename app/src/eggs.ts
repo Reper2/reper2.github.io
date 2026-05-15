@@ -8,8 +8,8 @@ const STORAGE_KEY = "eggs";
 const TOTAL_EGGS = 50;
 
 export const PAYLOAD = {
-  iv: new Uint8Array([213,104,49,253,101,152,81,140,20,242,151,37]),
-  data: new Uint8Array([74,136,234,119,144,230,218,88,41,226,178,224,40,73,11,182,13,238,82,165,142,179,216,45,67,32,209,167,141,152,134,190,126,123,81,236,105,149,217,114,58,167,182,132,49,153,177,51,18,124,204,11,102,61,175,124,226,71,204,73,151,22,90,9,199,211,110,40,213,40,95,40,113,65,107,44,75,238,251,183,223,187,211,124,160,83,61,142,208,173,109,152,77,100,131,124,0,11,8,5,191,189])
+  iv: new Uint8Array([71,172,109,241,54,128,183,185,111,5,105,245]),
+  data: new Uint8Array([243,51,109,100,80,91,104,166,221,209,216,16,73,208,48,130,248,121,28,25,115,90,228,238,5,166,38,174,194,82,216,217,187,222,98,131,49,154,191,185,242,98,15,50,210,104,44,178,165,4,141,241,197,225,159,118,228,95,191,212,118,210,232,178,182,15,180,101,45,87,67,172,224,38,23,161,29,94,244,207,223,254,203,203,210,254,72,139,47,8,97,205,222,92,49,166,198,41,187,182,166,154])
 };
 
 /**
@@ -161,11 +161,13 @@ const resetBtn = {
   tt: document.createElement("span")
 };
 
-resetBtn._.className = "tooltip";
-[resetBtn.btn.innerHTML, resetBtn.btn.onclick] = ["🥚🗑️", (): void => { localStorage.setItem("eggs", "{}"), location.reload(); }];
-[resetBtn.tt.innerHTML, resetBtn.tt.className] = ["Reset All Eggs (Ctrl+Z)", "tooltiptext"];
+if (resetBtn._) {
+  resetBtn._.className = "tooltip";
+  [resetBtn.btn.innerHTML, resetBtn.btn.onclick] = ["🥚🗑️", (): void => { localStorage.setItem("eggs", "{}"), location.reload(); }];
+  [resetBtn.tt.innerHTML, resetBtn.tt.className] = ["Reset All Eggs (Ctrl+Z)", "tooltiptext"];
 
-resetBtn.btn.appendChild(resetBtn.tt);
-resetBtn._.appendChild(resetBtn.btn);
+  resetBtn.btn.appendChild(resetBtn.tt);
+  resetBtn._.appendChild(resetBtn.btn);
+}
 
 export { TOTAL_EGGS, EggState, saveEggs, loadEggs, sha256, updateCounter, showReward, resolvePath };
