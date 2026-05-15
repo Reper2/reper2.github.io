@@ -1,19 +1,17 @@
 {
   "name": "frosty-volcano-summit",
+  "description": "Ethan's public portfolio - An interstellar scavenger hunt at the peak of Frosty Volcano.",
   "version": "26.5.0",
   "devDependencies": {
-    "javascript-obfuscator": "^5.4.2",
-    "typescript": "^5.9.3",
-    "workbox": "^0.0.0",
-    "workbox-cli": "^2.1.3"
+    "@types/jquery": "^4.0.0",
+    "eslint": "^10.3.0",
+    "typescript": "^6.0.3"
   },
   "dependencies": {
-    "@types/jquery": "^3.5.33",
     "dom": "^0.0.3",
-    "eslint": "^10.0.0",
-    "jquery": "^4.0.0",
-    "tslint": "^5.20.1",
-    "window": "^1.0.0"
+    "javascript-obfuscator": "^5.4.2",
+    "window": "^1.0.0",
+    "workbox-cli": "^7.4.1"
   },
   "scripts": {
     "build": "tsc -p ./app/tsconfig.json",
