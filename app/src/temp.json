@@ -1,0 +1,82 @@
+{
+  "switchFC": {
+    "unlocked": true,
+    "path": "/",
+    "titleLength": 28
+  },
+  "fvsHomeUnderForm": {
+    "unlocked": true,
+    "path": "/",
+    "titleLength": 28
+  },
+  "firstEgg": {
+    "unlocked": true,
+    "path": "/",
+    "titleLength": 28
+  },
+  "fvsHome_aboveHeader": {
+    "unlocked": true,
+    "path": "/",
+    "titleLength": 28
+  },
+  "fvsSoftware_aboveRow1": {
+    "unlocked": true,
+    "path": "/software",
+    "titleLength": 40
+  },
+  "fvsSoftware_underRow2": {
+    "unlocked": true,
+    "path": "/software",
+    "titleLength": 40
+  },
+  "fvsSoftware_underForm": {
+    "unlocked": true,
+    "path": "/software",
+    "titleLength": 40
+  },
+  "fvsSoftware_aboveFooter": {
+    "unlocked": true,
+    "path": "/software",
+    "titleLength": 40
+  },
+  "fvsSocials_aboveTitle": {
+    "unlocked": true,
+    "path": "/links",
+    "titleLength": 35
+  },
+  "fvsSocials": {
+    "unlocked": true,
+    "path": "/links",
+    "titleLength": 35
+  },
+  "fvsSocials_underForm": {
+    "unlocked": true,
+    "path": "/links",
+    "titleLength": 35
+  },
+  "fvsSocials_underBtns": {
+    "unlocked": true,
+    "path": "/links",
+    "titleLength": 35
+  },
+  "fvsKeys_aboveTitle": {
+    "unlocked": true,
+    "path": "/keybinds",
+    "titleLength": 32
+  },
+  "fvsKeys_underInstallKey": {
+    "unlocked": true,
+    "path": "/keybinds",
+    "titleLength": 32
+  },
+  "fvsKeybinds_underList": {
+    "unlocked": true,
+    "path": "/keybinds",
+    "titleLength": 32
+  },
+  "fvsKeybinds_underAudCtrls": {
+    "unlocked": true,
+    "path": "/keybinds",
+    "titleLength": 32
+  }
+}
