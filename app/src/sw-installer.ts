@@ -30,6 +30,13 @@ onload = () => {
   }
 
   if (!matchMedia("(display-mode: standalone)").matches) {
+    if (!sessionStorage.getItem("install_reminder_shown")) {
+      console.log('Executing app install reminder.');
+      // reminds the user they can install the app
+      window.alert('Consider installing the app!\nDesktop Browser - click install button in top-right of address bar\nMobile Browser - click "Add to Home Screen" in browser menu');
+      sessionStorage.setItem("install_reminder_shown", "true");
+    }
+
     let deferredPrompt: BeforeInstallPromptEvent | null;
 
     installListener = function install(e: Event) { // Assign the listener to the variable for later removal
@@ -54,7 +61,7 @@ onload = () => {
     sw.i.btn.appendChild(sw.i.tt);
     sw.i._.appendChild(sw.i.btn);
   }
-  
+
   appInstalledListener = function installed() {
     if (installListener) {
       window.removeEventListener("beforeinstallprompt", installListener); // Remove the listener once it has done its job
@@ -62,7 +69,7 @@ onload = () => {
     console.log(sw.i.msg);
     console.warn("Reload to remove the install button.");
   };
-  
+
   window.addEventListener("appinstalled", appInstalledListener);
 };
 
