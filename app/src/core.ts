@@ -12,24 +12,12 @@ const music = <HTMLAudioElement>document.getElementById("music");
 async function fetchDB<T>(filename: string): Promise<T> {
   try {
     const res = await fetch(`/app/databases/${filename}.json`);
-    const data = await res.text();
+    const data = await res.json();
     return <T>JSON.parse(data);
   } catch (e) {
     console.error(`Error fetching ${filename}.json: ${e}`);
     return {} as T;
   }
-}
-
-/**
- * Flips 0 or 1 to its opposite.
- * @param n Number to be flipped.
- */
-function flipNum(n: number): 0 | 1 {
-  if (n === 0)
-    return 1;
-  if (n === 1)
-    return 0;
-  else throw new ReferenceError("Input must be 0 or 1.");
 }
 
 /**
@@ -89,4 +77,4 @@ class SavUtils {
   }
 }
 
-export { SavUtils, copyLink, fetchDB, flipNum, music };
+export { SavUtils, copyLink, fetchDB, music };

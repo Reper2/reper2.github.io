@@ -17,7 +17,7 @@ const audctrls = {
 
 for (let i = 0; i < audctrls.btn.name.length; i++) {
   audctrls.btn._.push(document.createElement("button"));
-  [audctrls.btn._[i].id, audctrls.btn._[i].style.display, audctrls.btn._[i].innerHTML] = [audctrls.btn.id[i], audctrls.btn.disp[flipNum(i)], audctrls.btn.name[i]];
+  [audctrls.btn._[i].id, audctrls.btn._[i].style.display, audctrls.btn._[i].innerHTML] = [audctrls.btn.id[i], audctrls.btn.disp[i^1], audctrls.btn.name[i]];
 
   audctrls.tt._.push(document.createElement("span"));
   [audctrls.tt._[i].className, audctrls.tt._[i].innerHTML] = ["tooltiptext", audctrls.tt.name[i]];
