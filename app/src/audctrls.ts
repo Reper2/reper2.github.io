@@ -1,4 +1,4 @@
-import { music, flipNum } from "./core";
+import { music } from "./core";
 
 const audctrls = {
   _: <HTMLDivElement>document.getElementById("audctrls"),

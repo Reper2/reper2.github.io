@@ -6,19 +6,19 @@ const music = <HTMLAudioElement>document.getElementById("music");
 /**
  * Asynchronously fetch the contents of a json file.
  * @param filename Name of json file without extension.
- * @returns Promise with type \<T\> of the parsed json or empty object if error.
- * @throws an error if the json cannot be found or other issue.
+ * @returns Promise with type <T> of the parsed json.
+ * @throws An error if the network request fails or JSON parsing fails.
  */
 async function fetchDB<T>(filename: string): Promise<T> {
-  try {
-    const res = await fetch(`/app/databases/${filename}.json`);
-    const data = await res.json();
-    return <T>JSON.parse(data);
-  } catch (e) {
-    console.error(`Error fetching ${filename}.json: ${e}`);
-    return {} as T;
+  const response = await fetch(`/app/databases/${filename}.json`);
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch database "${filename}": ${response.statusText}`);
   }
+
+  return response.json() as Promise<T>;
 }
+
 
 /**
  * Copies link to clipboard.
