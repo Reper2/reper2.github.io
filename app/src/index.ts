@@ -2,7 +2,14 @@ import './sw-installer.js';
 import './keybinds.js';
 import './app.js';
 import './eggs.js';
-import './debug-secret.js';
 import './audctrls.js';
 import './copyLinkBtn.js';
 import './footer.js';
+
+const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+
+if (isLocalhost) {
+  import('./debug-secret.js')
+    .then(() => console.log("🛠️ Localhost detected: Debug utilities loaded."))
+    .catch(err => console.warn("Failed to load debug-secret.js:", err));
+}
