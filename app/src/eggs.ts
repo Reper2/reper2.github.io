@@ -14,29 +14,27 @@ let payloadData: BufferSource | null = null;
 /**
  * Downloads and parses the consolidated asset payload from the network.
  */
-async function fetchBinaryPayload(): Promise<boolean> {
+async function getBinPayload(): Promise<boolean> {
   try {
-    // Adjust this path relative to where you drop the file in your public deployment
-    const response = await fetch("/assets/egg-payload.bin");
-    if (!response.ok) throw new Error("Network response was not stable.");
+    const res = await fetch("/assets/egg-payload.bin");
+    if (!res.ok) throw new Error("Network response was not stable.");
 
-    const arrayBuffer = await response.arrayBuffer();
+    const arrayBuffer = await res.arrayBuffer();
     const fullView = new Uint8Array(arrayBuffer);
-
-    // Extract the first 12 bytes as our IV matching our encryption pipeline layout
+    // The first 12 bytes of the payload are reserved for the AES-GCM IV
     payloadIv = fullView.slice(0, 12);
-    // Everything else following the header signature is our raw ciphertext data block
+    // The rest is the encrypted reward data
     payloadData = fullView.slice(12);
 
     return true;
-  } catch (err) {
-    console.error("Failed to load binary puzzle manifests:", err);
+  } catch (e) {
+    console.error("Failed to load binary puzzle manifests:", e);
     return false;
   }
 }
 
 /**
- * 
+ * Loads the egg state from local storage.
  * @returns An EggState object with properties `unlocked` which only stores true as long as it exists,
  * `path` representing the relative directory path to the root
  */
@@ -135,7 +133,7 @@ async function tryUnlock(): Promise<void> {
 
 async function initEggs(): Promise<void> {
   // 1. Kick off the asynchronous asset stream fetch right away on boot
-  const assetLoaded = await fetchBinaryPayload();
+  const assetLoaded = await getBinPayload();
   if (!assetLoaded) return; // Halt script execution if payload can't be fetched
 
   const state = loadEggs();
@@ -203,8 +201,9 @@ function showReward(text: string): void {
   } catch { }
 }
 
-initEggs();
+// Run on each page load so there isn't any delay in validating the current state and showing the reward if already unlocked
 tryUnlock();
+updateCounter(loadEggs());
 
 const resetBtn = {
   _: <HTMLDivElement>document.getElementById("resetEggs"),
