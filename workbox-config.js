@@ -13,7 +13,7 @@ module.exports = {
 	],
 	// Clean up production extensions and specifically target your app databases
 	globPatterns: [
-		"**/*.{html,css,js,png,jpg,jpeg,svg,ttf,webmanifest,ico,webp}",
+		"**/*.{html,css,js,png,jpg,jpeg,svg,ttf,webmanifest,ico,webp,bin}",
 		"app/databases/*.json"
 	],
 	maximumFileSizeToCacheInBytes: 5000000, // 5MB is perfect for your background assets
