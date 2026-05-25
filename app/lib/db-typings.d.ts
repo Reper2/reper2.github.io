@@ -40,7 +40,7 @@ export namespace Background {
    * the first is the parent object containing the contents array,
    * and the second is an object containing metadata about the directory.
    */
-  type DatabaseStructure = { [key: string]: [Database.Obj1, Database.Obj2] };
+  type DatabaseStructure = { [key: string]: [Database.Obj1, Database.Obj2]; };
   /**
    * The configuration object for the background object.
    * Contains the element to which the background will be applied, the database of backgrounds,
@@ -66,28 +66,27 @@ export namespace Background {
 
 export namespace Music {
   /**
-   * Terminal-generarted tree structure for the music database using `tree [directory_path] -J > [output_path]` command.
-   * The key is the name of the directory, and the value is an array of two objects:
-   * the first is the parent object containing the contents array,
-   * and the second is an object containing metadata about the directory.
+   * Terminal-generated tree structure for the music database using `tree [directory_path] -J > [output_path]` command.
    */
   type DatabaseStructure = [Database.ParentObj, Database.Obj2];
+
   /**
    * The configuration object for the music object.
-   * Contains the element to which the audio will be applied, the database of soundtracks,
-   * and the list of option groups in the music select element.
-   * @see DatabaseStructure for info about database structure.  haha
    */
   interface Config {
-    _: HTMLOptGroupElement[],
-    elem: HTMLAudioElement,
-    srcElem: HTMLSourceElement,
+    _: HTMLOptGroupElement[];
+    
+    // 💡 FIX: Updated to a readonly getter signature to support the runtime DOM evaluation
+    elems: [HTMLAudioElement, HTMLAudioElement]; 
+    
+    // Tracks which element is currently active (index 0 or 1)
+    currentIdx: 0 | 1; 
     sav: {
-      ss: string,
-      param: string
-    },
-    db: DatabaseStructure,
-    opt: OptSignature
+      ss: string | null; // Account for sessionStorage returning null if empty
+      param: string | null;
+    };
+    db: DatabaseStructure;
+    opt: HTMLOptionElement[][]; // Replaced OptSignature with explicit 2D matrix array if needed
   }
 }
 
@@ -98,15 +97,15 @@ type OptSignature = HTMLOptionElement[][];
 
 export namespace Grass {
   interface Config {
-    elem: HTMLDivElement,
+    elem: HTMLDivElement;
     sav: {
-      ss: string,
-      param: string
+      ss: string;
+      param: string;
     },
     db: {
-      src: string[],
-      name: string[]
+      src: string[];
+      name: string[];
     },
-    opt: HTMLOptionElement[]
+    opt: HTMLOptionElement[];
   }
 }

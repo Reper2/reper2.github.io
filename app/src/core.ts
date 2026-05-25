@@ -1,15 +1,33 @@
+// Internal pointer to track elements locally without relying on the app object tree
+let activeElementsPointer: [HTMLAudioElement, HTMLAudioElement] | null = null;
+let activeIndexPointer: { currentIdx: 0 | 1 } = { currentIdx: 0 };
+
 /**
- * Global constant for accessing `music`.
+ * Global proxy for accessing the currently active music element dynamically.
  */
-const music = <HTMLAudioElement>document.getElementById("music");
+export const music = {
+  get style() {
+    if (activeElementsPointer) {
+      return activeElementsPointer[activeIndexPointer.currentIdx].style;
+    }
+    // Fallback deck mapping to prevent boot crashes before initialization
+    const fallback = <HTMLAudioElement>document.getElementById("music");
+    return fallback ? fallback.style : ({} as CSSStyleDeclaration);
+  }
+};
+
+/**
+ * Connects the dual crossfader arrays directly to the core proxy tracking hooks
+ */
+export function initMusicProxy(elems: [HTMLAudioElement, HTMLAudioElement], indexTracker: { currentIdx: 0 | 1 }): void {
+  activeElementsPointer = elems;
+  activeIndexPointer = indexTracker;
+}
 
 /**
  * Asynchronously fetch the contents of a json file.
- * @param filename Name of json file without extension.
- * @returns Promise with type <T> of the parsed json.
- * @throws An error if the network request fails or JSON parsing fails.
  */
-async function fetchDB<T>(filename: string): Promise<T> {
+export async function fetchDB<T>(filename: string): Promise<T> {
   const response = await fetch(`/app/databases/${filename}.json`);
   
   if (!response.ok) {
@@ -19,15 +37,13 @@ async function fetchDB<T>(filename: string): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-
 /**
  * Copies link to clipboard.
- * @param url Uniform Resource Locator to be copied to clipboard.
  */
-function copyLink(url: string): void {
+export function copyLink(url: string): void {
   navigator.clipboard.writeText(url)
     .then(() => {
-      console.log("📋Added to clipboard:", url);
+      console.log("📋 Added to clipboard:", url);
       alert(`Copied link: ${url}`);
     })
     .catch(e => {
@@ -39,42 +55,23 @@ function copyLink(url: string): void {
 /**
  * Aliases for getting/setting session storage and url parameter data.
  */
-class SavUtils {
-  /**
-	 * Alias of `sessionStorage.getItem()`
-	 * @param key Item to get from session storage.
-	 * @returns Value of the item.
-	 */
+export class SavUtils {
   getSS(key: string): string | null {
     return sessionStorage.getItem(key);
   }
 
-  /**
-	 * Alias of `sessionStorage.setItem()`
-	 * @param key Identifier for the item.
-	 * @param value Value of specified item.
-	 */
   setSS(key: string, value: string): void {
     sessionStorage.setItem(key, value);
   }
 
-  /**
-	 * Alias of `new URL().searchParams.get()`
-	 * @param name Name of the parameter to search for in the url.
-	 * @returns Value of specified parameter.
-	 */
   getParam(name: string): string | null {
     return new URL(window.location.href).searchParams.get(name);
   }
 
-  /**
-	 * Alias of `new URL().searchParams.set()`
-	 * @param name Name of parameter to search for in the url.
-	 * @param value Value to set to the specified parameter.
-	 */
+  // 💡 FIXED: Updates the active frame context cleanly
   setParam(name: string, value: string): void {
-    new URL(window.location.href).searchParams.set(name, value);
+    const url = new URL(window.location.href);
+    url.searchParams.set(name, value);
+    window.history.pushState({}, '', url.toString());
   }
 }
-
-export { SavUtils, copyLink, fetchDB, music };

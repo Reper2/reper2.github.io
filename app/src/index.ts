@@ -4,7 +4,6 @@ import './app.js';
 import './eggs.js';
 import './audctrls.js';
 import './copyLinkBtn.js';
-import './footer.js';
 
 const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
 
