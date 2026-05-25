@@ -154,6 +154,49 @@ kbd {
 }
 
 /* ids */
+/* Base setup for the body */
+body#_bg {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* Common rules for both background layers */
+body#_bg::before,
+body#_bg::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  z-index: -1;
+  transition: opacity 2s ease-in-out;
+  opacity: 0;
+}
+
+/* Layer A: Uses the --bg-before variable */
+body#_bg::before {
+  background-image: var(--bg-before, none);
+  opacity: 1;
+}
+
+/* Layer B: Uses the --bg-after variable */
+body#_bg::after {
+  background-image: var(--bg-after, none);
+}
+
+/* Layer swapping driven by class toggle */
+body#_bg.bg-flip::before {
+  opacity: 0;
+}
+body#_bg.bg-flip::after {
+  opacity: 1;
+}
+
 #grassBox {
   font-size: 3.5vmin;
   width: 70vmin;

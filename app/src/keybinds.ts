@@ -1,74 +1,96 @@
 import { copyLink } from "./core";
 
-document.addEventListener("keydown", (k) => {
+document.addEventListener("keydown", (k: KeyboardEvent) => {
+  // 💡 FIX: Ignore hotkeys if the user is currently typing in an input or textarea
+  const target = k.target as HTMLElement;
+  if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable) {
+    // Exception: Allow Enter to still submit the form even when inside the input
+    if (k.key === "Enter") {
+      k.preventDefault();
+      console.warn("Enter was pressed inside input");
+      const optSet = document.getElementById("optSet");
+      if (optSet) optSet.click();
+    }
+    return;
+  }
+
+  // Normalize input strings to lower-case for safe conditional checks
+  const keyLower = k.key.toLowerCase();
+
   if (k.ctrlKey && k.key === "/") {
     console.warn("Ctrl+/ was pressed");
     window.location.href = "/keybinds.html";
   }
 
-  if (k.altKey && k.key === "s") {
-    k.preventDefault(); // Prevent default browser behavior for Alt+S
+  if (k.altKey && keyLower === "s") {
+    k.preventDefault();
     console.warn("Alt+S was pressed");
-    $("#audctrlBtn_show").trigger("click");
+    document.getElementById("audctrlBtn_show")?.click();
   }
-
-  if (k.altKey && k.key === "h") {
-    k.preventDefault(); // Prevent default browser behavior for Alt+H
+  
+  if (k.altKey && keyLower === "h") {
+    k.preventDefault();
     console.warn("Alt+H was pressed");
-    $("#audctrlBtn_hide").trigger("click");
+    document.getElementById("audctrlBtn_hide")?.click();
   }
 
-  if (k.ctrlKey && k.key === "c") {
-    k.preventDefault(); // Prevent default browser behavior for Ctrl+C
+  if (k.ctrlKey && keyLower === "c") {
+    k.preventDefault();
     console.warn("Ctrl+C was pressed");
     copyLink(window.location.href);
   }
 
-  if (k.altKey && k.key === "l") {
-    k.preventDefault(); // Prevent default browser behavior for Alt+L
+  if (k.altKey && keyLower === "l") {
+    k.preventDefault();
     console.warn("Alt+L was pressed");
     window.open("https://github.com/Reper2/reper2.github.io/blob/master/LICENSE");
     window.open("/LICENSE");
   }
 
-  if (k.ctrlKey && k.key === "i") {
-    k.preventDefault(); // Prevent default browser behavior for Ctrl+I
+  if (k.ctrlKey && keyLower === "i") {
+    k.preventDefault();
     console.warn("Ctrl+I was pressed");
-    $("#install").trigger("click");
+    const btn = document.getElementById("install");
+    if (btn) btn.click();
   }
 
   if (k.key === "Backspace") {
-    k.preventDefault(); // Prevent default browser behavior for Backspace
+    k.preventDefault();
     console.warn("Backspace was pressed");
-    $("#back").trigger("click");
+    const btn = document.getElementById("back");
+    if (btn) btn.click();
   }
 
   if (k.key === "Enter") {
-    k.preventDefault(); // Prevent default browser behavior for Enter
+    k.preventDefault();
     console.warn("Enter was pressed");
-    $("#optSet").trigger("click");
+    const btn = document.getElementById("optSet");
+    if (btn) btn.click();
   }
 
-  if (k.altKey && k.key === "r") {
-    k.preventDefault(); // Prevent default browser behavior for Alt+R
+  if (k.altKey && keyLower === "r") {
+    k.preventDefault();
     console.warn("Alt+R was pressed");
-    $("#optReset").trigger("click");
+    const btn = document.getElementById("optReset");
+    if (btn) btn.click();
   }
 
   if (k.key === "?") {
+    k.preventDefault(); // Added preventDefault to keep string pure
     console.warn("? was pressed");
-    $("#optRand").trigger("click");
+    const btn = document.getElementById("optRand");
+    if (btn) btn.click();
   }
 
-  if (k.ctrlKey && k.altKey && k.key === "d") {
-    k.preventDefault(); // Prevent default browser behavior for Ctrl+Alt+D
+  if (k.ctrlKey && k.altKey && keyLower === "d") {
+    k.preventDefault();
     console.warn("Ctrl+Alt+D was pressed");
     window.open("/app/dist/keybinds.js");
     window.open("/app/src/keybinds.ts");
   }
 
-  if (k.ctrlKey && k.key === "z") {
-    k.preventDefault(); // Prevent default browser behavior for Ctrl+Z
+  if (k.ctrlKey && keyLower === "z") {
+    k.preventDefault();
     console.warn("Ctrl+Z was pressed");
     localStorage.setItem("eggs", "{}");
     location.reload();

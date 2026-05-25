@@ -26,4 +26,4 @@ app/lib/debugger-class-typings.d.ts
 app/src/debug-secret.ts
 app/dist/debug-secret.js
 cmd/encrypt-eggs.js
-cmd/secret-styles.css
+assets/secret-styles.css
