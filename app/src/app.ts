@@ -301,22 +301,30 @@ async function playWithCrossfade(targetTrackName: string): Promise<void> {
 
   fadeIntervalId = window.setInterval(() => {
     currentStep++;
-    const progress = currentStep / steps;
+    // 🛡️ Clamp progress strictly between 0.0 and 1.0 to prevent negative trigonometric results
+    const progress = Math.min(1, Math.max(0, currentStep / steps));
 
-    nextEl.volume = Math.min(Math.sin(progress * (Math.PI / 2)), 1);
+    // Calculate target volumes safely clamped
+    const targetNextVolume = Math.sin(progress * (Math.PI / 2));
+    nextEl.volume = Math.min(1, Math.max(0, targetNextVolume));
 
     if (currentEl && !currentEl.paused) {
-      currentEl.volume = Math.max(Math.cos(progress * (Math.PI / 2)), 0);
+      const targetCurrentVolume = Math.cos(progress * (Math.PI / 2));
+      currentEl.volume = Math.min(1, Math.max(0, targetCurrentVolume));
     }
 
+    // Use greater-than-or-equal to handle any interval step arithmetic overrides cleanly
     if (currentStep >= steps) {
-      clearInterval(fadeIntervalId!);
-      fadeIntervalId = null;
+      if (fadeIntervalId !== null) {
+        clearInterval(fadeIntervalId);
+        fadeIntervalId = null;
+      }
 
       if (currentEl) {
         currentEl.pause();
         currentEl.controls = false;
         currentEl.style.display = "none";
+        currentEl.volume = 0; // Reset completely
       }
 
       nextEl.volume = 1;
