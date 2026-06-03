@@ -1,36 +1,52 @@
-name: Deploy to GitHub Pages
+name: Optimized Instant Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["main"] # Change to your default branch name if it's master
+    branches: ["main"]
 
 permissions:
   contents: read
   pages: write
   id-token: write
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: true # ⚡ Cancels older builds if you push rapidly
+
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps: deployment.outputs.page_url }}
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      # 1. Light checkout: Grab only the text code FIRST (bypassing LFS payload)
+      - name: Checkout Code Only
         uses: actions/checkout@v4
         with:
-          lfs: true # 🔑 CRUCIAL: This forces GitHub to download the real zip file for the build
+          lfs: false 
 
-      - name: Checkout LFS files
-        run: git lfs checkout
+      # 2. Check if the music zip is already cached from a previous build
+      - name: Cache Large Music Archive
+        id: cache-music
+        uses: actions/cache@v4
+        with:
+          path: assets/music.zip
+          key: ${{ runner.os }}-music-zip-${{ hashFiles('assets/music.zip') }}
 
+      # 3. ONLY pull down the 1.15GB asset from LFS if it actually changed
+      - name: Fetch LFS Assets On Cache Miss
+        if: steps.cache-music.outputs.cache-hit != 'true'
+        run: |
+          git lfs install
+          git lfs pull
+
+      # 4. Set up Pages framework environment
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: Upload Artifact
+      # 5. Pack and Deploy
+      - name: Upload Website Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.' # Uploads your entire project root to GitHub Pages
+          path: '.' 
 
       - name: Deploy to GitHub Pages
         id: deployment
