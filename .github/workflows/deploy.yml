@@ -2,7 +2,7 @@ name: Optimized Instant Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["main"] # Double-check if yours is main or master
+    branches: ["main"] # Change to "master" if your branch is named master
 
 permissions:
   contents: read
@@ -17,34 +17,24 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      # 1. Checkout Code (Pass the system token so it can talk to LFS servers)
-      - name: Checkout Code Only
+      # 1. Force the runner to do an explicit checkout with native LFS handling turned ON
+      - name: Checkout Code & LFS Assets
         uses: actions/checkout@v4
         with:
-          lfs: false 
-          token: ${{ secrets.GITHUB_TOKEN }} # 🔑 ADD THIS LINE
+          lfs: true 
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      # 2. Check if the music zip is already cached
-      - name: Cache Large Music Archive
-        id: cache-music
-        uses: actions/cache@v4
-        with:
-          path: assets/music.zip
-          key: ${{ runner.os }}-music-zip-${{ hashFiles('assets/music.zip') }}
-
-      # 3. Explicitly pull the real LFS file down if it's a cache miss
-      - name: Fetch LFS Assets On Cache Miss
-        if: steps.cache-music.outputs.cache-hit != 'true'
+      # 2. Hard override: Ensure Git LFS checks out the binary data manually in the workspace
+      - name: Force LFS Download
         run: |
           git lfs install
-          git lfs fetch --all # 🔑 CHANGED THIS FROM 'pull' TO 'fetch --all'
-          git lfs checkout
+          git lfs pull
 
-      # 4. Set up Pages framework environment
+      # 3. Set up Pages framework environment
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      # 5. Pack and Deploy
+      # 4. Pack and Deploy the real code + full binary
       - name: Upload Website Artifact
         uses: actions/upload-pages-artifact@v3
         with:
