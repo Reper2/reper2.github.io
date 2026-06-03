@@ -2,7 +2,7 @@ name: Optimized Instant Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main"] # Double-check if yours is main or master
 
 permissions:
   contents: read
@@ -11,19 +11,20 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: true # ⚡ Cancels older builds if you push rapidly
+  cancel-in-progress: true
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      # 1. Light checkout: Grab only the text code FIRST (bypassing LFS payload)
+      # 1. Checkout Code (Pass the system token so it can talk to LFS servers)
       - name: Checkout Code Only
         uses: actions/checkout@v4
         with:
           lfs: false 
+          token: ${{ secrets.GITHUB_TOKEN }} # 🔑 ADD THIS LINE
 
-      # 2. Check if the music zip is already cached from a previous build
+      # 2. Check if the music zip is already cached
       - name: Cache Large Music Archive
         id: cache-music
         uses: actions/cache@v4
@@ -31,12 +32,13 @@ jobs:
           path: assets/music.zip
           key: ${{ runner.os }}-music-zip-${{ hashFiles('assets/music.zip') }}
 
-      # 3. ONLY pull down the 1.15GB asset from LFS if it actually changed
+      # 3. Explicitly pull the real LFS file down if it's a cache miss
       - name: Fetch LFS Assets On Cache Miss
         if: steps.cache-music.outputs.cache-hit != 'true'
         run: |
           git lfs install
-          git lfs pull
+          git lfs fetch --all # 🔑 CHANGED THIS FROM 'pull' TO 'fetch --all'
+          git lfs checkout
 
       # 4. Set up Pages framework environment
       - name: Setup Pages
