@@ -28,7 +28,7 @@ jobs:
       - name: Inject Production Assets from Release
         run: |
           rm -f assets/music.zip
-          curl -L -o assets/music.zip "https://github.com/${{ github.repository }}/releases/expanded_assets/music-zip/music.zip"
+          curl -L -o assets/music.zip "https://github.com/${{ github.repository }}/releases/download/music-zip/music.zip"
 
       # 3. Provision the deployment configuration environment
       - name: Setup Pages
