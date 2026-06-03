@@ -17,24 +17,21 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      # 1. Force the runner to do an explicit checkout with native LFS handling turned ON
-      - name: Checkout Code & LFS Assets
+      # 1. Fast, instant download of your text code repository
+      - name: Checkout Source Code
         uses: actions/checkout@v4
-        with:
-          lfs: true 
-          token: ${{ secrets.GITHUB_TOKEN }}
 
-      # 2. Hard override: Ensure Git LFS checks out the binary data manually in the workspace
-      - name: Force LFS Download
+      # 2. Extract the real music payload out of GitHub Releases straight into the build folder
+      - name: Inject Production Assets from Release
         run: |
-          git lfs install
-          git lfs pull
+          rm -f assets/music.zip
+          curl -L -o assets/music.zip "https://github.com/${{ github.repository }}/releases/expanded_assets/music-zip/music.zip"
 
-      # 3. Set up Pages framework environment
+      # 3. Provision the deployment configuration environment
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      # 4. Pack and Deploy the real code + full binary
+      # 4. Deliver the real site package to your live web domain URL
       - name: Upload Website Artifact
         uses: actions/upload-pages-artifact@v3
         with:
