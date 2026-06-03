@@ -10,7 +10,7 @@ done
 echo
 
 echo
-echo "🔨Tempering scripts and calling lumas..."
+echo "🔨Tempering scripts and calling Lumas..."
 for i in {1..100}
 do
   printf "\rProgress: %3d%%" "$i"
@@ -50,7 +50,7 @@ echo "🪛Kindling bytes..."
 for i in {1..100}
 do
     printf "\rProgress: %3d%%" "$i"
-    sleep 0.01
+    sleep 0.001
 done
 echo
 
@@ -59,54 +59,19 @@ echo "🌋Forge stage 1/2 complete!"
 
 echo
 echo "Calling Green Lumas to start building the service worker..."
-for i in {1..777}
+for i in {1..100}
 do
     printf "\rNumber of Green Lumas that have come to help: %3d" "$i"
-    sleep 0.01
+    sleep 0.001
 done
 echo
 
 echo
 echo "Initialising the comet engine for interstellar caching and offline support..."
-for i in {1..49}
+for i in {1..100}
 do
-    printf "\r💫Fetching comet medals for exchange: %3d" "$i"
-    sleep 0.01
-done
-echo
-
-for i in {1..35}
-do
-    printf "\r🤝Trading comet medals for Power Stars: %3d" "$i"
-    sleep 0.01
-done
-echo
-
-for i in {1..56}
-do
-    printf "\r🌠Fetching Power Stars: %3d" "$i"
-    sleep 0.01
-done
-echo
-
-for i in {1..6}
-do
-    printf "\r🌟Fetching Grand Stars: %3d" "$i"
-    sleep 0.01
-done
-echo
-
-for i in {1..17}
-do
-    printf "\r🫥Finding Hidden Stars: %3d" "$i"
-    sleep 0.01
-done
-echo
-
-for i in {1..120}
-do
-    printf "\r🟢Fetching Green Stars: %3d" "$i"
-    sleep 0.01
+    printf "\rProgress: %3d%%" "$i"
+    sleep 0.001
 done
 echo
 

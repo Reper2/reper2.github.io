@@ -25,6 +25,16 @@
   <meta property="og:site_name" content="Frosty Volcano Summit | reper2.github.io">
   <meta name="theme-color" content="#14d8ee">
   <script src="/app/lib/jquery-4.0.0.min.js" defer></script>
+  <script>
+    // Block rendering for a millisecond to pull the theme before the DOM draws
+    if (localStorage.getItem("site-theme") === "zelda") {
+      const link = document.createElement("link");
+      link.id = "theme-link";
+      link.rel = "stylesheet";
+      link.href = "./assets/zelda.css";
+      document.head.appendChild(link);
+    }
+  </script>
 </head>
 
 <body id="_bg">
@@ -70,17 +80,17 @@
       <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
     </div>
   </main>
-    <div class="flex">
-      <div id="audctrls"></div>
-      <div id="install"></div>
-      <div id="copy"></div>
-      <div id="resetEggs"></div>
-    </div>
-    <audio id="music"></audio>
-    <div class="egg" data-egg="fvsKeybinds_underAudCtrls">
-      <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
-      <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
-    </div>
+  <div class="flex">
+    <div id="audctrls"></div>
+    <div id="install"></div>
+    <div id="copy"></div>
+    <div id="resetEggs"></div>
+  </div>
+  <audio id="music"></audio>
+  <div class="egg" data-egg="fvsKeybinds_underAudCtrls">
+    <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
+    <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
+  </div>
   </main>
   <footer id="footer" class="bottom"></footer>
 </body>

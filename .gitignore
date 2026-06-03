@@ -27,3 +27,6 @@ app/src/debug-secret.ts
 app/dist/debug-secret.js
 cmd/encrypt-eggs.js
 assets/secret-styles.css
+
+# Music is now compressed as a zip file, so we can ignore the uncompressed versions
+assets/music/

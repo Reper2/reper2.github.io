@@ -1,6 +1,6 @@
 // Back button for subpages, most useful while using the web app.
 const back = {
-  _: <HTMLDivElement>document.getElementById("back"),
+  _: document.getElementById("back") as HTMLDivElement,
   btn: document.createElement("img")
 };
 

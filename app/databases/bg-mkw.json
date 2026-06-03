@@ -31,7 +31,6 @@
         {"type":"file","name":"2026052623592300_c.jpg"},
         {"type":"file","name":"2026052623592700_c.jpg"},
         {"type":"file","name":"2026052623593300_c.jpg"},
-        {"type":"file","name":"2026052700003000_c.jpg"},
         {"type":"file","name":"2026052700014100_c.jpg"},
         {"type":"file","name":"2026052700024800_c.jpg"},
         {"type":"file","name":"2026052700030400_c.jpg"},
@@ -100,5 +99,5 @@
         {"type":"file","name":"2026052700542000_c.jpg"},
         {"type":"file","name":"2026052700542900_c.jpg"}
     ]}
-,    {"type":"report","directories":1,"files":99}
+,    {"type":"report","directories":1,"files":98}
 ]

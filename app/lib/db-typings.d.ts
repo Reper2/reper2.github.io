@@ -80,7 +80,7 @@ export namespace Music {
     elems: [HTMLAudioElement, HTMLAudioElement]; 
     
     // Tracks which element is currently active (index 0 or 1)
-    currentIdx: 0 | 1; 
+    currentIndex: 0 | 1; 
     sav: {
       ss: string | null; // Account for sessionStorage returning null if empty
       param: string | null;
