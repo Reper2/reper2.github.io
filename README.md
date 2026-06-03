@@ -37,23 +37,6 @@ If your browser supports it, you can install the web app and hop on the website 
 ## 🖼️ Backgrounds
 The backgrounds on this website, among some of my others, are fetched from [switch-album](https://github.com/Reper2/switch-album)
 
-## Music Architecture & Streaming Engine
-
-To maintain high-fidelity audio without bloating the initial application bundle or overwhelming server bandwidth, the soundtrack is archived within a single **1.49GB** compressed file located at `/assets/music.zip`. 
-
-### On-Demand Extraction
-Instead of downloading and decompressing the entire ZIP archive into memory (which would cause mobile and desktop browsers to crash), the application utilizes a surgical streaming interface powered by `@zip.js/zip.js`. 
-
-1. **HTTP Range Requests:** When a user selects a track, an `HttpReader` targets the precise byte coordinates of that specific file within the central directory of the remote ZIP.
-2. **Runtime Slicing:** Only the requested byte fragments are pulled over the network.
-3. **Blob Mapping:** The raw decompressed audio bytes are converted into an isolated in-memory `Blob` and exposed via `URL.createObjectURL()` for immediate playback.
-
-### Optimal Audio Caching
-To ensure flawless performance and offline capability, caching is split into a cooperative network-and-application layer configuration:
-
-* **Service Worker Layer (Workbox):** The Service Worker is explicitly configured with a `CacheFirst` strategy that targets `/assets/music.zip`. Crucially, it includes a `RangeRequestsPlugin` and supports HTTP `206 Partial Content` statuses. This allows the browser to safely cache and reuse the exact byte segments already fetched by the player.
-* **Storage Optimization:** To prevent user storage from being overwhelmed, a strict expiration policy retains a maximum of **5 distinct range chunk structures** at any given time, automatically recycling the oldest entries to keep the application footprint lean.
-
 ## ⏰ Clocks
 I have published [mobile](https://github.com/Reper2/mobile-clock) and [desktop](https://github.com/Reper2/desktop-clock) clocks. Try them out! The mobile clock is really nice to have in the background when you're working as it uses real photos I've taken on holidays, and besides the gradient animation on the text, the clock is unlikely to distract you. The desktop clock on the other hand can be great to use on your tv or monitor while you're gaming. Unless you are immune to wanting to play video games when you see video game content, it's best not to use this one when you're focusing.
 

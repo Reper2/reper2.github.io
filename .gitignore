@@ -29,8 +29,8 @@ cmd/encrypt-eggs.js
 assets/secret-styles.css
 
 # 🎵 Ignore all uncompressed music directories/files inside the folder
-assets/music/*/
-assets/music/**/*
+# assets/music/*/
+# assets/music/**/*
 
 # 🚀 DO NOT IGNORE the compiled album zip archives
-!assets/music/*.zip
+# !assets/music/*.zip

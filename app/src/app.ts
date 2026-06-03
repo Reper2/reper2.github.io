@@ -1,6 +1,6 @@
 import { Background, Database, Grass, Music } from "../lib/db-typings";
 import { fetchDB } from "./core";
-import { fetchAudioFromZip } from "./zip-extractor"; // Import our clean utility
+// import { fetchAudioFromZip } from "./zip-extractor"; // Import our clean utility
 import { applyThemeElements } from "./themes";
 
 // Initialize global state container if missing, checking cache first before defaulting to Zelda
@@ -219,13 +219,14 @@ async function getTrackUrl(sav: string): Promise<string | null> {
     for (let j = 0; j < album.contents.length; j++) {
       const track = album.contents[j];
       
-      // Strip extension to match against the 'sav' parameter safely
+      // Strip the extension to match against your 'sav' tracking state
       if (track.name.replace(/\.[^/.]+$/, "") === sav) {
         
-        const fullTrackPath = `${album.name}/${track.name}`; 
+        // 🌐 Directly build the relative network path to the loose asset file
+        const directAssetPath = `./assets/music/${album.name}/${track.name}`;
         
-        // Pass the single path string straight to our zero-touch extractor
-        return await fetchAudioFromZip(fullTrackPath);
+        // Return the raw URL string immediately—no extraction required!
+        return directAssetPath;
       }
     }
   }
