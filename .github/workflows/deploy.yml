@@ -1,8 +1,8 @@
-name: Optimized Instant Deploy to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["master"] # Change to "master" if your branch is named master
+    branches: ["master"] # Change to "master" if your default branch is master
 
 permissions:
   contents: read
@@ -20,21 +20,13 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      # 1. Fast, instant download of your text code repository
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      # 2. Extract the real music payload out of GitHub Releases straight into the build folder
-      - name: Inject Production Assets from Release
-        run: |
-          rm -f assets/music.zip
-          curl -L -o assets/music.zip "https://github.com/${{ github.repository }}/releases/download/music-zip/music.zip"
-
-      # 3. Provision the deployment configuration environment
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      # 4. Deliver the real site package to your live web domain URL
+      # Uploads only your source text/images, completely unburdened by giant zip binaries
       - name: Upload Website Artifact
         uses: actions/upload-pages-artifact@v3
         with:

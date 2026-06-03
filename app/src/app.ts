@@ -215,9 +215,17 @@ app.music.elems.forEach((el: HTMLAudioElement) => {
 async function getTrackUrl(sav: string): Promise<string | null> {
   for (let i = 0; i < app.music.db[0].contents.length; i++) {
     const album = app.music.db[0].contents[i];
+    
     for (let j = 0; j < album.contents.length; j++) {
-      if (album.contents[j].name.replace(/\.[^/.]+$/, "") === sav) {
-        return await fetchAudioFromZip(album.name, album.contents[j].name);
+      const track = album.contents[j];
+      
+      // Strip extension to match against the 'sav' parameter safely
+      if (track.name.replace(/\.[^/.]+$/, "") === sav) {
+        
+        const fullTrackPath = `${album.name}/${track.name}`; 
+        
+        // Pass the single path string straight to our zero-touch extractor
+        return await fetchAudioFromZip(fullTrackPath);
       }
     }
   }

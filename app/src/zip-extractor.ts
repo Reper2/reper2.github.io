@@ -1,77 +1,56 @@
-import { ZipReader, HttpRangeReader, BlobWriter } from 'https://esm.unpkg.com/@zip.js/zip.js';
-
-// Use a type alias instead of an interface to handle the flexible shape safely
-type CustomZipEntry = {
-  filename: string;
-  getData: (writer: BlobWriter) => Promise<Blob>;
-};
-
-let zipReaderInstance: ZipReader<unknown> | null = null;
-const ZIP_URL = '/assets/music.zip'; 
+import { HttpReader, ZipReader, BlobWriter } from "https://esm.unpkg.com/@zip.js/zip.js";
 
 /**
- * Initializes and caches the single ZipReader instance using true HTTP Range Slicing.
- * This tells the browser to request exact byte coordinates rather than streaming the full file.
+ * Dynamically resolves the correct ZIP file from the /assets/music/ directory.
+ * Fully type-safe configuration for @zip.js v2+
+ * @param fullTrackPath Example: "01_Maniac_Zone/01-opening-theme.mp3"
  */
-async function getZipReader(): Promise<ZipReader<unknown>> {
-  if (!zipReaderInstance) {
-    // 🔑 THE BYTE-SLICE FIX: Swapped HttpReader for HttpRangeReader
-    const httpRangeReader = new HttpRangeReader(ZIP_URL);
-    zipReaderInstance = new ZipReader(httpRangeReader);
+export async function fetchAudioFromZip(fullTrackPath: string): Promise<string> {
+  // 1. Clean the path and split by the slash
+  const cleanPath = fullTrackPath.replace(/^\.\//, "");
+  const pathParts = cleanPath.split('/');
+
+  if (pathParts.length < 2) {
+    throw new Error(`Invalid track path structure: "${fullTrackPath}". It must include a directory.`);
   }
-  return zipReaderInstance;
-}
 
-/**
- * Surgically extracts a single track from the 1.49GB zip file on demand.
- * Integrates an instant cache layer to bypass extraction logic on repeat plays.
- */
-export async function fetchAudioFromZip(albumName: string, trackName: string): Promise<string> {
+  // 2. Point directly to your /assets/music/ folder structure
+  const targetZipName = pathParts[0];
+  const targetZipUrl = `./assets/music/${targetZipName}.zip`;
+
+  // 3. Initialize the reader for this specific album archive
+  const reader = new HttpReader(targetZipUrl);
+  const zipReader = new ZipReader(reader);
+  let entries;
+
   try {
-    const targetPath = `${albumName}/${trackName}`;
-    const fakeUrl = `/assets/music/${targetPath}`; // Unique structural key for our Cache storage
+    entries = await zipReader.getEntries();
+  } catch (netError) {
+    throw new Error(`Could not read "${targetZipUrl}". Make sure the ZIP file exists in /assets/music/`);
+  }
 
-    // 1. APPLICATION CACHE LOOKUP: Check if this track was already extracted
-    const musicCache = await caches.open('app-music-cache');
-    const cachedResponse = await musicCache.match(fakeUrl);
-    
-    if (cachedResponse) {
-      const cachedBlob = await cachedResponse.blob();
-      console.log(`⚡ Instant Cache Hit: Serving ${trackName} instantly.`);
-      return URL.createObjectURL(cachedBlob); 
-    }
+  // 4. Find the song inside the ZIP file
+  const isolatedFileName = pathParts[pathParts.length - 1];
+  const trackEntry = entries.find(entry =>
+    entry.filename === cleanPath ||
+    entry.filename === fullTrackPath ||
+    entry.filename === isolatedFileName
+  );
 
-    // 2. EXTRACTION FALLBACK: Fetch only the specific song data slices over the network
-    const reader = await getZipReader();
-    
-    // Cast entries to any first, then to our strict shape to bypass library type bugs
-    const entries = (await reader.getEntries() as any) as CustomZipEntry[];
-    
-    const targetEntry = entries.find(entry => entry.filename && entry.filename.endsWith(targetPath));
+  if (!trackEntry) {
+    throw new Error(`Track "${isolatedFileName}" not found inside music/${targetZipName}.zip`);
+  }
 
-    if (!targetEntry) {
-      throw new Error(`Target track layout missing in zip matrix: ${targetPath}`);
-    }
+  // 5. TypeScript Safe Check: Ensure it's a file entry with a getData method
+  if ('getData' in trackEntry && typeof trackEntry.getData === 'function') {
+    const blobWriter = new BlobWriter();
+    const unzippedData = await trackEntry.getData(blobWriter);
 
-    if (typeof targetEntry.getData !== 'function') {
-      throw new Error(`Target entry is not an extractable file: ${targetPath}`);
-    }
+    const audioBlob = unzippedData as Blob;
 
-    console.log(`🎯 Cache Miss: Querying precise byte fragments for: ${targetPath}`);
-    const audioBlob = await targetEntry.getData(new BlobWriter());
-
-    // 3. CACHE HYDRATION: Save the freshly extracted standalone audio blob for next time
-    const responseToCache = new Response(audioBlob, {
-      headers: {
-        'Content-Type': 'audio/mpeg',
-        'Content-Length': audioBlob.size.toString()
-      }
-    });
-    await musicCache.put(fakeUrl, responseToCache);
-    
+    // Generate and return a local browser runtime URL safely
     return URL.createObjectURL(audioBlob);
-  } catch (error) {
-    console.error("🚨 Zip Stream Interface Extraction Error:", error);
-    throw error;
+  } else {
+    throw new Error(`Entry "${isolatedFileName}" inside the ZIP is a directory, not a playable file.`);
   }
 }
