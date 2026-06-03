@@ -1,0 +1,101 @@
+header, h1, h2, h3,
+p, a, span,
+button, label {
+  font-family: 'Hylia Serif', serif;
+  -webkit-text-stroke-width: 0.13vmin;
+  stroke-width: 0.13vmin;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  letter-spacing: 0.06em;
+  line-height: 1.5;
+}
+
+header {
+  background: linear-gradient(180deg, #FFF3A7 0%, #D4AF37 40%, #AA7C11 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+input, 
+button,
+.boxBtn {
+  display: inline-block;
+  width: auto;                  
+  height: auto;                 
+  padding: 2vmin 4vmin;         
+  
+  /* Slicing asset rules to prevent distortion */
+  border: 12px solid transparent;
+  border-image-source: url("/assets/zelda-theme/button.svg");
+  border-image-slice: 12 fill;
+  border-image-repeat: stretch;  
+  
+  background-color: transparent; 
+  border-radius: 0;             /* Overrides Mario's rounded borders */
+  color: white; 
+}
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  border-radius: 0;
+  background-image: url("/assets/zelda-theme/selector.png");
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%; 
+  width: auto;
+  height: auto;
+  padding: 2vmin 4vmin;
+  color: white;
+}
+
+select::-ms-expand {
+  display: none; 
+}
+
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4.5vmin;
+  block-size: auto;             /* 🔑 FIX: Overrides Mario's fixed 12vmin height */
+}
+
+/* ==========================================================================
+   3. THE SHEIKAH GRASSBOX CONTAINER
+   ========================================================================== */
+/* #grassBox {
+  position: relative;
+  z-index: 1;
+  font-size: 3.5vmin;
+  width: 70vmin;
+  border-radius: 0;             
+  box-sizing: border-box;
+  margin: 1vmin;
+  text-align: center;
+  padding: 9vmin 13vmin 8vmin 9vmin; 
+}
+
+#grassBox::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 99;                  
+  transform: translateZ(1px);
+  pointer-events: none;         
+  box-sizing: border-box;
+  border-width: 8vmin 12vmin 6vmin 8vmin;
+  border-style: solid;
+  border-color: transparent;
+  border-image-source: url("/assets/zelda-theme/sheikah-frame.png");
+  border-image-slice: 16% 22% 13% 16%; 
+  border-image-repeat: round;
+} */

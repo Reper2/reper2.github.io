@@ -11,7 +11,7 @@ export const music = {
       return activeElementsPointer[activeIndexPointer.currentIdx].style;
     }
     // Fallback deck mapping to prevent boot crashes before initialization
-    const fallback = <HTMLAudioElement>document.getElementById("music");
+    const fallback = document.getElementById("music") as HTMLAudioElement;;
     return fallback ? fallback.style : ({} as CSSStyleDeclaration);
   }
 };

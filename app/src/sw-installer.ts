@@ -1,4 +1,5 @@
 import BeforeInstallPromptEvent from "../lib/install-typings";
+import { globalState } from "./themes";
 
 const sw = {
   sessStart: sessionStorage.getItem("session_started"),
@@ -30,12 +31,14 @@ onload = () => {
   }
 
   if (!matchMedia("(display-mode: standalone)").matches) {
-    if (!sessionStorage.getItem("install_reminder_shown")) {
-      console.log('Executing app install reminder.');
-      // reminds the user they can install the app
-      window.alert('Consider installing the app!\nDesktop Browser - click install button in top-right of address bar\nMobile Browser - click "Add to Home Screen" in browser menu');
-      sessionStorage.setItem("install_reminder_shown", "true");
-    }
+    document.addEventListener("DOMContentLoaded", () => {
+      if (!sessionStorage.getItem("install_reminder_shown")) {
+        console.log('Executing app install reminder.');
+        // reminds the user they can install the app
+        window.alert('Consider installing the app!\nDesktop Browser - click install button in top-right of address bar\nMobile Browser - click "Add to Home Screen" in browser menu');
+        sessionStorage.setItem("install_reminder_shown", "true");
+      }
+    });
 
     let deferredPrompt: BeforeInstallPromptEvent | null;
 
@@ -55,7 +58,13 @@ onload = () => {
     };
 
     sw.i._.className = "tooltip";
-    sw.i.btn.innerHTML = "🌐📲";
+    if (globalState.theme === "original") {
+      sw.i.btn.innerHTML = "🌐📲";
+    } else if (globalState.theme === "zelda") {
+      sw.i.btn.innerHTML = "Install App";
+    } else {
+      throw new TypeError(`Unknown theme state: ${globalState.theme}`);
+    }
     [sw.i.tt.className, sw.i.tt.innerHTML] = ["tooltiptext", "Install App (Ctrl+I)"];
 
     sw.i.btn.appendChild(sw.i.tt);

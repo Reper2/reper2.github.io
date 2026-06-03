@@ -3,11 +3,11 @@ module.exports = {
 	globDirectory: "./",
 	// Explicitly ignore audio directories so they never accidentally sneak into the installation step
 	globIgnores: [
-		"**/node_modules/**/*", 
-		"**/src/**/*", 
-		"workbox-config.js", 
-		"package.json", 
-		"package-lock.json", 
+		"**/node_modules/**/*",
+		"**/src/**/*",
+		"workbox-config.js",
+		"package.json",
+		"package-lock.json",
 		"**/cmd/**/*",
 		"assets/music/**/*" // Exclude raw music folders from pre-caching
 	],
@@ -33,31 +33,9 @@ module.exports = {
 					maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
 				},
 				cacheableResponse: {
-					statuses: [0, 200], 
+					statuses: [0, 200],
 				},
 			},
-		},
-		{
-			// ⚡ OPTIMAL AUDIO CACHING: Stream your audio files using CacheFirst + Range Requests
-			urlPattern: /\/assets\/music\/.*\.(mp3|mpeg|ogg)$/,
-			handler: 'CacheFirst',
-			options: {
-				cacheName: 'app-music-cache',
-				expiration: {
-					maxEntries: 20, // Keeps your storage lean
-					maxAgeSeconds: 7 * 24 * 60 * 60, // 7 Days
-				},
-				cacheableResponse: {
-					statuses: [200],
-				},
-				// Crucial for media elements to prevent partial-content safari/chrome errors
-				plugins: [
-					{
-						// Note: Ensure your build environment inputs the workbox.rangeRequests plugin if using a bundler
-						cachedResponseWillBeUsed: async ({cachedResponse}) => cachedResponse,
-					}
-				]
-			}
 		}
 	],
 };

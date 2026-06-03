@@ -28,6 +28,16 @@
   <meta property="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#14d8ee">
   <script src="/app/lib/jquery-4.0.0.min.js" defer></script>
+  <script>
+    // Block rendering for a millisecond to pull the theme before the DOM draws
+    if (localStorage.getItem("site-theme") === "zelda") {
+      const link = document.createElement("link");
+      link.id = "theme-link";
+      link.rel = "stylesheet";
+      link.href = "./assets/zelda.css";
+      document.head.appendChild(link);
+    }
+  </script>
 </head>
 
 <body id="_bg">

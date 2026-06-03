@@ -1,31 +1,11 @@
-/* tags and other universal styles */
 @font-face {
   font-family: 'Super Mario 256';
-  src: url('./SuperMario256.ttf')
+  src: url('/assets/SuperMario256.ttf') format('truetype');
 }
 
-header {
-  font-size: clamp(1.2rem, 3vw, 2.5rem);
-  margin-top: 2vmin;
-  margin-bottom: 2vmin;
-
-  background: linear-gradient(45deg,
-      cyan,
-      #A5F2F3,
-      #B3E7F4,
-      #DDF9F1,
-      #E25C46,
-      #E42217,
-      #CF1020,
-      #AA0033);
-
-  background-clip: text;
-  -webkit-background-clip: text;
-  /* required for Chrome/Safari */
-
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  /* Safari compatibility */
+@font-face {
+  font-family: 'Hylia Serif';
+  src: url('/assets/zelda-theme/HyliaSerifBeta-Regular.otf') format('opentype');
 }
 
 body {
@@ -39,130 +19,12 @@ body {
   overflow-y: auto;
 }
 
-header,
-main,
-footer {
-  text-align: -webkit-center;
-}
-
-header,
-h1,
-h2,
-h3,
-p,
-a,
-span,
-button,
-label {
-  font-family: 'Super Mario 256', sans-serif;
-  color: white;
-  -webkit-text-stroke-width: 0.2vmin;
-  -webkit-text-stroke-color: black;
-}
-
-a {
-  text-decoration: none
-}
-
-button {
-  border-radius: 3vmin;
-  block-size: 12vmin;
-  margin: 1vmin;
-}
-
-select {
-  background-color: lightblue;
-  border-color: black;
-}
-
-input {
-  background-color: skyblue;
-}
-
-kbd {
-  background-color: #eee;
-  border-radius: 3px;
-  border: 1px solid #b4b4b4;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
-  color: #333;
-  font-size: .85em;
-  font-weight: 700;
-  line-height: 1;
-  padding: 2px 4px;
-  white-space: nowrap;
-}
-
-/* classes */
-.boxBtn {
-  border-radius: 2vmin;
-}
-
-.socialLogo {
-  margin-right: 10px;
-}
-
-.tooltip {
-  position: relative;
-}
-
-.tooltip .tooltiptext {
-  visibility: hidden;
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-text-stroke-width: 0;
-  background-color: #333;
-  border-radius: 6px;
-  padding: 5px 0;
-  width: 120px;
-  top: 100%;
-  left: 50%;
-  margin-left: -60px;
-  transition: opacity 0.3;
-  z-index: 1;
-}
-
-.tooltip .tooltiptext::after {
-  content: " ";
-  bottom: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent transparent #333 transparent;
-}
-
-.tooltip:hover .tooltiptext {
-  visibility: visible;
-  opacity: 1;
-}
-
-.kb-list {
-  text-align: left;
-  color: cyan;
-}
-
-.kb-hint {
-  color: inherit;
-}
-
-.flex {
-  display: flex;
-  justify-content: center;
-}
-
-.gold {
-  color: gold
-}
-
-/* ids */
-/* Base setup for the body */
+/* Base setup for the body dynamic background layers */
 body#_bg {
   position: relative;
-  margin: 0;
-  padding: 0;
   min-height: 100vh;
 }
 
-/* Common rules for both background layers */
 body#_bg::before,
 body#_bg::after {
   content: "";
@@ -178,23 +40,83 @@ body#_bg::after {
   opacity: 0;
 }
 
-/* Layer A: Uses the --bg-before variable */
 body#_bg::before {
   background-image: var(--bg-before, none);
   opacity: 1;
 }
 
-/* Layer B: Uses the --bg-after variable */
 body#_bg::after {
   background-image: var(--bg-after, none);
 }
 
-/* Layer swapping driven by class toggle */
 body#_bg.bg-flip::before {
   opacity: 0;
 }
+
 body#_bg.bg-flip::after {
   opacity: 1;
+}
+
+header,
+main,
+footer {
+  text-align: -webkit-center;
+}
+
+header,
+h1, h2, h3,
+p, a, span,
+button, label {
+  font-family: 'Super Mario 256', sans-serif;
+  color: white;
+  -webkit-text-stroke-width: 0.2vmin;
+  -webkit-text-stroke-color: black;
+}
+
+header {
+  font-size: clamp(1.2rem, 3vw, 2.5rem);
+  margin-top: 2vmin;
+  margin-bottom: 2vmin;
+  background: linear-gradient(45deg, cyan, #A5F2F3, #B3E7F4, #DDF9F1, #E25C46, #E42217, #CF1020, #AA0033);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* Form Elements Reset & Fonts */
+select,
+input {
+  font-family: sans-serif; /* Keeps inputs highly readable */
+}
+
+select {
+  background-color: lightblue;
+  border-color: black;
+}
+
+input {
+  background-color: skyblue;
+}
+
+button {
+  border-radius: 3vmin;
+  block-size: 12vmin;
+  margin: 1vmin;
+  font-size: 5vmin;
+  background-color: lightskyblue;
+  outline-color: initial;
+}
+
+.boxBtn {
+  border-radius: 2vmin;
+  background-color: lightskyblue;
+  padding: 8px;
+  font-size: 3vmin;
 }
 
 #grassBox {
@@ -203,90 +125,29 @@ body#_bg.bg-flip::after {
   border-radius: 1vmin;
   background-position: center;
   margin: 10px;
-}
-
-#learnmore {
-  color: rgb(0, 174, 255);
-  text-decoration: underline;
-}
-
-#back img {
-  top: 2vmin;
-  font-size: 8vmin;
-  width: 8vmin;
-  left: 2vmin;
-}
-
-#optForm {
-  margin: 4px;
-}
-
-#music {
-  margin: 3px;
-}
-
-/* mixed */
-select,
-input {
-  font-family: sans-serif;
-}
-
-button,
-.boxBtn {
-  background-color: lightskyblue;
-  outline-color: initial;
-}
-
-button,
-.kbd-hint {
-  font-size: 5vmin;
-}
-
-/* Only apply hover transform on devices that support a real hover state (mouse) */
-@media (hover: hover) {
-  button:hover,
-  input:hover {
-    transform: translateY(-1vh);
-  }
-}
-
-/* Use :active for mobile feedback instead */
-button:active,
-input:active {
-  transform: scale(0.95); /* Shrinks slightly when pressed, works great on touch */
-}
-
-#grassBox,
-.boxBtn {
   padding: 8px;
-}
-
-.tooltip .tooltiptext,
-#grassBox {
   text-align: center;
 }
 
-.bottom,
-.tooltip .tooltiptext,
-.boxBtn {
-  font-size: 3vmin;
-}
-
-#back img,
-.tooltip .tooltiptext,
-.tooltip .tooltiptext::after {
-  position: absolute;
-}
-
-kbd,
-.tooltip {
+kbd {
   display: inline-block;
+  background-color: #eee;
+  border-radius: 3px;
+  border: 1px solid #b4b4b4;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
+  color: #333;
+  font-size: .85em;
+  font-weight: 700;
+  line-height: 1;
+  padding: 2px 4px;
+  white-space: nowrap;
 }
 
 .appIcon,
 .link {
-  margin-bottom: 1vmin;
+  width: 10vmin;
   margin-top: 1vmin;
+  margin-bottom: 1vmin;
   border-radius: 30%;
   filter: drop-shadow(0.5vh 0.5vh 0.15vh rgba(0, 0, 0, 0.6));
   cursor: pointer;
@@ -295,11 +156,93 @@ kbd,
   pointer-events: all;
   transition-duration: 0.07s;
   transition-timing-function: ease-in-out;
-  width: 10vmin;
+}
+
+/* Tooltip Component */
+.tooltip {
+  display: inline-block;
+  position: relative;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  z-index: 1;
+  width: 120px;
+  margin-left: -60px;
+  padding: 5px 0;
+  border-radius: 6px;
+  background-color: #333;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 3vmin;
+  text-align: center;
+  -webkit-text-stroke-width: 0;
+  transition: opacity 0.3s; /* Fixed missing time unit (s) */
+  opacity: 0;
+}
+
+.tooltip .tooltiptext::after {
+  content: " ";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #333 transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.flex {
+  display: flex;
+  justify-content: center;
+}
+
+.gold { color: gold; }
+.kb-list { text-align: left; color: cyan; }
+.kb-hint { color: inherit; }
+.kbd-hint { font-size: 5vmin; }
+.socialLogo { margin-right: 10px; }
+.bottom { font-size: 3vmin; }
+
+#learnmore {
+  color: rgb(0, 174, 255);
+  text-decoration: underline;
+}
+
+#back img {
+  position: absolute;
+  top: 2vmin;
+  left: 2vmin;
+  width: 8vmin;
+  font-size: 8vmin;
+}
+
+#optForm { margin: 4px; }
+#music { margin: 3px; }
+
+/* Only apply hover translation on devices that natively support precision hovering (mice) */
+@media (hover: hover) {
+  button:hover,
+  input:hover {
+    transform: translateY(-1vh);
+  }
+}
+
+/* Use :active for instant physical feedback on touch devices */
+button:active,
+input:active {
+  transform: scale(0.95);
 }
 
 .appIcon:active,
 .appIcon:focus-visible,
 a:focus-visible .appIcon {
-  animation: bounceButton 0.25s ease-in-out forwards
+  animation: bounceButton 0.25s ease-in-out forwards;
 }
