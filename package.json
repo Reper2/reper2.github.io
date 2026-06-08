@@ -4,6 +4,7 @@
   "version": "26.5.0",
   "devDependencies": {
     "@types/jquery": "^4.0.0",
+    "@types/three": "^0.184.1",
     "eslint": "^10.3.0",
     "typescript": "^6.0.3"
   },
@@ -11,6 +12,7 @@
     "@zip.js/zip.js": "^2.8.26",
     "dom": "^0.0.3",
     "javascript-obfuscator": "^5.4.2",
+    "three": "^0.184.0",
     "window": "^1.0.0",
     "workbox-cli": "^2.1.3"
   },

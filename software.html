@@ -35,8 +35,10 @@
       const link = document.createElement("link");
       link.id = "theme-link";
       link.rel = "stylesheet";
-      link.href = "./assets/zelda.css";
+      link.href = "/assets/zelda.css";
       document.head.appendChild(link);
+    } else if (!localStorage.getItem("site-theme")) {
+      localStorage.setItem("site-theme", "zelda");
     }
   </script>
 </head>
@@ -115,7 +117,5 @@
   <footer id="footer" class="bottom"></footer>
 </body>
 <script type="module" src="/app/dist/index.js"></script>
-<script src="/app/dist/back.js" defer></script>
-<script src="/app/dist/footer.js" defer></script>
 
 </html>

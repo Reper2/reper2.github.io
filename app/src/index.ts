@@ -1,11 +1,8 @@
-import './sw-installer.js';
-import './keybinds.js';
+import { isLocalhost } from './core/utils.js';
 import './app.js';
+import './buttons.js';
 import './eggs.js';
-import './audctrls.js';
-import './copy-link.js';
-
-const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+import './keybinds.js';
 
 if (isLocalhost) {
   import('./debug-secret.js')

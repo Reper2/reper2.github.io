@@ -22,22 +22,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta id="meta-title" property="og:title" content="Frosty Volcano Summit">
   <meta id="meta-desc" property="og:description"
-    content="This is Ethan/Reper2's official website. Here you can find information about me, my projects, and more.">
+    content="This is Ethan's official website. Here you can find information about me, my projects, and more.">
   <meta id="meta-image" name="og:image" itemprop="image" content="https://reper2.github.io/images/meta.png">
   <meta property="og:site_name" content="Frosty Volcano Summit | reper2.github.io">
   <meta property="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#14d8ee">
   <script src="/app/lib/jquery-4.0.0.min.js" defer></script>
   <script>
-  // Block rendering for a millisecond to pull the theme before the DOM draws
-  if (localStorage.getItem("site-theme") === "zelda") {
-    const link = document.createElement("link");
-    link.id = "theme-link";
-    link.rel = "stylesheet";
-    link.href = "./assets/zelda.css";
-    document.head.appendChild(link);
-  }
-</script>
+    // Block rendering for a millisecond to pull the theme before the DOM draws
+    if (localStorage.getItem("site-theme") === "zelda") {
+      const link = document.createElement("link");
+      link.id = "theme-link";
+      link.rel = "stylesheet";
+      link.href = "/assets/zelda.css";
+      document.head.appendChild(link);
+    } else if (!localStorage.getItem("site-theme")) {
+      localStorage.setItem("site-theme", "zelda");
+    }
+  </script>
 </head>
 
 <body id="_bg">
@@ -112,6 +114,5 @@
   <footer id="footer" class="bottom"></footer>
 </body>
 <script type="module" src="/app/dist/index.js"></script>
-<script src="/app/dist/footer.js" defer></script>
 
 </html>

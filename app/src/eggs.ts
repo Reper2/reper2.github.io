@@ -1,4 +1,25 @@
 import { globalState } from "./themes";
+import { startCompSeq } from "./comp-seq";
+import { buildMeteorShower, constructStarbitShower } from "./starbits/";
+
+// Update page style based on saved theme preference. This has been made portable for all pages linked to this script.
+if (localStorage.getItem("site-theme") === "zelda") {
+  const existingLink = document.getElementById("theme-link") as HTMLLinkElement | null;
+  if (existingLink && existingLink.disabled === false) {
+    existingLink.href = "/assets/zelda.css";
+    console.warn("Zelda theme detected. Stylesheet link updated.");
+  } else {
+    console.warn("Zelda theme detected but no existing link found. Injecting new stylesheet link.");
+    const link = document.createElement("link");
+    link.id = "theme-link";
+    link.rel = "stylesheet";
+    link.href = "/assets/zelda.css";
+    document.head.appendChild(link);
+  }
+} else if (!localStorage.getItem("site-theme")) {
+  localStorage.setItem("site-theme", "zelda");
+  console.info("No theme preference found. Defaulting to Zelda theme.");
+}
 
 type EggState = Record<string, {
   unlocked: boolean;
@@ -88,7 +109,7 @@ function injectCuccoStyles(): void {
 }
 
 /**
- * 🐔 Spawns a synchronized attack wave of 15 chickens moving frantically across the view.
+ * 🐔 Spawns a synchronised attack wave of 20 chickens moving frantically across the view.
  */
 function triggerCuccoAttack(): void {
   injectCuccoStyles();
@@ -138,7 +159,6 @@ function triggerCuccoAttack(): void {
 
     // ⏳ Turn-Based Delay Mapping
     const dynamicDelay = Math.random() * 4.5;
-
     const dynamicDuration = 2.5 + Math.random() * 1.0;
 
     cucco.style.animationDelay = `${dynamicDelay}s`;
@@ -174,19 +194,18 @@ async function getBinPayload(): Promise<boolean> {
 }
 
 /**
- * Loads the egg state from local storage.
+ * Getters and setters for the global egg state.
  */
-function loadEggs(): EggState {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-  } catch {
-    return {};
+const eggs = {
+  get saved() {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return {} as EggState;
+    return JSON.parse(raw) as EggState;
+  },
+  set saved(state: EggState) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }
-}
-
-function saveEggs(state: EggState): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-}
+};
 
 function resolvePath(pathname: string): string {
   return pathname
@@ -245,7 +264,7 @@ async function deriveKey(state: EggState): Promise<CryptoKey> {
 }
 
 async function tryUnlock(): Promise<void> {
-  const state = loadEggs();
+  const state = eggs.saved;
   const currentFoundCount = Object.values(state).filter(e => e.unlocked).length;
 
   if (currentFoundCount < TOTAL_EGGS || !payloadIv || !payloadData) {
@@ -272,7 +291,7 @@ async function initEggs(): Promise<void> {
   const assetLoaded = await getBinPayload();
   if (!assetLoaded) return;
 
-  const state = loadEggs();
+  const state = eggs.saved;
 
   document.querySelectorAll<HTMLElement>(".egg").forEach(egg => {
     const id = egg.dataset.egg!;
@@ -301,7 +320,7 @@ async function initEggs(): Promise<void> {
         path: resolvePath(location.pathname),
         titleLength: document.title.trim().length
       };
-      saveEggs(state);
+      eggs.saved = state;
 
       egg.classList.add("cracking");
       if (globalState.theme === "zelda") {
@@ -313,13 +332,22 @@ async function initEggs(): Promise<void> {
         egg.classList.add("unlocked");
 
         updateCounter(state);
-        if (globalState.theme === "zelda") {
-          // ⭐ THE SWARM CHECK: Find how many total eggs are cracked right now
-          const totalUnlockedCount = Object.values(state).filter(e => e.unlocked).length;
+        const totalUnlockedCount = Object.values(state).filter(e => e.unlocked).length;
 
+        if (globalState.theme === "zelda") {
           // Triggers on intervals of 4 or 5 (e.g., 4, 5, 8, 10, 12, 15, 16, 20)
           if (totalUnlockedCount % 4 === 0 || totalUnlockedCount % 5 === 0) {
             triggerCuccoAttack();
+          }
+        } else if (globalState.theme === "original") {
+          if (totalUnlockedCount % 5 === 0 || totalUnlockedCount % 7 === 0) {
+            const context = constructStarbitShower();
+            if (context) {
+              const moonImagesArray = Array(totalUnlockedCount).fill("/images/moon.png");
+              const gltfModelUrl = "/assets/starbit.gltf";
+
+              buildMeteorShower(gltfModelUrl, moonImagesArray, context, totalUnlockedCount);
+            }
           }
         }
 
@@ -333,6 +361,7 @@ async function initEggs(): Promise<void> {
 }
 
 function showReward(text: string): void {
+  startCompSeq();
   const cleanContent = text.replace(/^VALID_REWARD\s*:\s*/, "").trim();
 
   try {
@@ -373,31 +402,6 @@ function updateCounter(state: EggState): void {
 }
 
 tryUnlock();
-updateCounter(loadEggs());
+updateCounter(eggs.saved);
 
-const resetBtn = {
-  _: <HTMLDivElement>document.getElementById("resetEggs"),
-  btn: document.createElement("button"),
-  tt: document.createElement("span")
-};
-
-if (resetBtn._) {
-  resetBtn._.className = "tooltip";
-  if (globalState.theme === "original") {
-    resetBtn.btn.innerHTML = "🥚🗑️";
-  } else if (globalState.theme === "zelda") {
-    resetBtn.btn.innerHTML = "Reset Eggs";
-  } else {
-    throw new TypeError(`Unknown theme state: ${globalState.theme}`);
-  }
-  resetBtn.btn.onclick = (): void => {
-    localStorage.setItem("eggs", "{}");
-    location.reload();
-  };
-  [resetBtn.tt.innerHTML, resetBtn.tt.className] = ["Reset All Eggs (Ctrl+Z)", "tooltiptext"];
-
-  resetBtn.btn.appendChild(resetBtn.tt);
-  resetBtn._.appendChild(resetBtn.btn);
-}
-
-export { TOTAL_EGGS, EggState, saveEggs, loadEggs, sha256, updateCounter, showReward, resolvePath };
+export { TOTAL_EGGS, EggState, eggs, sha256, updateCounter, showReward, resolvePath };

@@ -1,4 +1,4 @@
-import { copyLink } from "./core";
+import { copyLink } from "./core/utils";
 
 document.addEventListener("keydown", (k: KeyboardEvent) => {
   // 💡 FIX: Ignore hotkeys if the user is currently typing in an input or textarea

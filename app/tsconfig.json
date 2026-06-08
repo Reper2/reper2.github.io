@@ -5,10 +5,10 @@
     "lib": ["dom", "es2024"],
     "esModuleInterop": true,
     "moduleDetection": "auto",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler", 
     "ignoreDeprecations": "6.0",
     "strict": true,
-    "skipLibCheck": false,
+    "skipLibCheck": true,          
     "forceConsistentCasingInFileNames": true,
     "rootDir": "./src",
     "outDir": "./dist",
@@ -27,7 +27,7 @@
     "noImplicitOverride": true,
     "diagnostics": true,
     "listEmittedFiles": true,
-    "types": ["jquery"]
+    "types": ["jquery"]            /* 👈 Safe to include when skipLibCheck is true */
   },
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Recommended",
@@ -36,7 +36,7 @@
     "lib/**/*.d.ts"
   ],
   "exclude": [
-    "node_modules/*",
+    "node_modules",
     "./dist"
   ]
 }
