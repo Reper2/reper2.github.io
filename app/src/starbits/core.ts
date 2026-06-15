@@ -1,19 +1,20 @@
 import * as THREE from "https://esm.sh/three@0.160.0";
 
-const starBitColours: number[] = [
-  0xBE330B, // Red/Orange
-  0xE6A000, // Yellow
+export const starBitColours: number[] = [
+  0xbe330b, // Red/Orange
+  0xe6a000, // Yellow
   0x308000, // Deep Green
-  0x46A108, // Bright Green
-  0x375AA0, // Galaxy Blue
-  0x800099  // Purple
+  0x46a108, // Bright Green
+  0x375aa0, // Galaxy Blue
+  0x800099,  // Purple
+  0x98a0b8 // Silver
 ];
 
 const textureLoader = new THREE.TextureLoader();
 const matcapTexture = textureLoader.load('/assets/HighLight3.png');
 
-export const active3DParticles: Starbit3D[] = [];
-export const active2DParticles: Moon2D[] = [];
+export const activeStarbits: Starbit3D[] = [];
+export const activeMoons: Moon2D[] = [];
 
 const textureCache: Record<string, THREE.Texture> = {};
 

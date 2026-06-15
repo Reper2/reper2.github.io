@@ -2,13 +2,16 @@
   "compilerOptions": {
     "target": "es2024",
     "module": "esnext",
-    "lib": ["dom", "es2024"],
+    "lib": [
+      "dom",
+      "es2024"
+    ],
     "esModuleInterop": true,
     "moduleDetection": "auto",
-    "moduleResolution": "bundler", 
+    "moduleResolution": "bundler",
     "ignoreDeprecations": "6.0",
     "strict": true,
-    "skipLibCheck": true,          
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "rootDir": "./src",
     "outDir": "./dist",
@@ -27,13 +30,16 @@
     "noImplicitOverride": true,
     "diagnostics": true,
     "listEmittedFiles": true,
-    "types": ["jquery"]            /* 👈 Safe to include when skipLibCheck is true */
+    "types": [
+      "jquery"
+    ]
   },
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Recommended",
   "include": [
     "src/**/*.ts",
-    "lib/**/*.d.ts"
+    "lib/**/*.d.ts",
+    "lib/egg-debugger.d.ts"
   ],
   "exclude": [
     "node_modules",

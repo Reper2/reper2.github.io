@@ -18,6 +18,11 @@ do
 done
 echo
 
+echo -e "\n🧹 Purging ancient forge scraps and ghost memories..."
+rm -rf ./app/dist
+rm -f ./**/*.tsbuildinfo 
+echo "✅ Forge floor pristine."
+
 echo
 echo -e "\n🫠 Melting to JavaScript..."
 if npm run build; then

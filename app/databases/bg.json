@@ -1,0 +1,31 @@
+[
+    {"type":"directory","name":".","contents":[
+        {"type":"file","name":"acnh.json"},
+        {"type":"file","name":"dkb.json"},
+        {"type":"file","name":"hw_aoi.json"},
+        {"type":"file","name":"katfl.json"},
+        {"type":"file","name":"lm3.json"},
+        {"type":"file","name":"loz_botw.json"},
+        {"type":"file","name":"loz_eow.json"},
+        {"type":"file","name":"loz_ss.json"},
+        {"type":"file","name":"loz_totk.json"},
+        {"type":"file","name":"miitopia.json"},
+        {"type":"file","name":"mk8dx.json"},
+        {"type":"file","name":"mkw.json"},
+        {"type":"file","name":"mpj.json"},
+        {"type":"file","name":"mps.json"},
+        {"type":"file","name":"pik4.json"},
+        {"type":"file","name":"pm_ttyd.json"},
+        {"type":"file","name":"poke_la.json"},
+        {"type":"file","name":"poke_sword.json"},
+        {"type":"file","name":"sm3da.json"},
+        {"type":"file","name":"sm3dw_bf.json"},
+        {"type":"file","name":"smbw.json"},
+        {"type":"file","name":"smg2.json"},
+        {"type":"file","name":"smo.json"},
+        {"type":"file","name":"smp.json"},
+        {"type":"file","name":"ssbu.json"},
+        {"type":"file","name":"tlltd.json"}
+    ]}
+,    {"type":"report","directories":1,"files":26}
+]

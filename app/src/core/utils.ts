@@ -1,72 +1,24 @@
 import { Grass, Music } from "../../lib/db-typings";
-import { playWithCrossfade } from "./music";
+import { globalTheme } from "../themes";
+import { eggsav, getParsedState } from "../eggs/";
+import vault from "../eggs/vault";
+import { AppPanel } from "./interfaces";
+import { triggerPreviousTrack, triggerNextTrack, togglePlayPause } from "./music";
+import { isLocalhost, appState } from "./core";
+import SavUtils from "./storage";
 
-export const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
-
-/**
- * Asynchronously fetch the contents of a json file.
-*/
-export async function fetchDB<T>(filename: string): Promise<T> {
-  const response = await fetch(`/app/databases/${filename}.json`);
-  
-  if (!response.ok) {
-    throw new Error(`Failed to fetch database "${filename}": ${response.statusText}`);
-  }
-  
-  return response.json() as Promise<T>;
-}
-
-/**
- * Copies link to clipboard.
-*/
-export function copyLink(url: string): void {
-  navigator.clipboard.writeText(url)
-  .then(() => {
-    console.log("📋 Added to clipboard:", url);
-    alert(`Copied link: ${url}`);
-  })
-  .catch(e => {
-    console.error("Error copying to clipboard:", e);
-    throw e;
-  });
-}
-
-/**
- * Aliases for getting/setting session storage and url parameter data.
-*/
-export class SavUtils {
-  getSS(key: string): string | null {
-    return sessionStorage.getItem(key);
-  }
-  
-  setSS(key: string, value: string): void {
-    sessionStorage.setItem(key, value);
-  }
-  
-  getParam(name: string): string | null {
-    return new URL(window.location.href).searchParams.get(name);
-  }
-  
-  setParam(name: string, value: string): void {
-    const url = new URL(window.location.href);
-    url.searchParams.set(name, value);
-    window.history.pushState({}, '', url.toString());
-  }
-}
-
-// Centralized, Memory-Safe Sound Engine
 export const sfx = {
   cookingNormal: new Audio("/assets/zelda-theme/cooking_success.mp3"),
   cookingCritical: new Audio("/assets/zelda-theme/cooking_critical.mp3"),
   cookingDubious: new Audio("/assets/zelda-theme/cooking_failed.mp3"),
-  
+
   playRandomCooking() {
-    // Break out immediately if the user is running the 'original' theme
+    if (!isLocalhost) return;
     if ((window as any).globalState?.theme !== "zelda") return;
-    
+
     const roll = Math.random();
     let selectedAudio: HTMLAudioElement;
-    
+
     if (roll < 0.15) {
       selectedAudio = this.cookingCritical;
       console.log("🎲 SFX: Critical Success Fanfare!");
@@ -77,7 +29,7 @@ export const sfx = {
       selectedAudio = this.cookingNormal;
       console.log("🎲 SFX: Standard Cooking Success!");
     }
-    
+
     selectedAudio.currentTime = 0;
     selectedAudio.volume = 0.5;
     selectedAudio.play().catch(e => console.warn("SFX playback interrupted:", e));
@@ -85,52 +37,319 @@ export const sfx = {
 };
 sfx.playRandomCooking = sfx.playRandomCooking.bind(sfx);
 
-export function updateUrl(
+export async function updateUrl(
   musicObj: Music.Config,
   grassObj: Grass.Config,
-  playMode: "sequential" | "random",
-  fadeIntervalId: number | null,
-  isCrossfading: boolean,
-  isBooting: boolean,
-): void {
+  state: typeof appState
+): Promise<void> {
+  const { musicTrackState, grassTheme: grassThemeState } = await import("../app");
+
+  const activeTrack = musicTrackState.active;
+  const activeGrass = grassThemeState.active;
   const url = new URL(window.location.href);
-  const music = sessionStorage.getItem("music");
-  const grass = sessionStorage.getItem("grass");
 
-  if (music) {
-    url.searchParams.set("music", music);
-    playWithCrossfade(music, musicObj, grassObj, playMode, fadeIntervalId, isCrossfading, isBooting);
+  if (activeTrack) {
+    url.searchParams.set("music", activeTrack);
+    const { playWithCrossfade } = await import("./music");
+    await playWithCrossfade(activeTrack, musicObj, grassObj, state);
+  } else {
+    url.searchParams.delete("music");
   }
 
-  if (grass) {
-    url.searchParams.set("grass", grass);
-    grassObj.elem.style.backgroundImage = `url('/images/grass/${grass}.png')`;
+  if (activeGrass) {
+    url.searchParams.set("grass", activeGrass);
+    grassObj.elem.style.backgroundImage = `url('/images/grass/${activeGrass}.png')`;
+  } else {
+    url.searchParams.delete("grass");
   }
 
-  window.history.pushState({}, '', url);
-  console.log("🚀 Forge Sync Complete:", url.search);
+  window.history.pushState({}, '', url.toString());
+  console.log("🛠️ Forge Sync Complete:", url.search);
 }
 
-type Name = string | number;
+/**
+ * 🏛️ THE BASE BLUEPRINT (Abstract Base Class)
+ */
+export abstract class BasePanel implements AppPanel {
+  readonly elementId: string;
+  public isOpen: boolean = false;
+  protected container: HTMLElement;
 
-export class RandomPicker {
-  constructor(private names: Name[]) { }
-
-  private randomItem<T>(arr: T[]): T {
-    return arr[Math.floor(Math.random() * arr.length)];
+  constructor(elementId: string) {
+    this.elementId = elementId;
+    const foundContainer = document.getElementById(elementId);
+    if (!foundContainer) {
+      throw new Error(`DOM Element with ID "${elementId}" could not be located.`);
+    }
+    this.container = foundContainer;
   }
 
-  private randomName(): Name {
-    return this.randomItem(this.names);
+  public abstract render(): void;
+  public abstract toggleVisibility(forceState?: boolean): void;
+
+  public show(): void {
+    this.isOpen = true;
+    this.toggleVisibility(true);
   }
 
-  pick<T>(
-    getContents: (name: Name) => T[],
-    useFile: (name: Name, file: T) => void,
-  ): void {
-    const k = this.randomName();
-    const contents = getContents(k);
-    const file = this.randomItem(contents);
-    useFile(k, file);
+  public hide(): void {
+    this.isOpen = false;
+    this.toggleVisibility(false);
+  }
+}
+
+export class AudioControlPanel extends BasePanel {
+  private config: any;
+  private toggleBtns: HTMLButtonElement[] = [];
+  private playbackBtns: HTMLButtonElement[] = [];
+  private obj: { music: Music.Config, grass: Grass.Config };
+
+  constructor(elementId: string, config: any, obj: { music: Music.Config, grass: Grass.Config }) {
+    super(elementId);
+    this.config = config;
+    this.obj = obj;
+    this.render();
+  }
+
+  public render(): void {
+    this.container.innerHTML = "";
+    this.toggleBtns = [];
+    this.playbackBtns = [];
+
+    const isZelda = globalTheme.ls === "zelda";
+    const stateIdx = Number(this.isOpen);
+
+    const switchLabels = [
+      isZelda ? this.config.zelda.btn_name[0] : this.config.btn.name[0],
+      isZelda ? this.config.zelda.btn_name[1] : this.config.btn.name[1]
+    ];
+
+    for (let i = 0; i < 2; i++) {
+      const btn = document.createElement("button");
+      btn.id = this.config.btn.id[i];
+      btn.className = "tooltip";
+      btn.innerHTML = switchLabels[i];
+      btn.style.display = this.config.btn.disp[i ^ stateIdx];
+
+      const tip = document.createElement("span");
+      tip.className = "tooltiptext";
+      tip.innerHTML = this.config.tt.name[i];
+
+      btn.appendChild(tip);
+      this.toggleBtns.push(btn);
+      this.container.appendChild(btn);
+    }
+
+    const playbackData = [
+      { id: "audBtn_prev", label: isZelda ? "Previous" : "⏮️ Prev", tip: "Previous Track", action: () => triggerPreviousTrack(this.obj.music, this.obj.grass, appState) },
+      { id: "audBtn_playPause", label: isZelda ? "Pause" : "⏸️ Pause", tip: "Play / Pause Soundtrack", action: (btn: HTMLButtonElement) => togglePlayPause(this.obj.music, btn) },
+      { id: "audBtn_next", label: isZelda ? "Next" : "⏭️ Next", tip: "Next Track", action: () => triggerNextTrack(this.obj.music, this.obj.grass, appState) }
+    ];
+
+    playbackData.forEach(item => {
+      const btn = document.createElement("button");
+      btn.id = item.id;
+      btn.className = "tooltip";
+      btn.innerHTML = item.label;
+      btn.style.display = this.isOpen ? "inline-block" : "none";
+
+      const tip = document.createElement("span");
+      tip.className = "tooltiptext";
+      tip.innerHTML = item.tip;
+      btn.appendChild(tip);
+
+      btn.onclick = (e) => {
+        e.preventDefault();
+        item.action(btn);
+      };
+
+      this.playbackBtns.push(btn);
+      this.container.appendChild(btn);
+    });
+
+    this.toggleBtns[0].onclick = () => this.show();
+    this.toggleBtns[1].onclick = () => this.hide();
+  }
+
+  public toggleVisibility(forceState?: boolean): void {
+    this.isOpen = forceState !== undefined ? forceState : !this.isOpen;
+    const stateIdx = Number(this.isOpen);
+
+    this.toggleBtns.forEach((btn, i) => {
+      if (btn) btn.style.display = this.config.btn.disp[i ^ stateIdx];
+    });
+
+    this.playbackBtns.forEach(btn => {
+      if (btn) btn.style.display = this.isOpen ? "inline-block" : "none";
+    });
+
+    if (this.isOpen) {
+      const activeEl = this.obj.music.elems[this.obj.music.currentIndex];
+      if (activeEl) activeEl.style.display = "block";
+    } else {
+      this.obj.music.elems.forEach((el: HTMLAudioElement) => el.style.display = "none");
+    }
+  }
+}
+
+export class EggCookbookPanel extends BasePanel implements AppPanel {
+  private config: any;
+
+  constructor(elementId: string, config: any) {
+    super(elementId);
+    this.config = config;
+    this.render();
+  }
+
+  render(): void {
+    if (!this.container) return;
+
+    this.container.innerHTML = "";
+    this.config.toggle._ = [];
+
+    const isZelda = globalTheme.ls === "zelda";
+
+    for (let i = 0; i < this.config.toggle.labels.length; i++) {
+      const toggleBtn = document.createElement("button");
+      toggleBtn.id = this.config.toggle.id[i];
+      toggleBtn.className = "tooltip cookbook-toggle-btn";
+      toggleBtn.style.display = this.config.toggle.disp[i];
+      toggleBtn.innerHTML = isZelda ? this.config.toggle.zeldaLabels[i] : this.config.toggle.labels[i];
+
+      const tooltip = document.createElement("span");
+      tooltip.className = "tooltiptext";
+      tooltip.innerHTML = this.config.toggle.tooltips[i];
+
+      toggleBtn.appendChild(tooltip);
+      this.config.toggle._.push(toggleBtn);
+      this.container.appendChild(toggleBtn);
+
+      toggleBtn.onclick = (e) => {
+        e.preventDefault();
+        this.toggleVisibility();
+      };
+    }
+
+    const actionTray = document.createElement("div");
+    actionTray.className = "menu-actions-tray";
+    actionTray.style.display = "none";
+    this.container.appendChild(actionTray);
+
+    const actions = [
+      {
+        label: isZelda ? "Save Ledger" : "💾 Save",
+        tip: "Save your active profile progress",
+        click: () => {
+          try {
+            const rawData = eggsav.ls;
+            const dataObj = rawData ? JSON.parse(rawData) : {};
+            vault.save(dataObj);
+          } catch (e) {
+            console.error("Failed to parse ledger content payload details:", e);
+            vault.save({});
+          }
+        }
+      },
+      {
+        label: isZelda ? "Import Ledger" : "📥 Import",
+        tip: "Restore a profile backup file (.eggfvs)",
+        click: () => this.triggerFileImport()
+      },
+      {
+        label: isZelda ? "Export Ledger" : "📤 Export",
+        tip: "Download a secured backup file",
+        click: () => {
+          try {
+            const rawData = eggsav.ls;
+            const dataObj = rawData ? JSON.parse(rawData) : {};
+            vault.exportToFile(dataObj);
+          } catch (e) {
+            console.error("Failed to map ledger data object profile parameters:", e);
+            vault.exportToFile({});
+          }
+        }
+      },
+      {
+        label: isZelda ? "Reset Ledger" : "🥚🗑️ Reset",
+        tip: "Reset All Eggs (Ctrl+Z)",
+        click: () => {
+          const confirmMsg = isZelda ? "Are you sure you want to wipe the ledger?" : "Reset all progress?";
+          if (confirm(confirmMsg)) {
+            const legacyJar = new SavUtils("eggs");
+            const safeJar = new SavUtils("fvs_egghunt_secure");
+            legacyJar.clear();
+            safeJar.clear();
+            location.reload();
+          }
+        }
+      }
+    ];
+
+    actions.forEach(act => {
+      const btn = document.createElement("button");
+      btn.className = "tooltip cookbook-btn";
+      btn.innerHTML = act.label;
+      btn.onclick = (e) => {
+        e.preventDefault();
+        act.click();
+      };
+
+      const tip = document.createElement("span");
+      tip.className = "tooltiptext";
+      tip.innerHTML = act.tip;
+
+      btn.appendChild(tip);
+      actionTray.appendChild(btn);
+    });
+  }
+
+  public toggleVisibility(forceState?: boolean): void {
+    this.isOpen = forceState !== undefined ? forceState : !this.isOpen;
+
+    const showBtn = this.config.toggle._[0];
+    const hideBtn = this.config.toggle._[1];
+    const actionTray = this.container?.querySelector(".menu-actions-tray") as HTMLDivElement;
+
+    if (this.isOpen) {
+      if (showBtn) showBtn.style.display = "none";
+      if (hideBtn) hideBtn.style.display = "block";
+      if (actionTray) actionTray.style.display = "flex";
+    } else {
+      if (showBtn) showBtn.style.display = "block";
+      if (hideBtn) hideBtn.style.display = "none";
+      if (actionTray) actionTray.style.display = "none";
+    }
+  }
+
+  private triggerFileImport(): void {
+    const uploader = document.createElement("input");
+    uploader.type = "file";
+    uploader.accept = ".eggfvs";
+
+    uploader.onchange = async () => {
+      const file = uploader.files?.[0];
+      if (!file) return;
+      const isZelda = globalTheme.ls === "zelda";
+
+      try {
+        const buffer = await file.arrayBuffer();
+        const binaryData = new Uint8Array(buffer);
+        
+        const activeState = getParsedState();
+        const parsedState = vault.importFromFile(binaryData, activeState);
+
+        if (parsedState) {
+          vault.save(parsedState);
+          alert(isZelda ? "📜 Ledger authenticated and restored successfully!" : "Save imported successfully!");
+          location.reload();
+        } else {
+          alert("🚨 Failed to parse file verification signatures.");
+        }
+      } catch (err) {
+        console.error("Import workflow crash:", err);
+      }
+    };
+
+    uploader.click();
   }
 }

@@ -1,16 +1,9 @@
+import SavUtils from "./core/storage";
+
 export type ThemeType = "original" | "zelda"; 
 
 // Maintain local compatibility, but dynamically look up the window/session state
-export const globalState = {
-  get theme(): ThemeType {
-    return ((window as any).globalState?.theme || localStorage.getItem("site-theme") || "zelda") as ThemeType;
-  },
-  set theme(val: ThemeType) {
-    if (!(window as any).globalState) (window as any).globalState = {};
-    (window as any).globalState.theme = val;
-    localStorage.setItem("site-theme", val);
-  }
-};
+export const globalTheme = new SavUtils("site-theme");
 
 /**
  * Updates the active stylesheet in the DOM based on the global state
@@ -25,10 +18,8 @@ export function applyThemeElements(): void {
     document.head.appendChild(themeLink);
   }
 
-  const activeTheme = globalState.theme;
-
-  if (activeTheme === "zelda") {
-    themeLink.href = "./assets/zelda.css";
+  if (globalTheme.ls === "zelda") {
+    themeLink.href = "/assets/zelda.css";
     themeLink.disabled = false; // 🔑 Ensure the tag is explicitly enabled
     console.log("⚔️ Zelda CSS layers injected dynamically.");
   } else {

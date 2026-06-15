@@ -1,12 +1,8 @@
-import { eggs } from "./eggs";
-import {
-  copyLink, isLocalhost,
-  togglePlayPause, showAudioControls, hideAudioControls,
-  triggerNextTrack, triggerPreviousTrack
-} from "./core/";
-import { globalState } from "./themes";
+import { isLocalhost, copyLink } from "./core/core";
+import { AudioControlPanel, EggCookbookPanel } from "./core/utils";
+import { globalTheme } from "./themes";
+import app from "./app";
 import BeforeInstallPromptEvent from "../lib/install-typings";
-import app, { fadeIntervalId, isBooting, isCrossfading, playMode } from "./app";
 
 onload = () => {
   if ("serviceWorker" in navigator) {
@@ -25,19 +21,18 @@ onload = () => {
   }
 };
 
+// --- Step 1: Main Buttons Configuration Objects Matrix ---
 const btns = {
-  // Back button for subpages, most useful while using the web app.
   back: {
     _: document.getElementById("back") as HTMLDivElement,
     btn: document.createElement("img")
   },
   audctrls: {
     _: document.getElementById("audctrls") as HTMLDivElement,
-    // Main ON/OFF Master panel switches
     btn: {
       _: [] as HTMLButtonElement[],
       id: ["audctrlBtn_show", "audctrlBtn_hide"],
-      disp: ["none", "block"],
+      disp: ["block", "none"], // 0: Closed (Show visible), 1: Open (Hide visible)
       name: ["🎵🎛️ - ON", "🎵🎛️ - OFF"],
       log: ["🎵🎛️ Audio controls are now visible.", "🚫 Audio controls are now hidden."]
     },
@@ -45,9 +40,8 @@ const btns = {
       _: [] as HTMLSpanElement[],
       name: ["Show Audio Controls (Alt+S)", "Hide Audio Controls (Alt+H)"]
     },
-    // Operational playback buttons configuration map
     playback: {
-      _: [] as HTMLButtonElement[], // <-- Storage array added to cleanly reference buttons later
+      _: [] as HTMLButtonElement[],
       ids: ["audBtn_prev", "audBtn_playPause", "audBtn_next"],
       labels: ["⏮️ Prev", "⏸️ Pause", "⏭️ Next"],
       tooltips: ["Previous Track", "Play / Pause Soundtrack", "Next Track"]
@@ -57,10 +51,16 @@ const btns = {
       playback_labels: ["Previous", "Pause", "Next"],
     }
   },
-  resetEggs: {
-    _: document.getElementById("resetEggs") as HTMLDivElement,
-    btn: document.createElement("button"),
-    tt: document.createElement("span")
+  eggMenu: {
+    _: document.getElementById("eggMenu") as HTMLDivElement,
+    toggle: {
+      _: [] as HTMLButtonElement[],
+      id: ["eggctrlBtn_show", "eggctrlBtn_hide"],
+      disp: ["block", "none"], // 0: Closed (Show visible), 1: Open (Hide visible)
+      labels: ["🥚📂 Open Menu", "🥚🔒 Close Menu"],
+      zeldaLabels: ["Show Ledger Options", "Hide Ledger Options"],
+      tooltips: ["Show backup and management utilities", "Hide backup and management utilities"]
+    }
   },
   copy: {
     _: document.getElementById("copy") as HTMLDivElement,
@@ -73,147 +73,59 @@ const btns = {
     tt: document.createElement("span")
   },
   footer: {
-    _: document.getElementById("footer"),
+    _: document.getElementById("footer") as HTMLDivElement | null,
     cr: {
       license: document.createElement("a"),
       txt: document.createElement("h3")
     }
   }
-}
+};
+export default btns;
 
+const isZelda = globalTheme.ls === "zelda";
+
+// --- Step 2: Global UI Handlers ---
+
+// Back Button Layout Processing
 if (btns.back._) {
   btns.back._.onclick = () => {
-    if (window.history.length > 1 && document.referrer.startsWith(window.location.origin)) {
-      if (window.location.href.includes("#") || window.location.href.includes("?")) {
-        console.log("⚙️url contained a hash (#) or parameter (?), window.location.href='../' was used rather than window.history.back() to skip all the hashes or url parameters.");
-        window.location.href = "../";
-      }
-      else window.history.back();
+    if (document.referrer && document.referrer.startsWith(window.location.origin)) {
+      window.location.href = document.referrer;
+    } else {
+      window.location.href = window.location.origin;
     }
-    else window.location.href = "../../";
   };
-
   [btns.back.btn.src, btns.back.btn.title] = ["/images/back.png", "Back (Alt+◁)"];
   btns.back._.appendChild(btns.back.btn);
 }
 
-if (btns.audctrls._) {
-  for (let i = 0; i < btns.audctrls.btn.name.length; i++) {
-    const button = document.createElement("button");
-    button.id = btns.audctrls.btn.id[i];
-    button.style.display = btns.audctrls.btn.disp[i ^ 1];
-
-    button.className = "tooltip";
-
-    if (globalState.theme === "zelda") {
-      button.innerHTML = btns.audctrls.zelda.btn_name[i];
-    } else if (globalState.theme === "original") {
-      button.innerHTML = btns.audctrls.btn.name[i];
-    } else {
-      throw new TypeError(`Unknown theme state: ${globalState.theme}`);
-    }
-    btns.audctrls.btn._.push(button);
-
-    const tooltip = document.createElement("span");
-    tooltip.className = "tooltiptext";
-    tooltip.innerHTML = btns.audctrls.tt.name[i];
-    btns.audctrls.tt._.push(tooltip);
-
-    button.appendChild(tooltip);
-    btns.audctrls._.appendChild(button);
-  }
-
-  // Set initial display state matching the "hidden" state on first load
-  const initialPlaybackDisp = "none";
-
-  btns.audctrls.playback.ids.forEach((id, idx) => {
-    const btn = document.createElement("button");
-    btn.id = id;
-    btn.style.display = initialPlaybackDisp; // Sync default visibility state
-
-    btn.className = "tooltip";
-
-    if (globalState.theme === "zelda") {
-      btn.innerHTML = btns.audctrls.zelda.playback_labels[idx];
-    } else if (globalState.theme === "original") {
-      btn.innerHTML = btns.audctrls.playback.labels[idx];
-    } else {
-      throw new TypeError(`Unknown theme state: ${globalState.theme}`);
-    }
-
-    // Add custom tooltips 
-    const tip = document.createElement("span");
-    tip.className = "tooltiptext";
-    tip.innerHTML = btns.audctrls.playback.tooltips[idx];
-    btn.appendChild(tip);
-
-    // Store reference and append
-    btns.audctrls.playback._.push(btn);
-    btns.audctrls._.appendChild(btn);
-  });
-
-  document.getElementById("audBtn_prev")!.onclick = (e) => {
-    e.preventDefault();
-    triggerPreviousTrack(app.music, app.grass, playMode, fadeIntervalId, isCrossfading, isBooting);
-  };
-
-  document.getElementById("audBtn_next")!.onclick = (e) => {
-    e.preventDefault();
-    triggerNextTrack(app.music, app.grass, playMode, fadeIntervalId, isCrossfading, isBooting);
-  };
-
-  const playPauseBtn = document.getElementById("audBtn_playPause") as HTMLButtonElement;
-  playPauseBtn.onclick = (e) => {
-    e.preventDefault();
-    togglePlayPause(app.music, playPauseBtn);
-  };
-
-  btns.audctrls.btn._[0].onclick = () => showAudioControls(btns.audctrls, app.music);
-  btns.audctrls.btn._[1].onclick = () => hideAudioControls(btns.audctrls, app.music);
+// Ensure your src/buttons.ts matches this kickoff layout
+if (btns.audctrls._ && isLocalhost) {
+  // Pass elementId, configuration tracking array, and operational targets cleanly
+  new AudioControlPanel("audctrls", btns.audctrls, app);
 }
 
-if (btns.resetEggs._) {
-  btns.resetEggs._.className = "tooltip";
-  if (globalState.theme === "original") {
-    btns.resetEggs.btn.innerHTML = "🥚🗑️";
-  } else if (globalState.theme === "zelda") {
-    btns.resetEggs.btn.innerHTML = "Reset Eggs";
-  } else {
-    throw new TypeError(`Unknown theme state: ${globalState.theme}`);
-  }
-  btns.resetEggs.btn.onclick = (): void => {
-    eggs.saved = {};
-    location.reload();
-  };
-  [btns.resetEggs.tt.innerHTML, btns.resetEggs.tt.className] = ["Reset All Eggs (Ctrl+Z)", "tooltiptext"];
-
-  btns.resetEggs.btn.appendChild(btns.resetEggs.tt);
-  btns.resetEggs._.appendChild(btns.resetEggs.btn);
+if (btns.eggMenu._) {
+  new EggCookbookPanel("eggMenu", btns.eggMenu);
 }
 
+// Copy Action Registration
 if (btns.copy._) {
-  if (globalState.theme === "original") {
-    btns.copy.btn.innerHTML = "📋🔗";
-  } else if (globalState.theme === "zelda") {
-    btns.copy.btn.innerHTML = "Copy Link";
-  } else {
-    throw new TypeError(`Unknown theme state: ${globalState.theme}`);
-  }
-
+  btns.copy.btn.innerHTML = isZelda ? "Copy Link" : "📋🔗";
   btns.copy._.className = "tooltip";
   btns.copy.btn.onclick = (): void => copyLink(window.location.href);
+  
   [btns.copy.tt.innerHTML, btns.copy.tt.className] = ["Copy Link (Ctrl+C)", "tooltiptext"];
-
   btns.copy.btn.appendChild(btns.copy.tt);
   btns.copy._.appendChild(btns.copy.btn);
 }
 
+// Footer Component Processing
 if (btns.footer._) {
   btns.footer.cr.license.title = "View License (Alt+L)";
   btns.footer.cr.license.href = "https://github.com/Reper2/reper2.github.io/blob/master/LICENSE";
   btns.footer.cr.license.target = "_blank";
   btns.footer.cr.license.rel = "noopener noreferrer";
-
   btns.footer.cr.txt.textContent = "(c) 2021-2026 Reper2/Ethan. All rights reserved.";
 
   btns.footer.cr.license.appendChild(btns.footer.cr.txt);
@@ -269,12 +181,12 @@ if (btns.sw._) {
     };
 
     btns.sw._.className = "tooltip";
-    if (globalState.theme === "original") {
+    if (globalTheme.ls === "original") {
       btns.sw.btn.innerHTML = "🌐📲";
-    } else if (globalState.theme === "zelda") {
+    } else if (globalTheme.ls === "zelda") {
       btns.sw.btn.innerHTML = "Install App";
     } else {
-      throw new TypeError(`Unknown theme state: ${globalState.theme}`);
+      throw new TypeError(`Unknown theme state: ${globalTheme.ls}`);
     }
     [btns.sw.tt.className, btns.sw.tt.innerHTML] = ["tooltiptext", "Install App (Ctrl+I)"];
 

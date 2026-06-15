@@ -1,3 +1,5 @@
+import { SavUtils } from "../src/core";
+
 declare namespace Database {
   /**
    * Typings for objects within the contents array of background databses.
@@ -81,10 +83,7 @@ export namespace Music {
     
     // Tracks which element is currently active (index 0 or 1)
     currentIndex: 0 | 1; 
-    sav: {
-      ss: string | null; // Account for sessionStorage returning null if empty
-      param: string | null;
-    };
+    sav: SavUtils;
     db: DatabaseStructure;
     opt: HTMLOptionElement[][]; // Replaced OptSignature with explicit 2D matrix array if needed
   }
@@ -98,10 +97,7 @@ type OptSignature = HTMLOptionElement[][];
 export namespace Grass {
   interface Config {
     elem: HTMLDivElement;
-    sav: {
-      ss: string;
-      param: string;
-    },
+    sav: SavUtils;
     db: {
       src: string[];
       name: string[];

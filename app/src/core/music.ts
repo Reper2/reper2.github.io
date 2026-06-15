@@ -1,5 +1,7 @@
 import { Database, Grass, Music } from "../../lib/db-typings";
-import { updateUrl, RandomPicker } from "./utils";
+import { updateUrl } from "./utils";
+import { RandomPicker } from "./core";
+import { isLocalhost, appState } from "./core";
 
 // Internal pointer to track elements locally without relying on the app object tree
 let activeElementsPointer: [HTMLAudioElement, HTMLAudioElement] | null = null;
@@ -28,6 +30,8 @@ export const music = {
 };
 
 export function togglePlayPause(obj: Music.Config, playPauseBtn: HTMLButtonElement): void {
+  if (!isLocalhost) return;
+
   const activeEl = obj.elems[obj.currentIndex];
   if (!activeEl) return;
 
@@ -39,47 +43,7 @@ export function togglePlayPause(obj: Music.Config, playPauseBtn: HTMLButtonEleme
     playPauseBtn.childNodes[0].textContent = "▶️ Play";
   }
 }
-interface AudCtrlElems {
-  _: HTMLDivElement;
-  btn: {
-    _: HTMLButtonElement[]; // [showBtn, hideBtn]
-    id: string[];
-    disp: string[];
-    name: string[];
-    log: string[];
-  };
-  tt: {
-    _: HTMLSpanElement[]; // [showTooltip, hideTooltip]
-    name: string[];
-  };
-  playback: {
-    _: HTMLButtonElement[]; // [prevBtn, playPauseBtn, nextBtn]
-    ids: string[];
-    labels: string[];
-    tooltips: string[];
-  };
-}
 
-export function showAudioControls(obj: AudCtrlElems, audObj: Music.Config): void {
-  obj.btn._[0].style.display = "none";
-  obj.btn._[1].style.display = "block";
-
-  // Show all playback buttons
-  obj.playback._.forEach(btn => btn.style.display = "inline-block");
-
-  const activeEl = audObj.elems[audObj.currentIndex];
-  if (activeEl) activeEl.style.display = "block";
-}
-
-export function hideAudioControls(obj: AudCtrlElems, audObj: Music.Config): void {
-  obj.btn._[0].style.display = "block";
-  obj.btn._[1].style.display = "none";
-
-  // Hide all playback buttons
-  obj.playback._.forEach(btn => btn.style.display = "none");
-
-  audObj.elems.forEach((el: HTMLAudioElement) => el.style.display = "none");
-}
 /**
  * Asynchronously locates and extracts the audio file out of the zip binary array.
  */
@@ -103,14 +67,15 @@ export async function getTrackUrl(obj: Music.Config, sav: string): Promise<strin
   }
   return null;
 }
+
 /**
  * Force-stops any active crossfade immediately, snapping volumes to their endpoints.
  */
-export function cancelCurrentCrossfade(obj: Music.Config, fadeIntervalId: number | null, _isCrossfading: boolean): void {
-  if (fadeIntervalId !== null) {
-    clearInterval(fadeIntervalId);
-    fadeIntervalId = null;
-    _isCrossfading = false;
+export function cancelCurrentCrossfade(obj: Music.Config, state: typeof appState): void {
+  if (state.fadeIntervalId !== null) {
+    clearInterval(state.fadeIntervalId);
+    state.fadeIntervalId = null;
+    state.isCrossfading = false;
 
     const currentEl = obj.elems[obj.currentIndex];
     const nextIdx = obj.currentIndex === 0 ? 1 : 0;
@@ -133,17 +98,14 @@ export async function playWithCrossfade(
   targetTrackName: string,
   musicObj: Music.Config,
   grassObj: Grass.Config,
-  playMode: "sequential" | "random",
-  fadeIntervalId: number | null,
-  isCrossfading: boolean,
-  isBooting: boolean
+  state: typeof appState
 ): Promise<void> {
-  if (isBooting) {
+  if (state.isBooting) {
     return;
   }
 
-  if (isCrossfading) {
-    cancelCurrentCrossfade(musicObj, fadeIntervalId, isCrossfading);
+  if (state.isCrossfading) {
+    cancelCurrentCrossfade(musicObj, state);
   }
 
   const currentEl = musicObj.elems[musicObj.currentIndex];
@@ -156,7 +118,7 @@ export async function playWithCrossfade(
     return;
   }
 
-  isCrossfading = true;
+  state.isCrossfading = true;
 
   nextEl.src = trackUrl;
   nextEl.load();
@@ -177,11 +139,11 @@ export async function playWithCrossfade(
     currentEl.onended = null;
   }
 
-  setupAudioListeners(nextEl, musicObj, grassObj, playMode, fadeIntervalId, isCrossfading, isBooting);
+  setupAudioListeners(nextEl, musicObj, grassObj, state);
 
   nextEl.play().catch(e => {
     console.warn("Audio play blocked by browser policy:", e);
-    isCrossfading = false;
+    state.isCrossfading = false;
   });
 
   const CROSSFADE_DURATION = 10000;
@@ -189,7 +151,7 @@ export async function playWithCrossfade(
   const steps = CROSSFADE_DURATION / INTERVAL_STEP;
   let currentStep = 0;
 
-  fadeIntervalId = window.setInterval(() => {
+  state.fadeIntervalId = window.setInterval(() => {
     currentStep++;
     // 🛡️ Clamp progress strictly between 0.0 and 1.0 to prevent negative trigonometric results
     const progress = Math.min(1, Math.max(0, currentStep / steps));
@@ -205,9 +167,9 @@ export async function playWithCrossfade(
 
     // Use greater-than-or-equal to handle any interval step arithmetic overrides cleanly
     if (currentStep >= steps) {
-      if (fadeIntervalId !== null) {
-        clearInterval(fadeIntervalId);
-        fadeIntervalId = null;
+      if (state.fadeIntervalId !== null) {
+        clearInterval(state.fadeIntervalId);
+        state.fadeIntervalId = null;
       }
 
       if (currentEl) {
@@ -220,7 +182,7 @@ export async function playWithCrossfade(
       nextEl.volume = 1;
       musicObj.currentIndex = nextIdx;
 
-      isCrossfading = false;
+      state.isCrossfading = false;
       console.log(`✨ 10s Logarithmic Cross-fade complete. Active track: ${targetTrackName}`);
     }
   }, INTERVAL_STEP);
@@ -233,23 +195,20 @@ export function setupAudioListeners(
   el: HTMLAudioElement,
   musicObj: Music.Config,
   grassObj: Grass.Config,
-  playMode: "sequential" | "random",
-  fadeIntervalId: number | null,
-  isCrossfading: boolean,
-  isBooting: boolean
+  state: typeof appState
 ): void {
   el.ontimeupdate = () => {
-    if (el.duration && !isCrossfading) {
+    if (el.duration && !state.isCrossfading) {
       const crystalTimeRemaining = el.duration - el.currentTime;
       if (crystalTimeRemaining <= 10) {
-        triggerNextTrack(musicObj, grassObj, playMode, fadeIntervalId, isCrossfading, isBooting);
+        triggerNextTrack(musicObj, grassObj, state);
       }
     }
   };
 
   el.onended = () => {
-    if (!isCrossfading) {
-      triggerNextTrack(musicObj, grassObj, playMode, fadeIntervalId, isCrossfading, isBooting);
+    if (!state.isCrossfading) {
+      triggerNextTrack(musicObj, grassObj, state);
     }
   };
 }
@@ -260,17 +219,14 @@ export function setupAudioListeners(
 export function triggerNextTrack(
   musicObj: Music.Config,
   grassObj: Grass.Config,
-  playMode: "sequential" | "random",
-  fadeIntervalId: number | null,
-  isCrossfading: boolean,
-  isBooting: boolean
+  state: typeof appState
 ): void {
-  if (playMode === "random") {
+  if (state.playMode === "random") {
     pickRandomTrack(musicObj);
   } else {
     pickNextTrack(musicObj);
   }
-  updateUrl(musicObj, grassObj, playMode, fadeIntervalId, isCrossfading, isBooting);
+  updateUrl(musicObj, grassObj, state);
 }
 
 /**
@@ -279,14 +235,11 @@ export function triggerNextTrack(
 export function triggerPreviousTrack(
   musicObj: Music.Config,
   grassObj: Grass.Config,
-  playMode: "sequential" | "random",
-  fadeIntervalId: number | null,
-  isCrossfading: boolean,
-  isBooting: boolean
+  state: typeof appState
 ): void {
-  if (playMode === "random") {
+  if (state.playMode === "random") {
     pickRandomTrack(musicObj);
-    updateUrl(musicObj, grassObj, playMode, fadeIntervalId, isCrossfading, isBooting);
+    updateUrl(musicObj, grassObj, state);
     return;
   }
 
@@ -300,7 +253,7 @@ export function triggerPreviousTrack(
         const prevIndex = (j - 1 + album.contents.length) % album.contents.length;
         const prevCleanName = album.contents[prevIndex].name.replace(/\.[^/.]+$/, "");
         sessionStorage.setItem("music", prevCleanName);
-        updateUrl(musicObj, grassObj, playMode, fadeIntervalId, isCrossfading, isBooting);
+        updateUrl(musicObj, grassObj, state);
         return;
       }
     }

@@ -1,36 +1,51 @@
-# Visual Studio Code
-.vscode/*
+# ====================================================================
+# 🎛️ SYSTEM & IDE
+# ====================================================================
+.vscode/
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
 !.vscode/*.code-snippets
-.eslintrc.json
+/.eslintrc.json
 
-# Node
-node_modules/
-package-lock.json
-*.tsbuildinfo
-
-# Internal
-app.lnk
-info.txt
-
-# System Files
-desktop.ini
+# OS Garbage Piles
 .DS_Store
+[Dd]esktop.ini
 Thumbs.db
 
-# Secret Dev Files
-app/lib/debugger-class-typings.d.ts
-app/src/debug-secret.ts
-app/dist/debug-secret.js
-cmd/encrypt-eggs.js
-assets/secret-styles.css
+# ====================================================================
+# 📦 DEPENDENCIES & RUNTIMES
+# ====================================================================
+/node_modules/
+/package-lock.json
+*.tsbuildinfo
 
-# 🎵 Ignore all uncompressed music directories/files inside the folder
-# assets/music/*/
-# assets/music/**/*
+# Internal Shortcuts / Logs bounded to Root
+/app.lnk
+/info.txt
 
-# 🚀 DO NOT IGNORE the compiled album zip archives
-# !assets/music/*.zip
+# ====================================================================
+# 🔐 SECRET DEVELOPMENT FILES (EGG HUNT VAULT)
+# ====================================================================
+/app/lib/egg-debugger.d.ts
+/app/src/eggs/debug.ts
+/app/dist/eggs/debug.js
+/cmd/encrypt-eggs.js
+/assets/secret-styles.css
+
+# ====================================================================
+# 🎵 AUDIO ENGINE PIPELINES & TRACK ARCHIVES
+# ====================================================================
+# 1. Blindly ignore all common audio payloads everywhere in the project
+*.mp3
+*.wav
+*.ogg
+*.m4a
+
+# 2. Explicitly ensure entire raw asset audio folders are wiped from tracking
+/assets/music/
+
+# 3. CRITICAL: Whitelist specific localized static audio tracks if needed downstream
+# (If you ever want an MP3 to bypass the ban, you MUST negate it explicitly like this):
+# !/assets/fallback-sounds/click.mp3

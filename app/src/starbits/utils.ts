@@ -1,5 +1,5 @@
 import * as THREE from "https://esm.sh/three@0.160.0";
-import { Starbit3D, Moon2D, active3DParticles, active2DParticles } from "./core";
+import { Starbit3D, Moon2D, activeStarbits, activeMoons, starBitColours } from "./core";
 
 let animationId: number | null = null;
 
@@ -26,47 +26,48 @@ async function getGLTFLoaderClass(): Promise<any> {
   }
 }
 
-export function animateCombinedScene(context: RainSceneContext): void {
+export function animateGalacticScene(context: RainSceneContext): void {
   const { scene, camera, renderer, canvas } = context;
 
-  for (let i = active3DParticles.length - 1; i >= 0; i--) {
-    const bit = active3DParticles[i];
+  for (let i = activeStarbits.length - 1; i >= 0; i--) {
+    const bit = activeStarbits[i];
     bit.update();
 
     if (bit.mesh.position.y < -7 || bit.mesh.position.x > 14) {
       bit.destroy();
-      active3DParticles.splice(i, 1);
+      activeStarbits.splice(i, 1);
     }
   }
 
-  for (let j = active2DParticles.length - 1; j >= 0; j--) {
-    const flatImg = active2DParticles[j];
+  for (let j = activeMoons.length - 1; j >= 0; j--) {
+    const flatImg = activeMoons[j];
     flatImg.update();
 
     if (flatImg.sprite.position.y < -7 || flatImg.sprite.position.x > 14) {
       flatImg.destroy();
-      active2DParticles.splice(j, 1);
+      activeMoons.splice(j, 1);
     }
   }
 
   renderer.render(scene, camera);
 
-  if (active3DParticles.length === 0 && active2DParticles.length === 0) {
+  if (activeStarbits.length === 0 && activeMoons.length === 0) {
     if (animationId !== null) {
       cancelAnimationFrame(animationId);
       animationId = null;
     }
     canvas.style.display = "none";
   } else {
-    animationId = requestAnimationFrame(() => animateCombinedScene(context));
+    animationId = requestAnimationFrame(() => animateGalacticScene(context));
   }
 }
 
-export function buildMeteorShower(
+export function generateStarbitShower(
   gltfModelPath: string,
   array2DImageUrls: string[],
   context: RainSceneContext,
-  eggCount: number
+  eggCount: number,
+  totalEggs: number
 ): void {
   if (!context.scene && context.init3D) {
     context.init3D();
@@ -78,7 +79,7 @@ export function buildMeteorShower(
     for (let k = 0; k < eggCount; k++) {
       const randomUrlIndex = Math.floor(Math.random() * array2DImageUrls.length);
       const chosenUrl = array2DImageUrls[randomUrlIndex];
-      active2DParticles.push(new Moon2D(chosenUrl, context.scene));
+      activeMoons.push(new Moon2D(chosenUrl, context.scene));
     }
   }
 
@@ -90,13 +91,15 @@ export function buildMeteorShower(
 
     context.loader.load(gltfModelPath, (gltf: any) => {
       const masterMesh = gltf.scene.children[0] as THREE.Mesh;
+      const TOTAL_BITS = starBitColours.length * totalEggs;
+      const progress = eggCount/totalEggs;
 
-      for (let i = 0; i < 40; i++) {
-        active3DParticles.push(new Starbit3D(masterMesh, context.scene));
+      for (let i = 0; i < TOTAL_BITS*progress; i++) {
+        activeStarbits.push(new Starbit3D(masterMesh, context.scene));
       }
 
       if (animationId === null) {
-        animateCombinedScene(context);
+        animateGalacticScene(context);
       }
     }, undefined, (error: any) => {
       console.error("glTF structure failed to load completely:", error);
@@ -106,7 +109,7 @@ export function buildMeteorShower(
 
 let rainContextCache: RainSceneContext | null = null;
 
-export function constructStarbitShower(): RainSceneContext {
+export function constructStarbitScene(): RainSceneContext {
   if (rainContextCache) return rainContextCache;
 
   let canvas = document.getElementById("bg-canvas") as HTMLCanvasElement | null;

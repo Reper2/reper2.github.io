@@ -1,5 +1,5 @@
 import { Background, Database } from "../../lib/db-typings";
-import { RandomPicker } from "./utils";
+import { RandomPicker } from "./core";
 
 let isLayerA = true;
 let isInitialLoad = true;

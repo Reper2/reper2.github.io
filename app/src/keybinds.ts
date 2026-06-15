@@ -1,7 +1,6 @@
-import { copyLink } from "./core/utils";
+import { copyLink } from "./core/";
 
 document.addEventListener("keydown", (k: KeyboardEvent) => {
-  // 💡 FIX: Ignore hotkeys if the user is currently typing in an input or textarea
   const target = k.target as HTMLElement;
   if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable) {
     // Exception: Allow Enter to still submit the form even when inside the input
