@@ -42,5 +42,5 @@ I have published [mobile](https://github.com/Reper2/mobile-clock) and [desktop](
 
 ## ⚖️ Legal & Disclaimer
 This is a non-commercial, fan-made passion project. 
-* All character assets and Animal Crossing terrain textures present on this website are properties and intellectual intellectual property of **[Nintendo Co., Ltd.](https://www.nintendo.com/)**
+* All character assets and Animal Crossing terrain textures present on this website are intellectual property of **[Nintendo Co., Ltd.](https://www.nintendo.com/)**
 * No copyright infringement is intended. All original source materials belong to their respective owners.
