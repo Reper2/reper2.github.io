@@ -1,6 +1,21 @@
 import SavUtils from "../core/storage";
 import { EggState, ShieldedStorage, ProgressTransport } from "./interfaces";
 
+function getTimestamp(date: Date = new Date()): string {
+  const pad = (num: number, size: number = 2): string => 
+    num.toString().padStart(size, '0');
+
+  const yyyy = date.getFullYear();
+  const mm = pad(date.getMonth() + 1); // Months are 0-indexed
+  const dd = pad(date.getDate());
+  const hh = pad(date.getHours());
+  const min = pad(date.getMinutes());
+  const ss = pad(date.getSeconds());
+  const ms = pad(date.getMilliseconds(), 2).slice(0, 2); // Switch uses 2-digit milliseconds
+
+  return `${yyyy}${mm}${dd}${hh}${min}${ss}${ms}`;
+}
+
 export class SecureProgressVault implements ProgressTransport {
   private readonly safeJar: SavUtils;
   private readonly legacyJar: SavUtils;
@@ -278,7 +293,7 @@ export class SecureProgressVault implements ProgressTransport {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `backup_progress.eggfvs`;
+    a.download = `${getTimestamp()}-progress-sav.eggfvs`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
