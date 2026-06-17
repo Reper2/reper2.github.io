@@ -7,29 +7,44 @@ import { triggerPreviousTrack, triggerNextTrack, togglePlayPause } from "./music
 import { isLocalhost, appState } from "./core";
 import SavUtils from "./storage";
 
-export const sfx = {
-  cookingNormal: new Audio("/assets/alt-theme/cooking_success.mp3"),
-  cookingCritical: new Audio("/assets/alt-theme/cooking_critical.mp3"),
-  cookingDubious: new Audio("/assets/alt-theme/cooking_failed.mp3"),
+// Define hidden private pointers to hold our audio instances
+let cookingNormalInstance: HTMLAudioElement | null = null;
+let cookingCriticalInstance: HTMLAudioElement | null = null;
+let cookingDubiousInstance: HTMLAudioElement | null = null;
 
+export const sfx = {
   playRandomCooking() {
+    // 1. STAGE 1 GUARDS: Terminate instantly before any assets are constructed or fetched
     if (!isLocalhost) return;
     if ((window as any).globalState?.theme !== "alt") return;
 
+    // 2. LAZY LOAD: Allocate the audio memory buffers only if we pass the guards above
+    if (!cookingNormalInstance) {
+      cookingNormalInstance = new Audio("/assets/alt-theme/cooking_success.mp3");
+    }
+    if (!cookingCriticalInstance) {
+      cookingCriticalInstance = new Audio("/assets/alt-theme/cooking_critical.mp3");
+    }
+    if (!cookingDubiousInstance) {
+      cookingDubiousInstance = new Audio("/assets/alt-theme/cooking_failed.mp3");
+    }
+
+    // 3. EXECUTE GAMEPLAY ROLL LOGIC
     const roll = Math.random();
     let selectedAudio: HTMLAudioElement;
 
     if (roll < 0.15) {
-      selectedAudio = this.cookingCritical;
+      selectedAudio = cookingCriticalInstance;
       console.log("🎲 SFX: Critical Success Fanfare!");
     } else if (roll < 0.30) {
-      selectedAudio = this.cookingDubious;
+      selectedAudio = cookingDubiousInstance;
       console.log("🎲 SFX: Dubious Food Failure Thud!");
     } else {
-      selectedAudio = this.cookingNormal;
+      selectedAudio = cookingNormalInstance;
       console.log("🎲 SFX: Standard Cooking Success!");
     }
 
+    // Safe to trigger playback now
     selectedAudio.currentTime = 0;
     selectedAudio.volume = 0.5;
     selectedAudio.play().catch(e => console.warn("SFX playback interrupted:", e));

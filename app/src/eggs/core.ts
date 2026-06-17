@@ -60,13 +60,39 @@ export const TOTAL_EGGS = 24;
 let payloadIv: BufferSource | null = null;
 let payloadData: BufferSource | null = null;
 
-const sfx = {
-  korokYahaha: new Audio(THEME_ASSETS.alt.sfxKorok),
-  shrineFanfare: new Audio(THEME_ASSETS.alt.sfxFanfare),
+// 1. Maintain isolated, uninstantiated pointers outside the scope definition
+let korokInstance: HTMLAudioElement | null = null;
+let fanfareInstance: HTMLAudioElement | null = null;
 
+const sfx = {
   playInstant(effect: 'korokYahaha' | 'shrineFanfare') {
+    // 2. STAGE 1 GUARD: Halt immediately before parsing path mappings or constructing elements
     if (!isLocalhost) return;
-    const audio = this[effect];
+
+    // 3. LAZY LOAD: Construct the individual browser Audio nodes only when explicitly requested
+    if (effect === 'korokYahaha') {
+      if (!korokInstance && THEME_ASSETS.alt.sfxKorok) {
+        korokInstance = new Audio(THEME_ASSETS.alt.sfxKorok);
+      }
+      
+      if (korokInstance) {
+        this.executePlayback(korokInstance);
+      }
+    } 
+    
+    else if (effect === 'shrineFanfare') {
+      if (!fanfareInstance && THEME_ASSETS.alt.sfxFanfare) {
+        fanfareInstance = new Audio(THEME_ASSETS.alt.sfxFanfare);
+      }
+      
+      if (fanfareInstance) {
+        this.executePlayback(fanfareInstance);
+      }
+    }
+  },
+
+  // Helper method to keep duplicate playback properties dry and legible
+  executePlayback(audio: HTMLAudioElement) {
     if (!audio.src) return;
     audio.currentTime = 0;
     audio.volume = 0.5;
