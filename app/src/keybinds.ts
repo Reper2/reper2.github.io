@@ -1,4 +1,5 @@
 import { copyLink } from "./core/";
+import vault from "./eggs/vault";
 
 document.addEventListener("keydown", (k: KeyboardEvent) => {
   const target = k.target as HTMLElement;
@@ -91,7 +92,7 @@ document.addEventListener("keydown", (k: KeyboardEvent) => {
   if (k.ctrlKey && keyLower === "z") {
     k.preventDefault();
     console.warn("Ctrl+Z was pressed");
-    localStorage.setItem("eggs", "{}");
+    vault.clear();
     location.reload();
   }
 });

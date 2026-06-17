@@ -3,6 +3,7 @@ import { AudioControlPanel, EggCookbookPanel } from "./core/utils";
 import { globalTheme } from "./themes";
 import app from "./app";
 import BeforeInstallPromptEvent from "../lib/install-typings";
+import SavUtils from "./core/storage";
 
 onload = () => {
   if ("serviceWorker" in navigator) {
@@ -138,26 +139,18 @@ if (btns.footer._) {
   btns.footer._.appendChild(btns.footer.cr.license);
 }
 
-const reminder = {
-  get shown(): string | null {
-    return sessionStorage.getItem("install_reminder_shown");
-  },
-  set shown(value: string) {
-    sessionStorage.setItem("install_reminder_shown", value);
-  }
-};
-
+const reminder = new SavUtils("install_reminder_shown")
 let installListener: ((e: Event) => void) | null = null; // Declare install listener outside the scope of onload
 let appInstalledListener: (() => void) | null = null;
 
 if (btns.sw._) {
   if (!matchMedia("(display-mode: standalone)").matches) {
     document.addEventListener("DOMContentLoaded", () => {
-      if (!reminder.shown && !isLocalhost) {
+      if (!reminder.ss && !isLocalhost) {
         console.log('Executing app install reminder.');
         // reminds the user they can install the app
         window.alert('Consider installing the app!\nDesktop Browser - click install button in top-right of address bar\nMobile Browser - click "Add to Home Screen" in browser menu');
-        reminder.shown = "true";
+        reminder.ss = "true";
       }
     });
 
