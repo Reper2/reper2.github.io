@@ -10,7 +10,7 @@ import {
 import SavUtils from "./core/storage";
 import { applyThemeElements } from "./themes";
 
-// Unified SavUtils Storage Layers
+// 1. Unified SavUtils Storage Layers
 const themeSav = new SavUtils("site-theme");
 const musicSav = new SavUtils("music");
 const grassSav = new SavUtils("grass");
@@ -25,7 +25,7 @@ const compiledBackgrounds = await bgLoader.loadWithMetadata();
 const compiledMusicDB = await musicLoader.loadRegistry();
 const compiledGrassDB = await grassLoader.loadRegistry();
 
-// High-Level Abstract State Managers with Automated Side-Effects
+// 2. High-Level Abstract State Managers with Automated Side-Effects
 export const themeState = {
   get active(): "original" | "alt" {
     return (themeSav.ls as "original" | "alt") || "alt";
@@ -78,7 +78,7 @@ export const musicTrackState = {
 };
 
 export const app = {
-  form: document.getElementById("optForm") as HTMLFormElement,
+  form: document.getElementById("optForm") as HTMLFormElement | null,
   label: {
     _: [] as HTMLLabelElement[],
     name: ["select song:", "or type the name:", "select box background:"]
@@ -180,7 +180,7 @@ export const app = {
   } as Background.Config
 };
 
-// Global Memory Allocations (Safe because they aren't reading from the DOM tree yet)
+// Global Memory Allocations (Safe because they aren't interacting with page layout nodes directly yet)
 for (let i = 0; i < 4; i++) app.break.push(document.createElement("br"));
 for (let i = 0; i < app.label.name.length; i++) {
   app.label._.push(document.createElement("label"));
@@ -211,72 +211,81 @@ app.label._[0].htmlFor = app.selector._[0].name = app.label._[1].htmlFor = app.i
 app.label._[2].htmlFor = app.selector._[1].name = "grass";
 
 $(function () {
-  app.music.elems.forEach((el: HTMLAudioElement | null) => {
-    if (el) {
-      el.controls = true; 
-      el.style.display = "none"; 
-      el.preload = "auto";
-    }
-  });
-
   themeState.active = themeState.active;
 
-  if (isLocalhost) {
-    for (let i = 0; i < app.selector._.length; i++) {
-      app.selector._[i].appendChild(app.placeholder._[i]);
-    }
-
-    const parent = app.music.db[0];
-    for (let i = 0; i < parent.contents.length; i++) {
-      const album = parent.contents[i];
-      pushOptGroups(app.music._, [album.name]);
-      app.music.opt[i] = [];
-
-      for (let j = 0; j < album.contents.length; j++) {
-        const file = album.contents[j];
-        const option = document.createElement("option");
-        option.value = file.name.replace(/\.[^/.]+$/, "");
-        option.textContent = file.name.replace(/\.[^/.]+$/, "");
-        app.music.opt[i].push(option);
-      }
-    }
+  // 🛡️ FORM ENGINE DEEP SAFEGUARD
+  if (!app.form) {
+    console.log("ℹ️ Configuration form ('#optForm') unallocated on this view page matrix. Sub-injection bypassed.");
   } else {
-    app.selector._[1].appendChild(app.placeholder._[1]);
-  }
-
-  pushGrassOpts(app.grass.opt, app.grass.db);
-
-  if (isLocalhost) {
-    for (let i = 0; i < app.music._.length; i++) {
-      const optgroup = app.music._[i];
-      for (const option of app.music.opt[i]) {
-        optgroup.appendChild(option);
+    // Initialise audio elements safely if they map inside the layout
+    app.music.elems.forEach((el: HTMLAudioElement | null) => {
+      if (el) {
+        el.controls = true; 
+        el.style.display = "none"; 
+        el.preload = "auto";
       }
-      app.selector._[0].appendChild(optgroup);
+    });
+
+    if (isLocalhost) {
+      for (let i = 0; i < app.selector._.length; i++) {
+        app.selector._[i].appendChild(app.placeholder._[i]);
+      }
+
+      const parent = app.music.db[0];
+      for (let i = 0; i < parent.contents.length; i++) {
+        const album = parent.contents[i];
+        pushOptGroups(app.music._, [album.name]);
+        app.music.opt[i] = [];
+
+        for (let j = 0; j < album.contents.length; j++) {
+          const file = album.contents[j];
+          const option = document.createElement("option");
+          option.value = file.name.replace(/\.[^/.]+$/, "");
+          option.textContent = file.name.replace(/\.[^/.]+$/, "");
+          app.music.opt[i].push(option);
+        }
+      }
+    } else {
+      app.selector._[1].appendChild(app.placeholder._[1]);
+    }
+
+    pushGrassOpts(app.grass.opt, app.grass.db);
+
+    if (isLocalhost) {
+      for (let i = 0; i < app.music._.length; i++) {
+        const optgroup = app.music._[i];
+        for (const option of app.music.opt[i]) {
+          optgroup.appendChild(option);
+        }
+        app.selector._[0].appendChild(optgroup);
+      }
+    }
+
+    if (isLocalhost) {
+      app.form.appendChild(app.label._[0]);
+      app.form.appendChild(app.selector._[0]);
+      app.form.appendChild(app.break[0]);
+      app.form.appendChild(app.label._[1]);
+      app.form.appendChild(app.input._[0]);
+      app.form.appendChild(app.break[1]);
+    }
+
+    for (let i = 0; i < app.grass.db.src.length; i++) {
+      app.selector._[1].appendChild(app.grass.opt[i]);
+    }
+    app.form.appendChild(app.label._[2]);
+    app.form.appendChild(app.selector._[1]);
+    app.form.appendChild(app.break[2]);
+
+    for (let i = 1; i < app.input.type.length; i++) {
+      app.form.appendChild(app.input._[i]);
     }
   }
 
-  if (isLocalhost) {
-    app.form.appendChild(app.label._[0]);
-    app.form.appendChild(app.selector._[0]);
-    app.form.appendChild(app.break[0]);
-    app.form.appendChild(app.label._[1]);
-    app.form.appendChild(app.input._[0]);
-    app.form.appendChild(app.break[1]);
+  // Fallback independent side-effects (Still runs smoothly even without the options box present)
+  if (app.grass.elem) {
+    app.grass.elem.style.backgroundImage = `url('/images/grass/${grassTheme.active}.png')`;
   }
-
-  for (let i = 0; i < app.grass.db.src.length; i++) {
-    app.selector._[1].appendChild(app.grass.opt[i]);
-  }
-  app.form.appendChild(app.label._[2]);
-  app.form.appendChild(app.selector._[1]);
-  app.form.appendChild(app.break[2]);
-
-  for (let i = 1; i < app.input.type.length; i++) {
-    app.form.appendChild(app.input._[i]);
-  }
-
-  app.grass.elem.style.backgroundImage = `url('/images/grass/${grassTheme.active}.png')`;
 
   if (isLocalhost) {
     let initialTrack = musicTrackState.active;

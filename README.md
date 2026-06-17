@@ -122,4 +122,4 @@ This is an independent, non-commercial, fan-made passion project designed for te
 * **Intellectual Property:** All character assets and Animal Crossing terrain textures present on this website are the registered trademarks and intellectual property of **[Nintendo Co., Ltd.](https://www.nintendo.com/)**
 * **Typography & Vetting:** Typographic elements used for styling (including fan-created typefaces like *Super Mario 256* and *Hylia Serif*) are gathered directly from verified distribution points. They are utilised strictly in a transformative, non-commercial capacity to test interface aesthetics.
 * **Risk & Compliance Isolation:** This platform is fully isolated from commercial monetisation channels. No copyright infringement is intended, and all original rights are recognised and reserved by their respective brand owners.
-* **Fallback Bubble Image** [Bubble PNGs by Vecteezy](https://www.vecteezy.com/free-png/bubble)
+* **Fallback Bubble Image:** [Bubble PNGs by Vecteezy](https://www.vecteezy.com/free-png/bubble)
