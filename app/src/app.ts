@@ -287,59 +287,60 @@ $(function () {
   // Streamlined UI Render Side-Effects using the clean Getter logic
   app.grass.elem.style.backgroundImage = `url('/images/grass/${grassTheme.active}.png')`;
 
-  // --- Soundtrack Engine Boot Interceptor ---
-  // Inside app.ts
+  // --- Engine Boot Interceptor & Sync ---
+  // --- Engine Boot Interceptor & Sync ---
   if (isLocalhost) {
     let initialTrack = musicTrackState.active;
     if (initialTrack) {
       musicTrackState.active = initialTrack;
     } else {
-      // Safely check if app.music structure is defined before picking
-      if (app.music) pickRandomTrack(app.music);
+      // Safeguard: Check if app.music exists before picking an initial random track
+      if (app.music) {
+        pickRandomTrack(app.music);
+      }
     }
 
     const verifiedTrack = musicTrackState.active;
-    if (verifiedTrack && app.music?.elems) {
+
+    // 🛡️ CRUCIAL DEEP SAFEGUARD: Verify app.music, its elements array, AND that elements actually exist
+    if (verifiedTrack && app.music?.elems && app.music.elems.length > 0 && app.music.elems[0]) {
       const deckA = app.music.elems[0];
 
-      // If deckA is missing from this page's DOM, abort before crashing
-      if (!deckA) {
-        console.warn("⚠️ Bypassing local audio deck alignment: Element target array slot is unallocated.");
-      } else {
-        getTrackUrl(app.music, verifiedTrack).then((trackUrl) => {
-          if (trackUrl) {
-            deckA.src = trackUrl;
-            deckA.load();
-            deckA.volume = 1;
-            deckA.controls = true;
+      getTrackUrl(app.music, verifiedTrack).then((trackUrl) => {
+        if (trackUrl) {
+          deckA.src = trackUrl;
+          deckA.load();
+          deckA.volume = 1;
+          deckA.controls = true;
 
-            const hideButton = document.getElementById("audctrlBtn_hide");
-            if (hideButton && hideButton.style.display === "none") {
-              deckA.style.display = "none";
-            } else {
-              deckA.style.display = "block";
-            }
-
-            setupAudioListeners(deckA, app.music, app.grass, appState);
-
-            deckA.play()
-              .then(() => { appState.isBooting = false; })
-              .catch(e => {
-                console.warn("Audio play blocked by browser policy:", e);
-                appState.isBooting = false;
-              });
+          const hideButton = document.getElementById("audctrlBtn_hide");
+          if (hideButton && hideButton.style.display === "none") {
+            deckA.style.display = "none";
+          } else {
+            deckA.style.display = "block";
           }
-        });
-        console.log("🚀 Initial Boot Deck Sync Complete:", verifiedTrack);
-      }
+
+          setupAudioListeners(deckA, app.music, app.grass, appState);
+
+          deckA.play()
+            .then(() => { appState.isBooting = false; })
+            .catch(e => {
+              console.warn("Audio play blocked by browser policy:", e);
+              appState.isBooting = false;
+            });
+        }
+      });
+      console.log("🚀 Initial Boot Deck Sync Complete:", verifiedTrack);
     } else {
-      // Production Fallback: Ensure global orchestration finishes boot cycles seamlessly
+      // 🌐 Production, secondary apps, & audio-free projects fallback (e.g., desktop-clock)
+      // Simply mark booting as done and skip all track orchestration gracefully!
+      console.log("ℹ️ Audio layer unallocated or bypassed for this project scope.");
       appState.isBooting = false;
     }
-
-    changeBackground(app.bg);
-    setInterval(() => { changeBackground(app.bg); }, 20000);
   }
+
+  changeBackground(app.bg);
+  setInterval(() => { changeBackground(app.bg); }, 20000);
 });
 
 export default app;
