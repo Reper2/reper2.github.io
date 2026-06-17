@@ -284,9 +284,17 @@ a:focus-visible .appIcon {
   display: flex;
   flex-wrap: wrap;                 
   gap: 1.8vmin;                 
-  justify-content: center;
-  align-items: center;
+  
+  /* ─── STABILITY FIX: Align to the start so the first button never jumps ─── */
+  justify-content: flex-start;  
+  text-align: left;
+  
+  /* Centers the entire tray container itself on the page */
+  max-width: max-content;
+  margin-left: auto;
+  margin-right: auto;
   margin-top: 1.8vmin;
+  box-sizing: border-box;
 }
 
 /* 📱 Responsive Adaptive Breakdown */
