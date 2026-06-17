@@ -166,7 +166,7 @@ export class AudioControlPanel extends BasePanel {
       btn.id = item.id;
       btn.className = "tooltip";
       btn.innerHTML = item.label;
-      btn.style.display = this.isOpen ? "inline-flex" : "none";
+      btn.style.display = this.isOpen ? "flex" : "none";
 
       const tip = document.createElement("span");
       tip.className = "tooltiptext";
@@ -195,7 +195,7 @@ export class AudioControlPanel extends BasePanel {
     });
 
     this.playbackBtns.forEach(btn => {
-      if (btn) btn.style.display = this.isOpen ? "inline-flex" : "none";
+      if (btn) btn.style.display = this.isOpen ? "flex" : "none";
     });
 
     if (this.isOpen) {
@@ -327,10 +327,10 @@ export class EggCookbookPanel extends BasePanel implements AppPanel {
 
     if (this.isOpen) {
       if (showBtn) showBtn.style.display = "none";
-      if (hideBtn) hideBtn.style.display = "inline-flex";
+      if (hideBtn) hideBtn.style.display = "block";
       if (actionTray) actionTray.style.display = "flex";
     } else {
-      if (showBtn) showBtn.style.display = "inline-flex";
+      if (showBtn) showBtn.style.display = "block";
       if (hideBtn) hideBtn.style.display = "none";
       if (actionTray) actionTray.style.display = "none";
     }
