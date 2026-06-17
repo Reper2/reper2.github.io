@@ -103,7 +103,7 @@ The platform features native desktop shortcut mapping to streamline navigation, 
 | <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>D</kbd> | Open Developer Source Maps and Script Distribution Layers (`keybinds.js` / `keybinds.ts`) |
 | <kbd>Ctrl</kbd> + <kbd>Z</kbd> | Reset All Found Easter Eggs |
 
-*Note: Some regions of the keybind screen may contain hidden anomalies. Keep an eye out for hidden blocks while browsing your shortcuts!*
+*Note: Some regions of the keybinds page may contain hidden anomalies. Keep an eye out for hidden bubbles while browsing your shortcuts!*
 
 ## 📱 Progressive Web App Functionality
 If your browser supports modern PWA architecture, you can install this platform to run locally and offline. To optimise performance and storage, asset loading is stratified: only cached backgrounds load without an active network connection, as they are fetched dynamically rather than pre-cached aggressively inside the Service Worker.
