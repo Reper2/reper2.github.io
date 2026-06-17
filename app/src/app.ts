@@ -10,7 +10,7 @@ import {
 import SavUtils from "./core/storage";
 import { applyThemeElements } from "./themes";
 
-// 1. Unified SavUtils Storage Layers
+// Unified SavUtils Storage Layers
 const themeSav = new SavUtils("site-theme");
 const musicSav = new SavUtils("music");
 const grassSav = new SavUtils("grass");
@@ -19,15 +19,18 @@ const grassSav = new SavUtils("grass");
 const bgLoader = new BackgroundDatabaseLoader();
 const musicLoader = new MusicDatabaseLoader();
 const grassLoader = new GrassDatabaseLoader();
-const compiledBackgrounds = await bgLoader.loadWithMetadata();
 
-// 2. High-Level Abstract State Managers with Automated Side-Effects
+// Fetch and resolve all async registries up front before constructing the 'app' tree
+const compiledBackgrounds = await bgLoader.loadWithMetadata();
+const compiledMusicDB = await musicLoader.loadRegistry();
+const compiledGrassDB = await grassLoader.loadRegistry();
+
+// High-Level Abstract State Managers with Automated Side-Effects
 export const themeState = {
   get active(): "original" | "alt" {
     return (themeSav.ls as "original" | "alt") || "alt";
   },
   set active(nextTheme: "original" | "alt") {
-    // Sync storage tiers cleanly via SavUtils proxy logic
     themeSav.ls = nextTheme;
     (window as any).globalState = { theme: nextTheme };
 
@@ -38,15 +41,13 @@ export const themeState = {
       themeLink.disabled = (nextTheme === "original");
     }
 
-    // Fire standard configuration scripts
     applyThemeElements();
   }
 };
 
 export const grassTheme = {
   get active(): string {
-    // Graceful automatic tier fallback through the class hierarchy
-    return grassSav.ss || grassSav.sp || grassSav.ls || app.grass.db.src[0];
+    return grassSav.ss || grassSav.sp || grassSav.ls || compiledGrassDB.src[0];
   },
   set active(themeName: string | null) {
     if (!themeName) {
@@ -98,7 +99,6 @@ export const app = {
     id: ["", "optSet", "optReset", "optRand", "themeToggle"],
     placeholder: ["enter song name", "", "", "", ""],
     onclick: [
-      // Index 0: Form submit text input entry points
       (e: MouseEvent): void => {
         e.preventDefault();
         sfx.playRandomCooking();
@@ -106,7 +106,6 @@ export const app = {
         submit(app.music, app.input._, app.selector._);
         updateUrl(app.music, app.grass, appState);
       },
-      // Index 1: Standard button submission set operations
       (e: MouseEvent): void => {
         e.preventDefault();
         sfx.playRandomCooking();
@@ -114,23 +113,19 @@ export const app = {
         submit(app.music, app.input._, app.selector._);
         updateUrl(app.music, app.grass, appState);
       },
-      // Index 2: Global Clear down engine
       (): void => {
         musicTrackState.active = null;
         grassTheme.active = null;
         updateUrl(app.music, app.grass, appState);
       },
-      // Index 3: Randomization and structural shuffle handling
       (): void => {
         sfx.playRandomCooking();
         appState.playMode = "random";
         pickRandomTrack(app.music);
 
-        // Mutate using our abstract grass setter
         grassTheme.active = app.grass.db.src[Math.floor(Math.random() * app.grass.db.src.length)];
         updateUrl(app.music, app.grass, appState);
       },
-      // Index 4: Transformed, streamlined Theme Switcher Button Interaction
       (): void => {
         const nextTheme = themeState.active === "alt" ? "original" : "alt";
         themeState.active = nextTheme;
@@ -167,14 +162,14 @@ export const app = {
     },
     currentIndex: 0,
     sav: musicSav,
-    db: await musicLoader.loadRegistry(),
+    db: compiledMusicDB,
     opt: []
   } as Music.Config,
 
   grass: {
     elem: <HTMLDivElement>document.getElementById("grassBox"),
     sav: grassSav,
-    db: await grassLoader.loadRegistry(),
+    db: compiledGrassDB,
     opt: [] as HTMLOptionElement[]
   } as Grass.Config,
 
@@ -185,11 +180,7 @@ export const app = {
   } as Background.Config
 };
 
-// Global Element Initialization Hooks
-app.music.elems.forEach((el: HTMLAudioElement) => {
-  el.controls = true; el.style.display = "none"; el.preload = "auto";
-});
-
+// Global Memory Allocations (Safe because they aren't reading from the DOM tree yet)
 for (let i = 0; i < 4; i++) app.break.push(document.createElement("br"));
 for (let i = 0; i < app.label.name.length; i++) {
   app.label._.push(document.createElement("label"));
@@ -220,10 +211,16 @@ app.label._[0].htmlFor = app.selector._[0].name = app.label._[1].htmlFor = app.i
 app.label._[2].htmlFor = app.selector._[1].name = "grass";
 
 $(function () {
-  // Re-run the active theme setter on startup to instantiate operational memory values
+  app.music.elems.forEach((el: HTMLAudioElement | null) => {
+    if (el) {
+      el.controls = true; 
+      el.style.display = "none"; 
+      el.preload = "auto";
+    }
+  });
+
   themeState.active = themeState.active;
 
-  // Only allocate and construct music drop-down matrix data structures if we are on localhost
   if (isLocalhost) {
     for (let i = 0; i < app.selector._.length; i++) {
       app.selector._[i].appendChild(app.placeholder._[i]);
@@ -244,13 +241,11 @@ $(function () {
       }
     }
   } else {
-    // Production Safety Step: Ensure the placeholder is applied only to the grass selector
     app.selector._[1].appendChild(app.placeholder._[1]);
   }
 
   pushGrassOpts(app.grass.opt, app.grass.db);
 
-  // Append music options to music dropdown only on localhost
   if (isLocalhost) {
     for (let i = 0; i < app.music._.length; i++) {
       const optgroup = app.music._[i];
@@ -262,39 +257,32 @@ $(function () {
   }
 
   if (isLocalhost) {
-    // Inject Album Selector, Track Names, and associated UI formatting rules
-    app.form.appendChild(app.label._[0]); // Music Dropdown Label
-    app.form.appendChild(app.selector._[0]); // Music Select Menu
+    app.form.appendChild(app.label._[0]);
+    app.form.appendChild(app.selector._[0]);
     app.form.appendChild(app.break[0]);
-    app.form.appendChild(app.label._[1]); // Audio Filename Label
-    app.form.appendChild(app.input._[0]);  // Input Text Control
+    app.form.appendChild(app.label._[1]);
+    app.form.appendChild(app.input._[0]);
     app.form.appendChild(app.break[1]);
   }
 
-  // Inject Grass Select tools (Always required across both local and live build variations)
   for (let i = 0; i < app.grass.db.src.length; i++) {
     app.selector._[1].appendChild(app.grass.opt[i]);
   }
-  app.form.appendChild(app.label._[2]); // Grass Selector Label
-  app.form.appendChild(app.selector._[1]); // Grass Select Menu
+  app.form.appendChild(app.label._[2]);
+  app.form.appendChild(app.selector._[1]);
   app.form.appendChild(app.break[2]);
 
-  // Handle generic trailing input operations
   for (let i = 1; i < app.input.type.length; i++) {
     app.form.appendChild(app.input._[i]);
   }
 
-  // Streamlined UI Render Side-Effects using the clean Getter logic
   app.grass.elem.style.backgroundImage = `url('/images/grass/${grassTheme.active}.png')`;
 
-  // --- Engine Boot Interceptor & Sync ---
-  // --- Engine Boot Interceptor & Sync ---
   if (isLocalhost) {
     let initialTrack = musicTrackState.active;
     if (initialTrack) {
       musicTrackState.active = initialTrack;
     } else {
-      // Safeguard: Check if app.music exists before picking an initial random track
       if (app.music) {
         pickRandomTrack(app.music);
       }
@@ -302,7 +290,6 @@ $(function () {
 
     const verifiedTrack = musicTrackState.active;
 
-    // 🛡️ CRUCIAL DEEP SAFEGUARD: Verify app.music, its elements array, AND that elements actually exist
     if (verifiedTrack && app.music?.elems && app.music.elems.length > 0 && app.music.elems[0]) {
       const deckA = app.music.elems[0];
 
@@ -332,8 +319,6 @@ $(function () {
       });
       console.log("🚀 Initial Boot Deck Sync Complete:", verifiedTrack);
     } else {
-      // 🌐 Production, secondary apps, & audio-free projects fallback (e.g., desktop-clock)
-      // Simply mark booting as done and skip all track orchestration gracefully!
       console.log("ℹ️ Audio layer unallocated or bypassed for this project scope.");
       appState.isBooting = false;
     }
