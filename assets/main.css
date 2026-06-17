@@ -74,8 +74,8 @@ button, label {
 }
 
 header {
-  font-size: clamp(1.1rem, 2.6vw, 2.2rem); /* 📉 Scaled Down from 1.2rem, 3vw, 2.5rem */
-  margin-top: 1.8vmin;                     /* 📉 Scaled Down from 2vmin */
+  font-size: clamp(1.1rem, 2.6vw, 2.2rem);
+  margin-top: 1.8vmin;
   margin-bottom: 1.8vmin;
   background: linear-gradient(45deg, cyan, #A5F2F3, #B3E7F4, #DDF9F1, #E25C46, #E42217, #CF1020, #AA0033);
   background-clip: text;
@@ -103,32 +103,31 @@ input {
   background-color: skyblue;
 }
 
-/* 📉 Base Button Class - Scaled Down Footprint Completely */
 button {
-  border-radius: 2.5vmin;      /* Down from 3vmin */
+  border-radius: 2.5vmin;
   block-size: auto;
-  min-block-size: 10.5vmin;    /* Down from 12vmin */
-  padding: 1.2vmin 3.5vmin;    /* Inline padding constraint for layout formatting */
-  margin: 0.8vmin;             /* Down from 1vmin */
-  font-size: 4.2vmin;          /* Down from 5vmin */
+  min-block-size: 10.5vmin;
+  padding: 1.2vmin 3.5vmin;
+  margin: 0.8vmin;
+  font-size: 4.2vmin;
   background-color: lightskyblue;
   outline-color: initial;
 }
 
 .boxBtn {
-  border-radius: 1.8vmin;      /* Down from 2vmin */
+  border-radius: 1.8vmin;
   background-color: lightskyblue;
-  padding: 7px;                /* Down from 8px */
-  font-size: 2.7vmin;          /* Down from 3vmin */
+  padding: 7px;
+  font-size: 2.7vmin;
 }
 
 #grassBox {
-  font-size: 3.1vmin;          /* Down from 3.5vmin */
-  width: 63vmin;               /* Down from 70vmin */
-  border-radius: 0.9vmin;      /* Down from 1vmin */
+  font-size: 3.1vmin;
+  width: 65vmin;
+  border-radius: 0.9vmin;
   background-position: center;
-  margin: 9px;                 /* Down from 10px */
-  padding: 7px;                /* Down from 8px */
+  margin: 9px;
+  padding: 7px;
   text-align: center;
 }
 
@@ -139,7 +138,7 @@ kbd {
   border: 1px solid #b4b4b4;
   box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
   color: #333;
-  font-size: .78em;            /* Down from .85em */
+  font-size: .78em;
   font-weight: 700;
   line-height: 1;
   padding: 2px 4px;
@@ -148,8 +147,8 @@ kbd {
 
 .appIcon,
 .link {
-  width: 9vmin;                /* Down from 10vmin */
-  margin-top: 0.9vmin;         /* Down from 1vmin */
+  width: 9vmin;
+  margin-top: 0.9vmin;
   margin-bottom: 0.9vmin;
   border-radius: 30%;
   filter: drop-shadow(0.45vh 0.45vh 0.13vh rgba(0, 0, 0, 0.6));
@@ -173,13 +172,17 @@ kbd {
   top: 100%;
   left: 50%;
   z-index: 1;
-  width: 108px;                /* Down from 120px */
-  margin-left: -54px;          /* Adjusted alignment anchor */
-  padding: 4px 0;              /* Slimmed text footprint spacing */
-  border-radius: 5px;          /* Down from 6px */
+  
+  /* ─── THE CONTENT SPANNING FIX ─── */
+  width: auto;                  /* Removes rigid pixel width restrictions */
+  white-space: nowrap;          /* Keeps text perfectly on one single line */
+  padding: 1vmin 2.5vmin;       /* Adaptive spacing based on text length */
+  transform: translateX(-50%);  /* Keeps it balanced over dead center without hard offsets */
+  
+  border-radius: 5px;
   background-color: #333;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 2.7vmin;          /* Down from 3vmin */
+  font-size: 2.7vmin;
   text-align: center;
   -webkit-text-stroke-width: 0;
   transition: opacity 0.3s; 
@@ -210,9 +213,9 @@ kbd {
 .gold { color: gold; }
 .kb-list { text-align: left; color: cyan; }
 .kb-hint { color: inherit; }
-.kbd-hint { font-size: 4.5vmin; } /* Down from 5vmin */
+.kbd-hint { font-size: 4.5vmin; }
 .socialLogo { margin-right: 9px; }
-.bottom { font-size: 2.7vmin; }   /* Down from 3vmin */
+.bottom { font-size: 2.7vmin; }
 
 #learnmore {
   color: rgb(0, 174, 255);
@@ -221,14 +224,14 @@ kbd {
 
 #back img {
   position: absolute;
-  top: 1.8vmin;                /* Down from 2vmin */
+  top: 1.8vmin;
   left: 1.8vmin;
-  width: 7.2vmin;              /* Down from 8vmin */
+  width: 7.2vmin;
   font-size: 7.2vmin;
 }
 
-#optForm { margin: 3px; }       /* Down from 4px */
-#music { margin: 2px; }         /* Down from 3px */
+#optForm { margin: 3px; }
+#music { margin: 2px; }
 
 /* Only apply hover translation on devices that natively support precision hovering (mice) */
 @media (hover: hover) {
@@ -258,9 +261,9 @@ a:focus-visible .appIcon {
   justify-content: center;
   position: relative; 
   
-  font-size: 4.2vmin;           /* Down from 5vmin */
+  font-size: 4.2vmin;
   block-size: auto;            
-  min-block-size: 10.5vmin;     /* Down from 12vmin */
+  min-block-size: 10.5vmin;
   padding: 1.2vmin 3.5vmin;     
   
   vertical-align: middle;
@@ -292,7 +295,7 @@ a:focus-visible .appIcon {
   .menu-actions-tray {
     flex-direction: column;        
     align-items: stretch;          
-    width: 72vmin;              /* Down from 80vmin */
+    width: 72vmin;
     margin-left: auto;
     margin-right: auto;
   }
@@ -310,15 +313,28 @@ a:focus-visible .appIcon {
   visibility: hidden;   
   display: block;       
   opacity: 0;
-  bottom: 130%;         
+  
+  top: 125%;
+  bottom: auto;         
+  
   left: 50%;
   transform: translateX(-50%);
-  z-index: 10;
-  font-size: 2.7vmin;           /* Down from 3vmin */
+
+  z-index: 999 !important;
+  pointer-events: none;
+  
+  /* ─── CONTROLS AREA CONTENT SPANNING AT bottom OVERRIDES ─── */
+  width: auto;                  /* Removes rigid pixel bounds */
+  white-space: nowrap;          /* Forces content to shape bounds instantly */
+  padding: 1vmin 2.5vmin;       
+  
+  font-size: 2.7vmin;   
+  transition: opacity 0.3s, visibility 0.3s;
 }
 
+/* Force state triggers on element interaction */
 #audctrls button:hover .tooltiptext,
 .menu-actions-tray button:hover .tooltiptext {
-  visibility: visible;
-  opacity: 1;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
