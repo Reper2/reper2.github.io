@@ -17,7 +17,7 @@ export interface ButtonObj {
     labels: string[];
     tooltips: string[];
   };
-  zelda?: {
+  alt?: {
     btn_name: string[];
     playback_labels: string[];
   };

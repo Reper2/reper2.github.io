@@ -23,10 +23,10 @@ const compiledBackgrounds = await bgLoader.loadWithMetadata();
 
 // 2. High-Level Abstract State Managers with Automated Side-Effects
 export const themeState = {
-  get active(): "original" | "zelda" {
-    return (themeSav.ls as "original" | "zelda") || "zelda";
+  get active(): "original" | "alt" {
+    return (themeSav.ls as "original" | "alt") || "alt";
   },
-  set active(nextTheme: "original" | "zelda") {
+  set active(nextTheme: "original" | "alt") {
     // Sync storage tiers cleanly via SavUtils proxy logic
     themeSav.ls = nextTheme;
     (window as any).globalState = { theme: nextTheme };
@@ -132,10 +132,10 @@ export const app = {
       },
       // Index 4: Transformed, streamlined Theme Switcher Button Interaction
       (): void => {
-        const nextTheme = themeState.active === "zelda" ? "original" : "zelda";
+        const nextTheme = themeState.active === "alt" ? "original" : "alt";
         themeState.active = nextTheme;
 
-        if (nextTheme === "zelda") {
+        if (nextTheme === "alt") {
           sfx.playRandomCooking();
         }
         console.log(`🎨 UI Theme State flipped and re-rendered to: ${nextTheme.toUpperCase()}`);

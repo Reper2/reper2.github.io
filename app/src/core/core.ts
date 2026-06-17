@@ -13,9 +13,9 @@ window.devModeStorage = new SavUtils("fvs_dev_force_production");
 // Checks for localhost/subnets, but strictly overrides to false if our session token is set to "true"
 export const isLocalhost = window.devModeStorage.ss === "true" ? false : (
   ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname) ||
-  /^192\.168\\./.test(window.location.hostname) ||
-  /^10\\./.test(window.location.hostname) ||
-  /^172\\.(1[6-9]|2[0-9]|3[0-1])\\./.test(window.location.hostname)
+  /^192\.168\./.test(window.location.hostname) ||
+  /^10\./.test(window.location.hostname) ||
+  /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(window.location.hostname)
 );
 
 /**

@@ -21,7 +21,6 @@ onload = () => {
   }
 };
 
-// --- Step 1: Main Buttons Configuration Objects Matrix ---
 const btns = {
   back: {
     _: document.getElementById("back") as HTMLDivElement,
@@ -46,7 +45,7 @@ const btns = {
       labels: ["⏮️ Prev", "⏸️ Pause", "⏭️ Next"],
       tooltips: ["Previous Track", "Play / Pause Soundtrack", "Next Track"]
     },
-    zelda: {
+    alt: {
       btn_name: ["Show Audio Controls", "Hide Audio Controls"],
       playback_labels: ["Previous", "Pause", "Next"],
     }
@@ -58,7 +57,7 @@ const btns = {
       id: ["eggctrlBtn_show", "eggctrlBtn_hide"],
       disp: ["block", "none"], // 0: Closed (Show visible), 1: Open (Hide visible)
       labels: ["🥚📂 Open Menu", "🥚🔒 Close Menu"],
-      zeldaLabels: ["Show Ledger Options", "Hide Ledger Options"],
+      altLabels: ["Show Ledger Options", "Hide Ledger Options"],
       tooltips: ["Show backup and management utilities", "Hide backup and management utilities"]
     }
   },
@@ -82,26 +81,33 @@ const btns = {
 };
 export default btns;
 
-const isZelda = globalTheme.ls === "zelda";
+const isAlt = globalTheme.ls === "alt";
 
-// --- Step 2: Global UI Handlers ---
-
-// Back Button Layout Processing
+// Back Button
 if (btns.back._) {
   btns.back._.onclick = () => {
-    if (document.referrer && document.referrer.startsWith(window.location.origin)) {
-      window.location.href = document.referrer;
-    } else {
-      window.location.href = window.location.origin;
+    if (document.referrer) {
+      try {
+        const referrerUrl = new URL(document.referrer);
+        const currentUrl = new URL(window.location.href);
+
+        // Enforce exact origin constraints to isolate internal application routes
+        if (referrerUrl.origin === currentUrl.origin) {
+          window.location.href = document.referrer;
+          return;
+        }
+      } catch (e) {
+        console.error("Failed to safely parse document referrer parameter context:", e);
+      }
     }
+    // Strict perimeter fallback to prevent unintended open redirects
+    window.location.href = window.location.origin;
   };
   [btns.back.btn.src, btns.back.btn.title] = ["/images/back.png", "Back (Alt+◁)"];
   btns.back._.appendChild(btns.back.btn);
 }
 
-// Ensure your src/buttons.ts matches this kickoff layout
 if (btns.audctrls._ && isLocalhost) {
-  // Pass elementId, configuration tracking array, and operational targets cleanly
   new AudioControlPanel("audctrls", btns.audctrls, app);
 }
 
@@ -109,9 +115,9 @@ if (btns.eggMenu._) {
   new EggCookbookPanel("eggMenu", btns.eggMenu);
 }
 
-// Copy Action Registration
+// Copy Button
 if (btns.copy._) {
-  btns.copy.btn.innerHTML = isZelda ? "Copy Link" : "📋🔗";
+  btns.copy.btn.innerHTML = isAlt ? "Copy Link" : "📋🔗";
   btns.copy._.className = "tooltip";
   btns.copy.btn.onclick = (): void => copyLink(window.location.href);
   
@@ -120,7 +126,7 @@ if (btns.copy._) {
   btns.copy._.appendChild(btns.copy.btn);
 }
 
-// Footer Component Processing
+// Footer
 if (btns.footer._) {
   btns.footer.cr.license.title = "View License (Alt+L)";
   btns.footer.cr.license.href = "https://github.com/Reper2/reper2.github.io/blob/master/LICENSE";
@@ -183,7 +189,7 @@ if (btns.sw._) {
     btns.sw._.className = "tooltip";
     if (globalTheme.ls === "original") {
       btns.sw.btn.innerHTML = "🌐📲";
-    } else if (globalTheme.ls === "zelda") {
+    } else if (globalTheme.ls === "alt") {
       btns.sw.btn.innerHTML = "Install App";
     } else {
       throw new TypeError(`Unknown theme state: ${globalTheme.ls}`);

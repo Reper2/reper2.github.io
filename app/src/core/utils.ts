@@ -8,13 +8,13 @@ import { isLocalhost, appState } from "./core";
 import SavUtils from "./storage";
 
 export const sfx = {
-  cookingNormal: new Audio("/assets/zelda-theme/cooking_success.mp3"),
-  cookingCritical: new Audio("/assets/zelda-theme/cooking_critical.mp3"),
-  cookingDubious: new Audio("/assets/zelda-theme/cooking_failed.mp3"),
+  cookingNormal: new Audio("/assets/alt-theme/cooking_success.mp3"),
+  cookingCritical: new Audio("/assets/alt-theme/cooking_critical.mp3"),
+  cookingDubious: new Audio("/assets/alt-theme/cooking_failed.mp3"),
 
   playRandomCooking() {
     if (!isLocalhost) return;
-    if ((window as any).globalState?.theme !== "zelda") return;
+    if ((window as any).globalState?.theme !== "alt") return;
 
     const roll = Math.random();
     let selectedAudio: HTMLAudioElement;
@@ -116,12 +116,12 @@ export class AudioControlPanel extends BasePanel {
     this.toggleBtns = [];
     this.playbackBtns = [];
 
-    const isZelda = globalTheme.ls === "zelda";
+    const isAlt = globalTheme.ls === "alt";
     const stateIdx = Number(this.isOpen);
 
     const switchLabels = [
-      isZelda ? this.config.zelda.btn_name[0] : this.config.btn.name[0],
-      isZelda ? this.config.zelda.btn_name[1] : this.config.btn.name[1]
+      isAlt ? this.config.alt.btn_name[0] : this.config.btn.name[0],
+      isAlt ? this.config.alt.btn_name[1] : this.config.btn.name[1]
     ];
 
     for (let i = 0; i < 2; i++) {
@@ -141,9 +141,9 @@ export class AudioControlPanel extends BasePanel {
     }
 
     const playbackData = [
-      { id: "audBtn_prev", label: isZelda ? "Previous" : "⏮️ Prev", tip: "Previous Track", action: () => triggerPreviousTrack(this.obj.music, this.obj.grass, appState) },
-      { id: "audBtn_playPause", label: isZelda ? "Pause" : "⏸️ Pause", tip: "Play / Pause Soundtrack", action: (btn: HTMLButtonElement) => togglePlayPause(this.obj.music, btn) },
-      { id: "audBtn_next", label: isZelda ? "Next" : "⏭️ Next", tip: "Next Track", action: () => triggerNextTrack(this.obj.music, this.obj.grass, appState) }
+      { id: "audBtn_prev", label: isAlt ? "Previous" : "⏮️ Prev", tip: "Previous Track", action: () => triggerPreviousTrack(this.obj.music, this.obj.grass, appState) },
+      { id: "audBtn_playPause", label: isAlt ? "Pause" : "⏸️ Pause", tip: "Play / Pause Soundtrack", action: (btn: HTMLButtonElement) => togglePlayPause(this.obj.music, btn) },
+      { id: "audBtn_next", label: isAlt ? "Next" : "⏭️ Next", tip: "Next Track", action: () => triggerNextTrack(this.obj.music, this.obj.grass, appState) }
     ];
 
     playbackData.forEach(item => {
@@ -151,7 +151,7 @@ export class AudioControlPanel extends BasePanel {
       btn.id = item.id;
       btn.className = "tooltip";
       btn.innerHTML = item.label;
-      btn.style.display = this.isOpen ? "inline-block" : "none";
+      btn.style.display = this.isOpen ? "inline-flex" : "none";
 
       const tip = document.createElement("span");
       tip.className = "tooltiptext";
@@ -180,7 +180,7 @@ export class AudioControlPanel extends BasePanel {
     });
 
     this.playbackBtns.forEach(btn => {
-      if (btn) btn.style.display = this.isOpen ? "inline-block" : "none";
+      if (btn) btn.style.display = this.isOpen ? "inline-flex" : "none";
     });
 
     if (this.isOpen) {
@@ -207,14 +207,14 @@ export class EggCookbookPanel extends BasePanel implements AppPanel {
     this.container.innerHTML = "";
     this.config.toggle._ = [];
 
-    const isZelda = globalTheme.ls === "zelda";
+    const isAlt = globalTheme.ls === "alt";
 
     for (let i = 0; i < this.config.toggle.labels.length; i++) {
       const toggleBtn = document.createElement("button");
       toggleBtn.id = this.config.toggle.id[i];
       toggleBtn.className = "tooltip cookbook-toggle-btn";
       toggleBtn.style.display = this.config.toggle.disp[i];
-      toggleBtn.innerHTML = isZelda ? this.config.toggle.zeldaLabels[i] : this.config.toggle.labels[i];
+      toggleBtn.innerHTML = isAlt ? this.config.toggle.altLabels[i] : this.config.toggle.labels[i];
 
       const tooltip = document.createElement("span");
       tooltip.className = "tooltiptext";
@@ -237,7 +237,7 @@ export class EggCookbookPanel extends BasePanel implements AppPanel {
 
     const actions = [
       {
-        label: isZelda ? "Save Ledger" : "💾 Save",
+        label: isAlt ? "Save Ledger" : "💾 Save",
         tip: "Save your active profile progress",
         click: () => {
           try {
@@ -251,12 +251,12 @@ export class EggCookbookPanel extends BasePanel implements AppPanel {
         }
       },
       {
-        label: isZelda ? "Import Ledger" : "📥 Import",
+        label: isAlt ? "Import Ledger" : "📥 Import",
         tip: "Restore a profile backup file (.eggfvs)",
         click: () => this.triggerFileImport()
       },
       {
-        label: isZelda ? "Export Ledger" : "📤 Export",
+        label: isAlt ? "Export Ledger" : "📤 Export",
         tip: "Download a secured backup file",
         click: () => {
           try {
@@ -270,10 +270,10 @@ export class EggCookbookPanel extends BasePanel implements AppPanel {
         }
       },
       {
-        label: isZelda ? "Reset Ledger" : "🥚🗑️ Reset",
+        label: isAlt ? "Reset Ledger" : "🥚🗑️ Reset",
         tip: "Reset All Eggs (Ctrl+Z)",
         click: () => {
-          const confirmMsg = isZelda ? "Are you sure you want to wipe the ledger?" : "Reset all progress?";
+          const confirmMsg = isAlt ? "Are you sure you want to wipe the ledger?" : "Reset all progress?";
           if (confirm(confirmMsg)) {
             const legacyJar = new SavUtils("eggs");
             const safeJar = new SavUtils("fvs_egghunt_secure");
@@ -312,10 +312,10 @@ export class EggCookbookPanel extends BasePanel implements AppPanel {
 
     if (this.isOpen) {
       if (showBtn) showBtn.style.display = "none";
-      if (hideBtn) hideBtn.style.display = "block";
+      if (hideBtn) hideBtn.style.display = "inline-flex";
       if (actionTray) actionTray.style.display = "flex";
     } else {
-      if (showBtn) showBtn.style.display = "block";
+      if (showBtn) showBtn.style.display = "inline-flex";
       if (hideBtn) hideBtn.style.display = "none";
       if (actionTray) actionTray.style.display = "none";
     }
@@ -329,18 +329,18 @@ export class EggCookbookPanel extends BasePanel implements AppPanel {
     uploader.onchange = async () => {
       const file = uploader.files?.[0];
       if (!file) return;
-      const isZelda = globalTheme.ls === "zelda";
+      const isAlt = globalTheme.ls === "alt";
 
       try {
         const buffer = await file.arrayBuffer();
         const binaryData = new Uint8Array(buffer);
-        
+
         const activeState = getParsedState();
         const parsedState = vault.importFromFile(binaryData, activeState);
 
         if (parsedState) {
           vault.save(parsedState);
-          alert(isZelda ? "📜 Ledger authenticated and restored successfully!" : "Save imported successfully!");
+          alert(isAlt ? "📜 Ledger authenticated and restored successfully!" : "Save imported successfully!");
           location.reload();
         } else {
           alert("🚨 Failed to parse file verification signatures.");

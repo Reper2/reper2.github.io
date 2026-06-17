@@ -30,23 +30,20 @@
   <script src="/app/lib/jquery-4.0.0.min.js" defer></script>
   <script>
     // Block rendering for a millisecond to pull the theme before the DOM draws
-    if (localStorage.getItem("site-theme") === "zelda") {
+    if (localStorage.getItem("site-theme") === "alt") {
       const link = document.createElement("link");
       link.id = "theme-link";
       link.rel = "stylesheet";
-      link.href = "/assets/zelda.css";
+      link.href = "/assets/alt-theme.css";
       document.head.appendChild(link);
     } else if (!localStorage.getItem("site-theme")) {
-      localStorage.setItem("site-theme", "zelda");
+      localStorage.setItem("site-theme", "alt");
     }
   </script>
 </head>
 
 <body id="_bg">
-  <div class="egg" data-egg="fvsHome_aboveHeader">
-    <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
-    <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
-  </div>
+  <div class="egg" data-egg="fvsHome_aboveHeader"></div>
   <header>Frosty Volcano Summit</header>
   <main>
     <div id="grassBox">
@@ -60,26 +57,20 @@
         <span class="gold">Hobbies:</span> Programming, Console Gaming, LEGO<br>
         <span class="gold">Favourite Themes:</span> Ice, Fire, Space, Islands
       </p>
-      <div class="egg" data-egg="firstEgg">
-        <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
-        <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
-      </div>
+      <div class="egg" data-egg="firstEgg"></div>
       <p>
         <span class="gold">Favourite Animals:</span> Penguins, Sea Turtles, Pandas<br>
         <span class="gold">Favourite Pokemon:</span> Piplup, Squirtle, Pancham, Charmander<br>
-        <span class="gold">Favourite Game Franchises:</span> Mario, Zelda, Pokemon<br>
+        <span class="gold">Favourite Game Franchises:</span> Mario, alt, Pokemon<br>
         <span class="gold">Favourite Games:</span> Super Mario Galaxy 1 + 2, Animal Crossing: New Horizons, The Legend
-        of Zelda: Breath of the Wild, Pokemon Legends: Arceus
+        of alt: Breath of the Wild, Pokemon Legends: Arceus
         <br>
         <span class="gold">Favourite Music Artists:</span> Billy Joel, EWF, George Michael, David Bowie<br>
         <span class="gold">Favourite Song:</span> September — EWF
         <br><br>
         <span class="gold">SW-1847-3699-7280</span>
       </p>
-      <div class="egg" data-egg="switchFC">
-        <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
-        <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon!">
-      </div>
+      <div class="egg" data-egg="switchFC"></div>
       <a rel="noopener noreferrer" id="learnmore" target="_blank" href="https://github.com/Reper2"
         title="Location: Reper2 - GitHub (https://github.com/Reper2)">Learn more</a>
       <br><br>
@@ -95,20 +86,14 @@
     </div>
 
     <form id="optForm"></form>
-    <div class="egg" data-egg="fvsHome_underForm">
-      <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
-      <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon!">
-    </div>
+    <div class="egg" data-egg="fvsHome_underForm"></div>
     <div class="flex">
       <div id="audctrls"></div>
       <div id="eggMenu"></div>
       <div id="copy"></div>
       <div id="install"></div>
     </div>
-    <div class="egg" data-egg="fvsHome_underBtns">
-      <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
-      <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon!">
-    </div>
+    <div class="egg" data-egg="fvsHome_underBtns"></div>
     <audio id="music"></audio>
   </main>
   <footer id="footer" class="bottom"></footer>

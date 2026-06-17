@@ -29,7 +29,7 @@ button,
   
   /* Slicing asset rules to prevent distortion */
   border: 12px solid transparent;
-  border-image-source: url("/assets/zelda-theme/button.svg");
+  border-image-source: url("/assets/alt-theme/button.svg");
   border-image-slice: 12 fill;
   border-image-repeat: stretch;  
   
@@ -43,7 +43,7 @@ select {
   -webkit-appearance: none;
   border: none;
   border-radius: 0;
-  background-image: url("/assets/zelda-theme/selector.png");
+  background-image: url("/assets/alt-theme/selector.png");
   background-color: transparent;
   background-position: center;
   background-repeat: no-repeat;
@@ -95,7 +95,7 @@ button {
   border-width: 8vmin 12vmin 6vmin 8vmin;
   border-style: solid;
   border-color: transparent;
-  border-image-source: url("/assets/zelda-theme/sheikah-frame.png");
+  border-image-source: url("/assets/alt-theme/sheikah-frame.png");
   border-image-slice: 16% 22% 13% 16%; 
   border-image-repeat: round;
 } */

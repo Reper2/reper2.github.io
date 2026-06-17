@@ -1,6 +1,6 @@
 import SavUtils from "./core/storage";
 
-export type ThemeType = "original" | "zelda"; 
+export type ThemeType = "original" | "alt"; 
 
 // Maintain local compatibility, but dynamically look up the window/session state
 export const globalTheme = new SavUtils("site-theme");
@@ -18,12 +18,12 @@ export function applyThemeElements(): void {
     document.head.appendChild(themeLink);
   }
 
-  if (globalTheme.ls === "zelda") {
-    themeLink.href = "/assets/zelda.css";
+  if (globalTheme.ls === "alt") {
+    themeLink.href = "/assets/alt-theme.css";
     themeLink.disabled = false; // 🔑 Ensure the tag is explicitly enabled
-    console.log("⚔️ Zelda CSS layers injected dynamically.");
+    console.log("⚔️ alt CSS layers injected dynamically.");
   } else {
     themeLink.disabled = true; 
-    console.log("😐 Original fallback enabled (Zelda overrides purged).");
+    console.log("😐 Original fallback enabled (alt overrides purged).");
   }
 }

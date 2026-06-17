@@ -30,14 +30,14 @@
   <script src="/app/lib/jquery-4.0.0.min.js" defer></script>
   <script>
     // Block rendering for a millisecond to pull the theme before the DOM draws
-    if (localStorage.getItem("site-theme") === "zelda") {
+    if (localStorage.getItem("site-theme") === "alt") {
       const link = document.createElement("link");
       link.id = "theme-link";
       link.rel = "stylesheet";
-      link.href = "/assets/zelda.css";
+      link.href = "/assets/alt-theme.css";
       document.head.appendChild(link);
     } else if (!localStorage.getItem("site-theme")) {
-      localStorage.setItem("site-theme", "zelda");
+      localStorage.setItem("site-theme", "alt");
     }
   </script>
 </head>
@@ -46,10 +46,7 @@
   <header>Frosty Volcano Summit</header>
   <main>
     <div id="back"></div>
-    <div class="egg" data-egg="fvsSocials_aboveTitle">
-      <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
-      <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
-    </div>
+    <div class="egg" data-egg="fvsSocials_aboveTitle"></div>
     <h1 width="7vmin">Social Links</h1>
     <div id="grassBox">
       <a href="https://www.youtube.com/@sp.eth2976" title="Cyber Penguin - YouTube">
@@ -76,10 +73,7 @@
         <img src="/images/social-logos/reddit-logo.webp" class="link" alt="reddit_logo">
       </a>
 
-      <div class="egg" data-egg="fvsSocials">
-        <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
-        <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
-      </div>
+      <div class="egg" data-egg="fvsSocials"></div>
 
       <a href="https://islaatlas.com/en/" title="Isla Atlas - SCBI Club Network">
         <img src="https://islaatlas.com/images/logos/logoia_350x133px.png" class="link" alt="ia_logo">
@@ -87,20 +81,14 @@
     </div>
 
     <form id="optForm"></form>
-    <div class="egg" data-egg="fvsSocials_underForm">
-      <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
-      <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
-    </div>
+    <div class="egg" data-egg="fvsSocials_underForm"></div>
     <div class="flex">
       <div id="eggMenu"></div>
       <div id="copy"></div>
       <div id="install"></div>
       <div id="audctrls"></div>
     </div>
-    <div class="egg" data-egg="fvsSocials_underBtns">
-      <img class="egg-box" src="/images/hidden_block.png" alt="Egg - Hidden Block">
-      <img class="egg-cracked" src="/images/moon.png" alt="Egg - Moon">
-    </div>
+    <div class="egg" data-egg="fvsSocials_underBtns"></div>
     <audio id="music"></audio>
   </main>
   <footer id="footer" class="bottom"></footer>
