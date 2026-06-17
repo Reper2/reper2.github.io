@@ -27,6 +27,17 @@ To protect against technical leakage and restrict diagnostic backdoors, the plat
 ## 🥚 Easter Eggs & Cryptographic System
 I have hidden complex Easter eggs across my digital ecosystem. Locating all hidden elements unlocks a premium portal showcasing the true personality of Frosty Volcano Summit. As new eggs are introduced into production, access to the premium tier is revoked until the new parameters are identified. 
 
+### 🫧 Procedural 3D Soap Bubble Engine (`bubble.ts`)
+
+The project features a fully dynamic, hardware-accelerated **3D Soap Bubble Engine** built with raw WebGL via **Three.js**. It programmatically constructs realistic, iridescent geometric structures to house interface assets without requiring heavyweight pre-rendered 3D textures or external asset pipelines.
+
+#### 🌟 Key Enhancements
+* **Zero-Asset Footprint:** Operates completely using procedural mathematics inside GPU compilation blocks.
+* **Smart Performance Management:** Fully optimized with automatic lifecycle hooks via a `MutationObserver` instance. If a parent container is pruned from the page DOM, the animation loop freezes and unbinds allocated GPU memory structures (`geometry`, `material`, and `renderer` contexts) instantly to prevent memory leaks.
+* **Auto-Adaptive Render Layers:** Detects modern context configurations and degrades seamlessly down to an alternate fallback matrix on restricted configurations.
+
+---
+
 ### 🛡️ Security Architecture, Obfuscation & Deterrence
 From a defensive security perspective, this subsystem was engineered to introduce client-side deterrence against rapid manipulation, simple runtime modification, and superficial reverse engineering:
 * **Cryptographic Verification:** The egg hunting architecture relies on canonical strings that are dynamically hashed and executed to attempt decryption of the reward payload. The final validation object acts as the authenticated encryption/decryption key, complete with an **AEAD auth tag** to defend against basic ciphertext tampering.
