@@ -55,7 +55,7 @@ if (globalTheme.ls === "alt") {
 }
 
 export const STORAGE_KEY = "eggs";
-export const TOTAL_EGGS = 24;
+export const TOTAL_EGGS = 30;
 
 let payloadIv: BufferSource | null = null;
 let payloadData: BufferSource | null = null;
