@@ -7,7 +7,7 @@ import SavUtils from "./core/storage";
 
 onload = () => {
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/sw.js").then((reg) => {
+    navigator.serviceWorker.register("sw.js").then((reg) => {
       console.groupCollapsed("Service Worker Status");
       if (reg.installing) {
         console.log("service worker installing...");

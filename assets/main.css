@@ -217,7 +217,7 @@ kbd {
 .socialLogo { margin-right: 9px; }
 .bottom { font-size: 2.7vmin; }
 
-#learnmore {
+#learnmore, .dLink {
   color: rgb(0, 174, 255);
   text-decoration: underline;
 }

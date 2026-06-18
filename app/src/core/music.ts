@@ -58,7 +58,7 @@ export async function getTrackUrl(obj: Music.Config, sav: string): Promise<strin
       if (track.name.replace(/\.[^/.]+$/, "") === sav) {
 
         // 🌐 Directly build the relative network path to the loose asset file
-        const directAssetPath = `./assets/music/${album.name}/${track.name}`;
+        const directAssetPath = `/assets/music/${album.name}/${track.name}`;
 
         // Return the raw URL string immediately—no extraction required!
         return directAssetPath;

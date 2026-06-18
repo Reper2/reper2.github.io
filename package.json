@@ -12,12 +12,17 @@
   "dependencies": {
     "@zip.js/zip.js": "^2.8.26",
     "dom": "^0.0.3",
+    "express": "^5.2.1",
     "javascript-obfuscator": "^5.4.2",
+    "local-web-server": "^5.4.0",
+    "serve": "^14.2.6",
     "three": "^0.184.0",
     "window": "^1.0.0",
     "workbox-cli": "^7.4.1"
   },
   "scripts": {
+    "ls": "node ./cmd/server.js",
+    "buildf": "npm run build && npm run resolveModules && npm run obfuscate && workbox generateSW",
     "clean": "rm -rf ./app/dist && rm -f ./**/*.tsbuildinfo",
     "build": "npm run clean && npx tsc -p ./app/tsconfig.json",
     "watch": "nodemon --watch app --ext ts --exec 'npm run build'",
