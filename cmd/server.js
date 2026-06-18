@@ -19,6 +19,7 @@ app.use('/', express.static(projectRoot, staticOptions));
 const repos = [
   'acnh',
   'acnh-apps',
+  'desktop-clock',
   'holiday-album',
   'mario-texture-pack',
   'mobile-clock',
