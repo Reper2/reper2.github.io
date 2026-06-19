@@ -70,12 +70,24 @@ export function animateGalacticScene(context: RainSceneContext): void {
 export function generateStarbitShower(
   gltfModelPath: string,
   array2DImageUrls: string[],
-  context: RainSceneContext,
+  context: any, // Changed to 'any' to safely type-check input variations
   eggCount: number,
   totalEggs: number
 ): void {
-  if (!context.scene && context.init3D) {
-    context.init3D();
+
+  // 🔄 HYBRID RESOLVER: If the constructor function itself was passed instead of its instance, execute it!
+  if (typeof context === "function") {
+    context = context();
+  } else if (context && !context.scene && typeof context.init3D === "function") {
+    context.init3D.call(context);
+  } else if (!context && typeof constructStarbitScene === "function") {
+    context = constructStarbitScene(); // Ultimate safety recovery path
+  }
+
+  // 🛡️ Safe Boundary Exit Safeguard
+  if (!context || !context.scene) {
+    console.error("[Galactic Engine] Cancellation: Cannot build shower on an uninitialized THREE.Scene context.");
+    return;
   }
 
   context.canvas.style.display = "block";

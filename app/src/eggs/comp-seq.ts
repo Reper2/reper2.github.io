@@ -234,10 +234,23 @@ export function startCompSeq(
 
   window.addEventListener("resize", onWindowResize);
 
-  getGLTFLoaderClass().then((LoaderClass) => {
-    const loader = new LoaderClass();
+  getGLTFLoaderClass().then((GLTFLoaderClass) => {
+    const loader = new GLTFLoaderClass();
+
     loader.load(gltfModelPath, (gltf: any) => {
-      const masterMesh = gltf.scene.children[0] as THREE.Mesh;
+      
+      let masterMesh: THREE.Mesh | null = null;
+      gltf.scene.traverse((child: any) => {
+        if (!masterMesh && child.isMesh) {
+          masterMesh = child;
+        }
+      });
+
+      // Guard pass to log clean feedback if the asset goes completely missing
+      if (!masterMesh) {
+        console.error("[End Sequence Engine] Failed to identify any structural THREE.Mesh inside the loaded glTF.");
+        return;
+      }
       tick(masterMesh);
     }, undefined, (err: any) => {
       console.error("GLTF loader exception inside comp-seq:", err);
