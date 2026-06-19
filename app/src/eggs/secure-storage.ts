@@ -120,7 +120,7 @@ export class SecureProgressVault implements ProgressTransport {
   /**
    * 📥 Diagnostic Importer: Parses file payloads, maps structures, and logs safe metrics
    */
-  public importFromFile(binaryData: Uint8Array): EggState | null {
+  public importFromFile(binaryData: Uint8Array, currentState?: EggState): EggState | null {
     if (!(binaryData instanceof Uint8Array)) {
       throw new TypeError(`[SecureProgressVault] Expected an instance of Uint8Array for binary decoding, received: ${typeof binaryData}`);
     }
@@ -162,14 +162,14 @@ export class SecureProgressVault implements ProgressTransport {
 
       // --- 1. CAPTURE THE LIVE PRE-EXISTING BROWSER PROGRESS STATE ---
       console.group("📊 Dimension 1: Pre-Existing Browser Session Progress");
-      let runningState: EggState = {};
+      let runningState: EggState = { ...currentState };
       const rawSecure = this.safeJar.ls;
 
       if (rawSecure) {
         try {
           const parsed = JSON.parse(rawSecure);
           if (parsed && typeof parsed === "object" && "payload" in parsed) {
-            runningState = { ...parsed.payload };
+            runningState = { ...runningState, ...parsed.payload };
           }
         } catch {
           console.warn("No structured profile could be loaded from local storage. Starting blank canvas mapping.");

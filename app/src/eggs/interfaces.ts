@@ -16,6 +16,6 @@ export interface ProgressVault {
 }
 
 export interface ProgressTransport extends ProgressVault {
-  importFromFile(binaryData: Uint8Array, currentState: EggState): EggState | null;
+  importFromFile(binaryData: Uint8Array, currentState?: EggState): EggState | null;
   exportToFile(state: EggState): void;
 }
