@@ -63,6 +63,9 @@ export namespace Background {
      * This is used to determine which backgrounds to display for each branch.
      */
     game: (keyof DatabaseStructure)[];
+
+    get category();
+    get specificGame();
   }
 }
 

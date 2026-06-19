@@ -2,7 +2,8 @@ import { copyLink } from "./core/";
 import vault from "./eggs/vault";
 
 document.addEventListener("keydown", (k: KeyboardEvent) => {
-  const target = k.target as HTMLElement;
+  if (!(k.target instanceof HTMLElement)) return;
+  const target = k.target;
   if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable) {
     // Exception: Allow Enter to still submit the form even when inside the input
     if (k.key === "Enter") {
@@ -27,7 +28,7 @@ document.addEventListener("keydown", (k: KeyboardEvent) => {
     console.warn("Alt+S was pressed");
     document.getElementById("audctrlBtn_show")?.click();
   }
-  
+
   if (k.altKey && keyLower === "h") {
     k.preventDefault();
     console.warn("Alt+H was pressed");

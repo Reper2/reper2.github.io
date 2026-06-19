@@ -13,6 +13,10 @@ class SavUtils {
   }
 
   set ss(value: string) {
+    if (typeof value !== "string") {
+      console.warn(`[SavUtils] Expected type string for key "${this.key}", received ${typeof value}. Stringifying payload automatically.`);
+      value = JSON.stringify(value);
+    }
     try { sessionStorage.setItem(this.key, value); } catch { }
   }
 
@@ -21,6 +25,10 @@ class SavUtils {
   }
 
   set ls(value: string) {
+    if (typeof value !== "string") {
+      console.warn(`[SavUtils] Expected type string for key "${this.key}", received ${typeof value}. Stringifying payload automatically.`);
+      value = JSON.stringify(value);
+    }
     try { localStorage.setItem(this.key, value); } catch { }
   }
 
@@ -29,6 +37,10 @@ class SavUtils {
   }
 
   set sp(value: string) {
+    if (typeof value !== "string") {
+      console.warn(`[SavUtils] Expected type string for key "${this.key}", received ${typeof value}. Stringifying payload automatically.`);
+      value = JSON.stringify(value);
+    }
     const url = new URL(window.location.href);
     url.searchParams.set(this.key, value);
     window.history.replaceState({}, '', url.toString());

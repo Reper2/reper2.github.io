@@ -46,6 +46,10 @@ export async function fetchAudioFromZip(fullTrackPath: string): Promise<string> 
     const blobWriter = new BlobWriter();
     const unzippedData = await trackEntry.getData(blobWriter);
 
+    if (!(unzippedData instanceof Blob)) {
+      throw new TypeError(`[ZipExtractor] Extracted data structure was expected to be a Blob instance, received: ${typeof unzippedData}`);
+    }
+
     const audioBlob = unzippedData as Blob;
 
     // Generate and return a local browser runtime URL safely

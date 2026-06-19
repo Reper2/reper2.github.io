@@ -74,17 +74,17 @@ const sfx = {
       if (!korokInstance && THEME_ASSETS.alt.sfxKorok) {
         korokInstance = new Audio(THEME_ASSETS.alt.sfxKorok);
       }
-      
+
       if (korokInstance) {
         this.executePlayback(korokInstance);
       }
-    } 
-    
+    }
+
     else if (effect === 'shrineFanfare') {
       if (!fanfareInstance && THEME_ASSETS.alt.sfxFanfare) {
         fanfareInstance = new Audio(THEME_ASSETS.alt.sfxFanfare);
       }
-      
+
       if (fanfareInstance) {
         this.executePlayback(fanfareInstance);
       }
@@ -375,24 +375,28 @@ export function showReward(content: string): void {
 
   try {
     const reward = JSON.parse(cleanContent);
-    if (reward && (reward.type === "stylesheet" || reward.type === "styleBlock")) {
-      const alreadyInjected = document.getElementById("egg-reward-styles");
+    if (reward && typeof reward === "object" && "type" in reward) {
+      if (reward && (reward.type === "stylesheet" || reward.type === "styleBlock")) {
+        const alreadyInjected = document.getElementById("egg-reward-styles");
 
-      if (!alreadyInjected && globalTheme.ls === "alt") {
-        sfx.playInstant('shrineFanfare');
-      }
+        if (!alreadyInjected && globalTheme.ls === "alt") {
+          sfx.playInstant('shrineFanfare');
+        }
 
-      const style = alreadyInjected || document.createElement("style");
-      style.id = "egg-reward-styles";
-      style.textContent = typeof reward.value === "string" ? reward.value : String(reward.value);
+        const style = alreadyInjected || document.createElement("style");
+        style.id = "egg-reward-styles";
+        style.textContent = typeof reward.value === "string" ? reward.value : String(reward.value);
 
-      if (!alreadyInjected) {
-        document.head.appendChild(style);
+        if (!alreadyInjected) {
+          document.head.appendChild(style);
+        }
+        if (globalTheme.ls === "alt") {
+          globalTheme.ls = "original";
+        }
+        return;
       }
-      if (globalTheme.ls === "alt") {
-        globalTheme.ls = "original";
-      }
-      return;
+    } else {
+      console.error("`Reward` is not an object or `type` does not exist on `reward`");
     }
   } catch (e) {
     console.error("Reward parsing crashed:", e);

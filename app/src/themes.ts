@@ -1,6 +1,6 @@
 import SavUtils from "./core/storage";
 
-export type ThemeType = "original" | "alt"; 
+export type ThemeType = "original" | "alt";
 
 // Maintain local compatibility, but dynamically look up the window/session state
 export const globalTheme = new SavUtils("site-theme");
@@ -10,7 +10,7 @@ export const globalTheme = new SavUtils("site-theme");
  */
 export function applyThemeElements(): void {
   let themeLink = document.getElementById("theme-link") as HTMLLinkElement;
-  
+
   if (!themeLink) {
     themeLink = document.createElement("link");
     themeLink.id = "theme-link";
@@ -18,12 +18,15 @@ export function applyThemeElements(): void {
     document.head.appendChild(themeLink);
   }
 
-  if (globalTheme.ls === "alt") {
+  const currentTheme = globalTheme.ls;
+
+  if (typeof currentTheme === "string" && currentTheme === "alt") {
     themeLink.href = "/assets/alt-theme.css";
-    themeLink.disabled = false; // 🔑 Ensure the tag is explicitly enabled
-    console.log("⚔️ alt CSS layers injected dynamically.");
+    themeLink.disabled = false;
+  } else if (typeof currentTheme === "string" && currentTheme === "original") {
+    themeLink.disabled = true;
   } else {
-    themeLink.disabled = true; 
-    console.log("😐 Original fallback enabled (alt overrides purged).");
+    // Gracefully clear out anomalies or throw explicit errors
+    throw new TypeError(`Unknown or corrupt theme state detected: Value primitive is a ${typeof currentTheme}`);
   }
 }

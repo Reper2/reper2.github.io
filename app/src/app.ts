@@ -25,6 +25,31 @@ const compiledBackgrounds = await bgLoader.loadWithMetadata();
 const compiledMusicDB = await musicLoader.loadRegistry();
 const compiledGrassDB = await grassLoader.loadRegistry();
 
+const bgSav = {
+  cat: new SavUtils("bg_cat"),
+  game: new SavUtils("bg_game")
+}
+
+export const bgSelectionState = {
+  get category(): string {
+    return bgSav.cat.ss ?? bgSav.cat.sp ?? "games"; // defaults to games
+  },
+  set category(val: string) {
+    bgSav.cat.ss = bgSav.cat.sp = val;
+  },
+  get specificGame(): string | null {
+    return bgSav.game.ss ?? bgSav.game.sp ?? null;
+  },
+  set specificGame(val: string | null) {
+    bgSav.game.ss = bgSav.game.sp = val ?? "";
+  }
+};
+
+const bgElem = document.getElementById("_bg");
+if (!(bgElem instanceof HTMLBodyElement)) {
+  throw new Error("[App Initialisation] Target background container element '#_bg' was not found or is not a valid HTMLBodyElement.");
+}
+
 // 2. High-Level Abstract State Managers with Automated Side-Effects
 export const themeState = {
   get active(): "original" | "alt" {
@@ -81,15 +106,31 @@ export const app = {
   form: document.getElementById("optForm") as HTMLFormElement | null,
   label: {
     _: [] as HTMLLabelElement[],
-    name: ["select song:", "or type the name:", "select box background:"]
+    name: [
+      "select song:",
+      "or type the name:",
+      "select box background:",
+      "select page background category:",
+      "then select specific game:"
+    ]
   },
   selector: {
     _: [] as HTMLSelectElement[],
-    title: ["select a soundtrack from the dropdown then click SET", "select grass (box background) then click SET"]
+    title: [
+      "select a soundtrack from the dropdown then click SET",
+      "select grass (box background) then click SET",
+      "choose between games or holiday albums",
+      "choose a specific game album"
+    ]
   },
   placeholder: {
     _: [] as HTMLOptionElement[],
-    name: ["-- select soundtrack --", "-- select grass --"]
+    name: [
+      "-- select soundtrack --",
+      "-- select grass --",
+      "---",
+      "-- all games --"
+    ]
   },
   break: [] as HTMLBRElement[],
   input: {
@@ -174,14 +215,16 @@ export const app = {
   } as Grass.Config,
 
   bg: {
-    elem: <HTMLBodyElement>document.getElementById("_bg"),
+    elem: bgElem,
     db: compiledBackgrounds.db,
-    game: compiledBackgrounds.game
+    game: compiledBackgrounds.game,
+    get category() { return bgSelectionState.category; },
+    get specificGame() { return bgSelectionState.specificGame; }
   } as Background.Config
 };
 
 // Global Memory Allocations (Safe because they aren't interacting with page layout nodes directly yet)
-for (let i = 0; i < 4; i++) app.break.push(document.createElement("br"));
+for (let i = 0; i < 6; i++) app.break.push(document.createElement("br"));
 for (let i = 0; i < app.label.name.length; i++) {
   app.label._.push(document.createElement("label"));
   app.label._[i].innerHTML = app.label.name[i];
@@ -220,8 +263,8 @@ $(function () {
     // Initialise audio elements safely if they map inside the layout
     app.music.elems.forEach((el: HTMLAudioElement | null) => {
       if (el) {
-        el.controls = true; 
-        el.style.display = "none"; 
+        el.controls = true;
+        el.style.display = "none";
         el.preload = "auto";
       }
     });
@@ -276,6 +319,60 @@ $(function () {
     app.form.appendChild(app.label._[2]);
     app.form.appendChild(app.selector._[1]);
     app.form.appendChild(app.break[2]);
+
+    const categorySelect = app.selector._[2];
+    const optGames = document.createElement("option");
+    optGames.value = "games";
+    optGames.textContent = "Games";
+    const optHolidays = document.createElement("option");
+    optHolidays.value = "holidays";
+    optHolidays.textContent = "Holidays";
+    categorySelect.appendChild(optGames);
+    categorySelect.appendChild(optHolidays);
+    categorySelect.value = bgSelectionState.category;
+
+    // Build specific game selector options
+    const gameSelect = app.selector._[3];
+    gameSelect.appendChild(app.placeholder._[3]); // -- all games --
+    app.bg.game.forEach((game: string | number) => {
+      if (typeof game === "string") {
+        const opt = document.createElement("option");
+        opt.value = game;
+        opt.textContent = game;
+        gameSelect.appendChild(opt);
+      } else if (typeof game === "number") {
+        console.error("An array element contains an element of numerical value where it should not:", game);
+      }
+    });
+    gameSelect.value = bgSelectionState.specificGame || "";
+
+    // Toggle specific game dropdown visibility depending on category choice
+    function updateBgSelectorsVisibility() {
+      if (categorySelect.value === "games") {
+        gameSelect.style.display = "inline-block";
+        app.label._[4].style.display = "inline-block";
+      } else {
+        gameSelect.style.display = "none";
+        app.label._[4].style.display = "none";
+      }
+    }
+    categorySelect.addEventListener("change", updateBgSelectorsVisibility);
+    updateBgSelectorsVisibility();
+
+    app.form.appendChild(app.break[2]); // Break after grass
+
+    app.form.appendChild(app.label._[3]);
+    app.form.appendChild(categorySelect);
+
+    app.form.appendChild(app.break[3]);
+
+    app.form.appendChild(app.label._[4]);
+    app.form.appendChild(gameSelect);
+
+    app.form.appendChild(app.break[4]);
+    app.form.appendChild(app.break[5]);
+
+
 
     for (let i = 1; i < app.input.type.length; i++) {
       app.form.appendChild(app.input._[i]);

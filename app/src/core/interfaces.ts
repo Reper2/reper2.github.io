@@ -29,4 +29,5 @@ export interface AppPanel {
   render(): void;
   toggleVisibility(forceState?: boolean): void;
 }
+
 export type Name = string | number;

@@ -47,7 +47,12 @@ export class BackgroundDatabaseLoader extends AbstractDatabaseLoader<Background.
   public async loadWithMetadata(): Promise<{ db: Background.DatabaseStructure; game: string[] }> {
     // 1. Fetch the master catalog layout index (bg.json)
     // Master tree acts as a tuple: [Obj1 (contents array), Obj2 (report counts)]
-    const masterCatalog = await this.fetchDB<[Database.Obj1, Database.Obj2]>("bg");
+    const masterCatalog = await this.fetchDB<any>("bg");
+
+    // Check if the payload returned is actually structural data
+    if (!masterCatalog || typeof masterCatalog !== "object" || !Array.isArray(masterCatalog)) {
+      throw new Error("[BackgroundDatabaseLoader] Unexpected flat or malformed schema parsing index.");
+    }
     const fileEntries = masterCatalog[0].contents;
 
     // 2. Generate your dynamic 'game' names array by trimming out extensions
@@ -55,7 +60,7 @@ export class BackgroundDatabaseLoader extends AbstractDatabaseLoader<Background.
       return fileObj.name.replace(/\.[^/.]+$/, ""); // Converts "acnh.json" -> "acnh"
     });
 
-    // 3. Batch dispatch network stream operations concurrently
+    // 3. Batch dispatch network stream operations concurrently for games
     const dispatchRequests = fileEntries.map(async (fileObj: Database.File) => {
       const gameKey = fileObj.name.replace(/\.[^/.]+$/, "");
       try {
@@ -67,7 +72,15 @@ export class BackgroundDatabaseLoader extends AbstractDatabaseLoader<Background.
       }
     });
 
-    const resolvedPayloads = await Promise.all(dispatchRequests);
+    // 🌟 Fetch the flat photos.json for holidays concurrently alongside your games
+    const holidayRequest = this.fetchDB<[Database.Obj1, Database.Obj2]>("photos")
+      .then((payload) => ({ key: "holidays", data: payload }))
+      .catch((err) => {
+        console.error(`[BackgroundDatabaseLoader] Skipping standalone holiday "photos.json":`, err);
+        return null;
+      });
+
+    const resolvedPayloads = await Promise.all([...dispatchRequests, holidayRequest]);
 
     // 4. Reduce payloads into the Background.DatabaseStructure map
     const mappedDatabase: Background.DatabaseStructure = {};

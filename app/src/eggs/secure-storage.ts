@@ -2,7 +2,7 @@ import SavUtils from "../core/storage";
 import { EggState, ShieldedStorage, ProgressTransport } from "./interfaces";
 
 function getTimestamp(date: Date = new Date()): string {
-  const pad = (num: number, size: number = 2): string => 
+  const pad = (num: number, size: number = 2): string =>
     num.toString().padStart(size, '0');
 
   const yyyy = date.getFullYear();
@@ -121,6 +121,9 @@ export class SecureProgressVault implements ProgressTransport {
    * 📥 Diagnostic Importer: Parses file payloads, maps structures, and logs safe metrics
    */
   public importFromFile(binaryData: Uint8Array): EggState | null {
+    if (!(binaryData instanceof Uint8Array)) {
+      throw new TypeError(`[SecureProgressVault] Expected an instance of Uint8Array for binary decoding, received: ${typeof binaryData}`);
+    }
     console.group("🔍 [SYSTEM DIAGNOSTIC] - File Import Pipeline Initiated");
     console.log(`📦 Incoming Binary Array Size: ${binaryData.length} bytes.`);
 

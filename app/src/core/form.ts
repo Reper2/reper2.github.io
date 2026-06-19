@@ -3,24 +3,32 @@ import { pickNextTrack } from "./music";
 import SavUtils from "./storage";
 
 export function submit(obj: Music.Config, input?: HTMLInputElement[], selector?: HTMLSelectElement[]) {
-  // 1. Safely extract values only if the arrays have elements at index 0
-  const musicInputValue = (input && input.length > 0) ? input[0].value : undefined;
-  const musicSelectValue = (selector && selector.length > 0) ? selector[0].value : undefined;
-
-  // Use whichever music input source is available
+  const musicInputValue = (input && input[0] instanceof HTMLInputElement) ? input[0].value : undefined;
+  const musicSelectValue = (selector && selector[0] instanceof HTMLSelectElement) ? selector[0].value : undefined;
   const inputValue = musicInputValue || musicSelectValue;
   const currentSaved = sessionStorage.getItem("music");
 
-  // 2. Handle Music Logic Safely
   if (inputValue && inputValue === currentSaved) {
     pickNextTrack(obj);
   } else if (inputValue) {
     new SavUtils("music").ss = inputValue;
   }
 
-  // 3. Handle Grass Logic Safely (Check if index 1 actually exists)
   if (selector && selector.length > 1 && selector[1]) {
     new SavUtils("grass").ss = selector[1].value;
+  }
+
+  // 4. Handle Background Picker Submissions
+  if (selector && selector.length > 3) {
+    const categoryVal = selector[2].value;     // games or holidays
+    const specificGameVal = selector[3].value; // game choice or ""
+
+    const bgSav = {
+      cat: new SavUtils("bg_cat"),
+      game: new SavUtils("bg_game")
+    }
+    bgSav.cat.ss = bgSav.cat.sp = categoryVal;
+    bgSav.game.ss = bgSav.game.sp = specificGameVal ?? "";
   }
 }
 

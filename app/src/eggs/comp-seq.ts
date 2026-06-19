@@ -436,10 +436,13 @@ function tick(masterMesh: THREE.Mesh | null = null): void {
     } else if (frostOverlayMesh) {
       scene.remove(frostOverlayMesh);
       frostOverlayMesh.geometry.dispose();
-      if (Array.isArray(frostOverlayMesh.material)) {
-        frostOverlayMesh.material.forEach(m => m.dispose());
-      } else {
+      
+      if (frostOverlayMesh.material instanceof THREE.Material) {
         frostOverlayMesh.material.dispose();
+      } else if (Array.isArray(frostOverlayMesh.material)) {
+        frostOverlayMesh.material.forEach(m => {
+          if (m instanceof THREE.Material) m.dispose();
+        });
       }
       frostOverlayMesh = null;
       frostMaterial = null;

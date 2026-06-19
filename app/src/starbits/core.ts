@@ -31,6 +31,10 @@ export class Starbit3D {
     this.scene = scene;
 
     this.mesh = originalMesh.clone() as THREE.Mesh;
+    if (!(this.mesh instanceof THREE.Mesh)) {
+      throw new TypeError(`[Starbit Engine] Instantiation failed. Object must be an instance of THREE.Mesh.`);
+    }
+
     this.mesh.visible = true;
 
     const randomColour = starBitColours[Math.floor(Math.random() * starBitColours.length)];
@@ -111,8 +115,10 @@ export class Starbit3D {
     if (this.mesh.geometry) this.mesh.geometry.dispose();
     if (this.mesh.material) {
       if (Array.isArray(this.mesh.material)) {
-        this.mesh.material.forEach(m => m?.dispose());
-      } else {
+        this.mesh.material.forEach(m => {
+          if (m instanceof THREE.Material) m.dispose();
+        });
+      } else if (this.mesh.material instanceof THREE.Material) {
         this.mesh.material.dispose();
       }
     }

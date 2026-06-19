@@ -121,7 +121,7 @@ if (btns.copy._) {
   btns.copy.btn.innerHTML = isAlt ? "Copy Link" : "📋🔗";
   btns.copy._.className = "tooltip";
   btns.copy.btn.onclick = (): void => copyLink(window.location.href);
-  
+
   [btns.copy.tt.innerHTML, btns.copy.tt.className] = ["Copy Link (Ctrl+C)", "tooltiptext"];
   btns.copy.btn.appendChild(btns.copy.tt);
   btns.copy._.appendChild(btns.copy.btn);
@@ -156,9 +156,15 @@ if (btns.sw._) {
 
     let deferredPrompt: BeforeInstallPromptEvent | null;
 
-    installListener = function install(e: Event) { // Assign the listener to the variable for later removal
-      e.preventDefault();
-      deferredPrompt = e as BeforeInstallPromptEvent;
+    function isBeforeInstallPromptEvent(e: Event): e is BeforeInstallPromptEvent {
+      return e !== null && typeof e === "object" && "prompt" in e && typeof (e as any).prompt === "function";
+    }
+
+    installListener = function install(e: Event) {
+      if (isBeforeInstallPromptEvent(e)) {
+        e.preventDefault();
+        deferredPrompt = e;
+      }
     };
 
     window.addEventListener("beforeinstallprompt", installListener); // Attach the listener

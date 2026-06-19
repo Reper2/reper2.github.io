@@ -18,6 +18,11 @@ async function getGLTFLoaderClass(): Promise<any> {
 
   try {
     const module = await import("https://esm.sh/three@0.160.0/examples/jsm/loaders/GLTFLoader.js");
+
+    if (!module || typeof module.GLTFLoader !== "function") {
+      throw new TypeError(`[Galactic Engine] GLTFLoader failed validation. Expected constructor function, received: ${typeof module?.GLTFLoader}`);
+    }
+
     cachedLoaderClass = module.GLTFLoader;
     return cachedLoaderClass;
   } catch (err) {
@@ -92,9 +97,9 @@ export function generateStarbitShower(
     context.loader.load(gltfModelPath, (gltf: any) => {
       const masterMesh = gltf.scene.children[0] as THREE.Mesh;
       const TOTAL_BITS = starBitColours.length * totalEggs;
-      const progress = eggCount/totalEggs;
+      const progress = eggCount / totalEggs;
 
-      for (let i = 0; i < TOTAL_BITS*progress; i++) {
+      for (let i = 0; i < TOTAL_BITS * progress; i++) {
         activeStarbits.push(new Starbit3D(masterMesh, context.scene));
       }
 
@@ -112,7 +117,16 @@ let rainContextCache: RainSceneContext | null = null;
 export function constructStarbitScene(): RainSceneContext {
   if (rainContextCache) return rainContextCache;
 
-  let canvas = document.getElementById("bg-canvas") as HTMLCanvasElement | null;
+  let canvasElement = document.getElementById("bg-canvas");
+
+  if (canvasElement && !(canvasElement instanceof HTMLCanvasElement)) {
+    console.warn(`[Galactic Engine] Warning: Element '#bg-canvas' exists but is not an HTMLCanvasElement instance. Replacing node...`);
+    canvasElement.remove();
+    canvasElement = null;
+  }
+
+  // Fallback logic to create a proper canvas if it doesn't exist
+  let canvas = canvasElement as HTMLCanvasElement | null;
   if (!canvas) {
     canvas = document.createElement("canvas");
     canvas.id = "bg-canvas";
