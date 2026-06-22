@@ -82,8 +82,6 @@ const btns = {
 };
 export default btns;
 
-const isAlt = globalTheme.ls === "alt";
-
 // Back Button
 if (btns.back._) {
   btns.back._.onclick = () => {
@@ -118,7 +116,8 @@ if (btns.eggMenu._) {
 
 // Copy Button
 if (btns.copy._) {
-  btns.copy.btn.innerHTML = isAlt ? "Copy Link" : "📋🔗";
+  const dynamicThemeCheck = globalTheme.ls || globalTheme.sp || "alt";
+  btns.copy.btn.innerHTML = (dynamicThemeCheck === "alt") ? "Copy Link" : "📋🔗";
   btns.copy._.className = "tooltip";
   btns.copy.btn.onclick = (): void => copyLink(window.location.href);
 
@@ -139,7 +138,7 @@ if (btns.footer._) {
   btns.footer._.appendChild(btns.footer.cr.license);
 }
 
-const reminder = new SavUtils("install_reminder_shown")
+const reminder = new SavUtils("install_reminder_shown");
 let installListener: ((e: Event) => void) | null = null; // Declare install listener outside the scope of onload
 let appInstalledListener: (() => void) | null = null;
 
@@ -186,13 +185,16 @@ if (btns.sw._) {
     };
 
     btns.sw._.className = "tooltip";
-    if (globalTheme.ls === "original") {
+    
+    const activeValue = globalTheme.ls || globalTheme.sp;
+    const currentTheme = (activeValue === "original") ? "original" : "alt";
+
+    if (currentTheme === "original") {
       btns.sw.btn.innerHTML = "🌐📲";
-    } else if (globalTheme.ls === "alt") {
-      btns.sw.btn.innerHTML = "Install App";
     } else {
-      throw new TypeError(`Unknown theme state: ${globalTheme.ls}`);
+      btns.sw.btn.innerHTML = "Install App";
     }
+    
     [btns.sw.tt.className, btns.sw.tt.innerHTML] = ["tooltiptext", "Install App (Ctrl+I)"];
 
     btns.sw.btn.appendChild(btns.sw.tt);

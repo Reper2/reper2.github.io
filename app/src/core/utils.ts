@@ -16,7 +16,9 @@ export const sfx = {
   playRandomCooking() {
     // 1. STAGE 1 GUARDS: Terminate instantly before any assets are constructed or fetched
     if (!isLocalhost) return;
-    if ((window as any).globalState?.theme !== "alt") return;
+
+    const dynamicThemeCheck = globalTheme.ls || globalTheme.sp || "alt";
+    if (dynamicThemeCheck !== "alt") return;
 
     // 2. LAZY LOAD: Allocate the audio memory buffers only if we pass the guards above
     if (!cookingNormalInstance) {
@@ -131,7 +133,7 @@ export class AudioControlPanel extends BasePanel {
     this.toggleBtns = [];
     this.playbackBtns = [];
 
-    const isAlt = globalTheme.ls === "alt";
+    const isAlt = (globalTheme.ls || globalTheme.sp) === "alt";
     const stateIdx = Number(this.isOpen);
 
     const switchLabels = [
@@ -222,7 +224,7 @@ export class EggCookbookPanel extends BasePanel implements AppPanel {
     this.container.innerHTML = "";
     this.config.toggle._ = [];
 
-    const isAlt = globalTheme.ls === "alt";
+    const isAlt = (globalTheme.ls || globalTheme.sp) === "alt";
 
     for (let i = 0; i < this.config.toggle.labels.length; i++) {
       const toggleBtn = document.createElement("button");
@@ -344,7 +346,7 @@ export class EggCookbookPanel extends BasePanel implements AppPanel {
     uploader.onchange = async () => {
       const file = uploader.files?.[0];
       if (!file) return;
-      const isAlt = globalTheme.ls === "alt";
+      const isAlt = (globalTheme.ls || globalTheme.sp) === "alt";
 
       try {
         const buffer = await file.arrayBuffer();

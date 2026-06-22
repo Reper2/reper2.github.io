@@ -35,8 +35,12 @@ const THEME_ASSETS = {
 const GLTF_MODEL_URL = "/assets/starbit.gltf";
 const BIN_PAYLOAD_URL = "/assets/egg-payload.bin";
 
+// Deterministic Strategy Lookup Anchor
+const baseThemeCheck = globalTheme.ls || globalTheme.sp;
+const activeThemeContext = (baseThemeCheck === "original") ? "original" : "alt";
+
 // Update page style based on saved theme preference.
-if (globalTheme.ls === "alt") {
+if (activeThemeContext === "alt") {
   const existingLink = document.getElementById("theme-link") as HTMLLinkElement | null;
   if (existingLink && existingLink.disabled === false) {
     existingLink.href = THEME_ASSETS.alt.stylesheet;
@@ -49,7 +53,7 @@ if (globalTheme.ls === "alt") {
     link.href = THEME_ASSETS.alt.stylesheet;
     document.head.appendChild(link);
   }
-} else if (!globalTheme.ls) {
+} else if (!globalTheme.ls && !globalTheme.sp) {
   globalTheme.ls = "alt";
   console.info("No theme preference found. Defaulting to alt theme.");
 }
@@ -274,11 +278,14 @@ async function initEggs(): Promise<void> {
   if (!assetLoaded) return;
 
   const state = vault.fetch({});
-  const currentTheme = globalTheme.ls === "alt" || globalTheme.ls === "original" ? globalTheme.ls : "alt";
+  
+  // Clean runtime selection pointer fallback layer
+  const activeValue = globalTheme.ls || globalTheme.sp;
+  const currentTheme = (activeValue === "original") ? "original" : "alt";
   const assets = THEME_ASSETS[currentTheme];
 
   if (!assets) {
-    throw new TypeError(`Unknown theme state: ${globalTheme.ls}`);
+    throw new TypeError(`Unknown theme state: ${activeValue}`);
   }
 
   document.querySelectorAll<HTMLElement>(".egg").forEach(egg => {
@@ -292,7 +299,7 @@ async function initEggs(): Promise<void> {
     }
 
     // LAYER 1: The Outer Target / Protective Cage Wrapper (.egg-box)
-    if (globalTheme.ls === "original") {
+    if (currentTheme === "original") {
       // Original theme instantiates our floating 3D procedural bubble cage!
       mountLocal3DBubble(egg, THEME_ASSETS);
     } else {
@@ -325,7 +332,7 @@ async function initEggs(): Promise<void> {
       vault.save(state);
 
       egg.classList.add("cracking");
-      if (globalTheme.ls === "alt") {
+      if (currentTheme === "alt") {
         sfx.playInstant('korokYahaha');
       }
 
@@ -336,11 +343,11 @@ async function initEggs(): Promise<void> {
         updateCounter(state);
         const totalUnlockedCount = Object.values(state).filter(e => e.unlocked).length;
 
-        if (globalTheme.ls === "alt") {
+        if (currentTheme === "alt") {
           if (totalUnlockedCount % 4 === 0 || totalUnlockedCount % 5 === 0) {
             triggerChickenAttack();
           }
-        } else if (globalTheme.ls === "original") {
+        } else if (currentTheme === "original") {
           if (totalUnlockedCount % 5 === 0 || totalUnlockedCount % 7 === 0) {
             const context = constructStarbitScene();
             if (context) {
@@ -379,7 +386,8 @@ export function showReward(content: string): void {
       if (reward && (reward.type === "stylesheet" || reward.type === "styleBlock")) {
         const alreadyInjected = document.getElementById("egg-reward-styles");
 
-        if (!alreadyInjected && globalTheme.ls === "alt") {
+        const dynamicThemeCheck = globalTheme.ls || globalTheme.sp || "alt";
+        if (!alreadyInjected && dynamicThemeCheck === "alt") {
           sfx.playInstant('shrineFanfare');
         }
 
@@ -390,7 +398,7 @@ export function showReward(content: string): void {
         if (!alreadyInjected) {
           document.head.appendChild(style);
         }
-        if (globalTheme.ls === "alt") {
+        if (dynamicThemeCheck === "alt") {
           globalTheme.ls = "original";
         }
         return;

@@ -63,10 +63,10 @@ if (!(bgElem instanceof HTMLBodyElement)) {
 // 2. High-Level Abstract State Managers with Automated Side-Effects
 export const themeState = {
   get active(): "original" | "alt" {
-    return (themeSav.ls as "original" | "alt") || "alt";
+    return ((themeSav.ls || themeSav.sp) as "original" | "alt") || "alt";
   },
   set active(nextTheme: "original" | "alt") {
-    themeSav.ls = nextTheme;
+    themeSav.ls = themeSav.sp = nextTheme;
     (window as any).globalState = { theme: nextTheme };
 
     document.body.setAttribute("data-theme", nextTheme);

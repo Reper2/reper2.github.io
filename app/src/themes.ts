@@ -18,7 +18,7 @@ export function applyThemeElements(): void {
     document.head.appendChild(themeLink);
   }
 
-  const currentTheme = globalTheme.ls;
+  const currentTheme = globalTheme.ls || globalTheme.sp;
 
   if (typeof currentTheme === "string" && currentTheme === "alt") {
     themeLink.href = "/assets/alt-theme.css";
