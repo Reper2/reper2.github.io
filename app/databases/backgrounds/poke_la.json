@@ -4,10 +4,10 @@
         {"type":"file","name":"2025120702365700_c.jpg"},
         {"type":"file","name":"2025120702402100_c.jpg"},
         {"type":"file","name":"2025120801235500_c.jpg"},
-        {"type":"file","name":"2025120801240100_c.jpg"},
         {"type":"file","name":"2025121101160400_c.jpg"},
         {"type":"file","name":"2025121203354900_c.jpg"},
-        {"type":"file","name":"2025121319524300_c.jpg"}
+        {"type":"file","name":"2025121319524300_c.jpg"},
+        {"type":"directory","name":"images"}
     ]}
-,    {"type":"report","directories":1,"files":9}
+,    {"type":"report","directories":2,"files":7}
 ]

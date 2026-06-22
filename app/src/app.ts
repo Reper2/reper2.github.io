@@ -28,19 +28,29 @@ const compiledGrassDB = await grassLoader.loadRegistry();
 const bgSav = {
   cat: new SavUtils("bg_cat"),
   game: new SavUtils("bg_game")
-}
+};
+
+// 🛡️ GUARDRAIL OVERRIDES: Check the DOM context up-front before building selections
+const forcedCategoryAttr = document.body.getAttribute("data-bg-force");
+const isForcedBgPage = forcedCategoryAttr === "games" || forcedCategoryAttr === "holidays";
 
 export const bgSelectionState = {
   get category(): string {
+    // 🧠 Bulletproof Fallback: if data-bg-force is set on body, override the state explicitly
+    if (isForcedBgPage) return forcedCategoryAttr!;
     return bgSav.cat.ss ?? bgSav.cat.sp ?? "games"; // defaults to games
   },
   set category(val: string) {
+    if (isForcedBgPage) return; // Prevent state writing if page forces a layout
     bgSav.cat.ss = bgSav.cat.sp = val;
   },
   get specificGame(): string | null {
+    // 🧠 Bulletproof Fallback: Nullify specific games if the category is locked by data-bg-force
+    if (isForcedBgPage) return null;
     return bgSav.game.ss ?? bgSav.game.sp ?? null;
   },
   set specificGame(val: string | null) {
+    if (isForcedBgPage) return; // Prevent state writing if page forces a layout
     bgSav.game.ss = bgSav.game.sp = val ?? "";
   }
 };
@@ -223,7 +233,7 @@ export const app = {
   } as Background.Config
 };
 
-// Global Memory Allocations (Safe because they aren't interacting with page layout nodes directly yet)
+// Global Memory Allocations
 for (let i = 0; i < 6; i++) app.break.push(document.createElement("br"));
 for (let i = 0; i < app.label.name.length; i++) {
   app.label._.push(document.createElement("label"));
@@ -347,7 +357,7 @@ $(function () {
     gameSelect.value = bgSelectionState.specificGame || "";
 
     // Toggle specific game dropdown visibility depending on category choice
-    function updateBgSelectorsVisibility() {
+    function updateBgSelVis() {
       if (categorySelect.value === "games") {
         gameSelect.style.display = "inline-block";
         app.label._[4].style.display = "inline-block";
@@ -356,23 +366,33 @@ $(function () {
         app.label._[4].style.display = "none";
       }
     }
-    categorySelect.addEventListener("change", updateBgSelectorsVisibility);
-    updateBgSelectorsVisibility();
+    categorySelect.addEventListener("change", updateBgSelVis);
+    updateBgSelVis();
 
     app.form.appendChild(app.break[2]); // Break after grass
 
-    app.form.appendChild(app.label._[3]);
-    app.form.appendChild(categorySelect);
+    // 🔒 UI GUARDRAIL: Lock or completely skip rendering selectors if the page enforces a context
+    if (isForcedBgPage) {
+      categorySelect.disabled = true;
+      categorySelect.style.opacity = "0.5";
+      gameSelect.disabled = true;
+      
+      // Hide them completely so users cannot alter the path
+      categorySelect.style.display = "none";
+      gameSelect.style.display = "none";
+      app.label._[3].style.display = "none";
+      app.label._[4].style.display = "none";
+    } else {
+      // Standard layout rendering
+      app.form.appendChild(app.label._[3]);
+      app.form.appendChild(categorySelect);
+      app.form.appendChild(app.break[3]);
+      app.form.appendChild(app.label._[4]);
+      app.form.appendChild(gameSelect);
+      app.form.appendChild(app.break[4]);
+    }
 
-    app.form.appendChild(app.break[3]);
-
-    app.form.appendChild(app.label._[4]);
-    app.form.appendChild(gameSelect);
-
-    app.form.appendChild(app.break[4]);
     app.form.appendChild(app.break[5]);
-
-
 
     for (let i = 1; i < app.input.type.length; i++) {
       app.form.appendChild(app.input._[i]);
