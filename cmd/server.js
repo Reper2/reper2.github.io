@@ -20,10 +20,13 @@ const repos = [
   'acnh',
   'acnh-apps',
   'desktop-clock',
+  // 'easter-egg-engine',
+  // 'gtcf',
   'holiday-album',
   'mario-texture-pack',
   'mobile-clock',
   'switch-album',
+  // 'tomodachi-album',
 ];
 
 repos.forEach(repo => {

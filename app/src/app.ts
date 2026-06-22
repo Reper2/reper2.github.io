@@ -245,7 +245,7 @@ for (let i = 0; i < app.selector.title.length; i++) {
 }
 for (let i = 0; i < app.placeholder.name.length; i++) {
   app.placeholder._.push(document.createElement("option"));
-  [app.placeholder._[i].value, app.placeholder._[i].innerHTML] = ["", app.placeholder.name[i]];
+  [app.placeholder._[i].value, app.placeholder._[i].innerHTML] = ["summer1", app.placeholder.name[i]];
 }
 
 for (let i = 0; i < app.input.type.length; i++) {

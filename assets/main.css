@@ -17,6 +17,14 @@ body {
   background-repeat: no-repeat;
   overflow-x: hidden;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Takes up the full height of the viewport */
+  margin: 0;         /* Prevents default browser spacing */
+}
+
+main {
+  flex: 1; /* Automatically expands to push the footer to the bottom */
 }
 
 /* Base setup for the body dynamic background layers */
