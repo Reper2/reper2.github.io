@@ -239,14 +239,18 @@ for (let i = 0; i < app.label.name.length; i++) {
   app.label._.push(document.createElement("label"));
   app.label._[i].innerHTML = app.label.name[i];
 }
+
 for (let i = 0; i < app.selector.title.length; i++) {
   app.selector._.push(document.createElement("select"));
   app.selector._[i].title = app.selector.title[i];
 }
+
 for (let i = 0; i < app.placeholder.name.length; i++) {
   app.placeholder._.push(document.createElement("option"));
-  [app.placeholder._[i].value, app.placeholder._[i].innerHTML] = ["summer1", app.placeholder.name[i]];
+  [app.placeholder._[i].value, app.placeholder._[i].innerHTML] = ["", app.placeholder.name[i]];
 }
+
+app.placeholder._[1].value = "summer1";
 
 for (let i = 0; i < app.input.type.length; i++) {
   app.input._.push(document.createElement("input"));
