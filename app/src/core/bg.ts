@@ -4,8 +4,8 @@ import { RandomPicker } from "./core";
 let isLayerA = true;
 let isInitialLoad = true;
 
-export function changeBackground(obj: Background.Config, definedCat?: string): void {
-  const currentCategory = definedCat || obj.category || "games";
+export function changeBackground(obj: Background.Config): void {
+  const currentCategory = obj.elem.dataset["bg-force"] || obj.category || "games";
   const chosenGame = obj.specificGame;
 
   // Handler function to cycle image buffer swaps
