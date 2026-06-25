@@ -9,3 +9,6 @@ declare module 'https://esm.sh/three@0.160.0/examples/jsm/loaders/GLTFLoader.js'
   import { GLTFLoader as LocalGLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
   export { LocalGLTFLoader as GLTFLoader };
 }
+declare module 'https://cdn.jsdelivr.net/npm/fflate@0.8.2/+esm' {
+  export * from 'fflate';
+}

@@ -59,7 +59,7 @@ if (activeThemeContext === "alt") {
 }
 
 export const STORAGE_KEY = "eggs";
-export const TOTAL_EGGS = 30;
+export const TOTAL_EGGS = 34;
 
 let payloadIv: BufferSource | null = null;
 let payloadData: BufferSource | null = null;
