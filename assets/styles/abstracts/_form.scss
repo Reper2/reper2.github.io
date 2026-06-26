@@ -1,0 +1,36 @@
+@use "variables";
+
+#optForm { margin: 3px; }
+
+select,
+input {
+  font-family: sans-serif; 
+}
+
+select {
+  background-color: lightblue;
+  border-color: black;
+}
+
+input {
+  background-color: skyblue;
+}
+
+button {
+  border-radius: 2.5vmin;
+  block-size: auto;
+  min-block-size: 10.5vmin;
+  padding: 1.2vmin 3.5vmin;
+  margin: 0.8vmin;
+  font-size: 4.2vmin;
+  background-color: lightskyblue;
+  outline-color: initial;
+}
+
+button, input {
+  transition: transform 0.2s ease;
+  
+  @include mouse-hover-only {
+    transform: translateY(-0.9vh); // Injected seamlessly inside the media query
+  }
+}

@@ -1,0 +1,12 @@
+@use "./abstracts/variables";
+
+#clock {
+  @include text-gradient(
+    (to right, cyan, #A5F2F3, #B3E7F4, #DDF9F1, #E25C46, #E42217, #CF1020, #AA0033, cyan),
+    gradient-scroll,
+    40s
+  );
+  font-family: 'Hylia Serif' !important;
+  display: inline-block;
+  white-space: nowrap;
+}

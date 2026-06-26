@@ -32,7 +32,10 @@ Thumbs.db
 /app/src/eggs/debug.ts
 /app/dist/eggs/debug.js
 /cmd/encrypt-eggs.js
+
 /assets/secret-styles.css
+/assets/secret-styles.css.map
+/assets/styles/secret-styles.scss
 
 # ====================================================================
 # 🎵 AUDIO ENGINE PIPELINES & TRACK ARCHIVES

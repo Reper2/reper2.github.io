@@ -1,0 +1,86 @@
+#back img {
+  position: absolute;
+  top: 1.8vmin;
+  left: 1.8vmin;
+  width: 7.2vmin;
+  font-size: 7.2vmin;
+}
+
+#music { margin: 2px; }
+
+/* 🎧 Audio Control Panel Container Setup */
+#audctrls {
+  display: inline-flex !important; 
+  flex-wrap: wrap;                 
+  gap: 1.8vmin;                 
+  justify-content: center;
+  align-items: center;
+}
+
+/* 🍳 Egg Cookbook Action Tray Setup */
+.menu-actions-tray {
+  display: flex;
+  flex-wrap: wrap;                 
+  gap: 1.8vmin;                 
+  
+  /* ─── STABILITY FIX: Align to the start so the first button never jumps ─── */
+  justify-content: flex-start;  
+  text-align: left;
+  
+  /* Centers the entire tray container itself on the page */
+  max-width: max-content;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1.8vmin;
+  box-sizing: border-box;
+}
+
+/* 📱 Responsive Adaptive Breakdown */
+@media (max-width: 480px) {
+  #audctrls,
+  .menu-actions-tray {
+    flex-direction: column;        
+    align-items: stretch;          
+    width: 72vmin;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  #audctrls button,
+  .menu-actions-tray button {
+    width: 100%;
+  }
+}
+
+/* Tooltip Layout Normalization Layer Overrides */
+#audctrls button .tooltiptext,
+.menu-actions-tray button .tooltiptext {
+  position: absolute;   
+  visibility: hidden;   
+  display: block;       
+  opacity: 0;
+  
+  top: 125%;
+  bottom: auto;         
+  
+  left: 50%;
+  transform: translateX(-50%);
+
+  z-index: 999 !important;
+  pointer-events: none;
+  
+  /* ─── CONTROLS AREA CONTENT SPANNING AT bottom OVERRIDES ─── */
+  width: auto;                  /* Removes rigid pixel bounds */
+  white-space: nowrap;          /* Forces content to shape bounds instantly */
+  padding: 1vmin 2.5vmin;       
+  
+  font-size: 2.7vmin;   
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+/* Force state triggers on element interaction */
+#audctrls button:hover .tooltiptext,
+.menu-actions-tray button:hover .tooltiptext {
+  visibility: visible !important;
+  opacity: 1 !important;
+}

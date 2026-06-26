@@ -1,0 +1,20 @@
+.appIcon:active,
+.appIcon:focus-visible,
+a:focus-visible .appIcon {
+  animation: bounceButton 0.25s ease-in-out forwards;
+}
+
+.appIcon,
+.link {
+  width: 9vmin;
+  margin-top: 0.9vmin;
+  margin-bottom: 0.9vmin;
+  border-radius: 30%;
+  filter: drop-shadow(0.45vh 0.45vh 0.13vh rgba(0, 0, 0, 0.6));
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: all;
+  transition-duration: 0.07s;
+  transition-timing-function: ease-in-out;
+}

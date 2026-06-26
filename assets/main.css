@@ -1,46 +1,225 @@
+@charset "UTF-8";
 @font-face {
-  font-family: 'Super Mario 256';
-  src: url('/assets/SuperMario256.ttf') format('truetype');
+  font-family: "Super Mario 256";
+  src: url("/assets/SuperMario256.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Hylia Serif";
+  src: url("/assets/alt-theme/HyliaSerifBeta-Regular.otf") format("opentype");
+}
+@keyframes bounceButton {
+  to {
+    transform: scale(0.95);
+  }
+}
+@keyframes gradient-scroll {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 200% 50%;
+  }
+}
+@keyframes bubblePop {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.95;
+  }
+  30% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+}
+@keyframes moon {
+  0% {
+    transform: translate(-50%, calc(-50% + 20px)) scale(0.5) rotate(-45deg);
+    opacity: 0;
+  }
+  25% {
+    transform: translate(calc(-50% - 15px), calc(-50% - 10px)) scale(1.3) rotate(20deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(calc(-50% + 15px), calc(-50% - 20px)) scale(1.1) rotate(-15deg);
+  }
+  75% {
+    transform: translate(calc(-50% - 5px), calc(-50% - 25px)) scale(1.2) rotate(10deg);
+  }
+  100% {
+    transform: translate(-50%, calc(-50% - 30px)) scale(1.1) rotate(0deg);
+    opacity: 1;
+  }
+}
+#grassBox {
+  font-size: 3.5vmin;
+  width: 65vmin;
+  border-radius: 0.9vmin;
+  background-position: center;
+  margin: 1vmin;
+  padding: 9vmin 13vmin 8vmin 9vmin;
+  text-align: center;
 }
 
-@font-face {
-  font-family: 'Hylia Serif';
-  src: url('/assets/alt-theme/HyliaSerifBeta-Regular.otf') format('opentype');
+#optForm {
+  margin: 3px;
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  background: #000;
-  background-attachment: fixed;
-  background-size: cover;
-  background-repeat: no-repeat;
-  overflow-x: hidden;
-  overflow-y: auto;
+/* Only apply hover translation on devices that natively support precision hovering (mice) */
+@media (hover: hover) {
+  button:hover,
+  input:hover {
+    transform: translateY(-0.9vh);
+  }
+}
+select,
+input {
+  font-family: sans-serif;
+}
+
+select {
+  background-color: lightblue;
+  border-color: black;
+}
+
+input {
+  background-color: skyblue;
+}
+
+button {
+  border-radius: 2.5vmin;
+  block-size: auto;
+  min-block-size: 10.5vmin;
+  padding: 1.2vmin 3.5vmin;
+  margin: 0.8vmin;
+  font-size: 4.2vmin;
+  background-color: lightskyblue;
+  outline-color: initial;
+}
+
+#back img {
+  position: absolute;
+  top: 1.8vmin;
+  left: 1.8vmin;
+  width: 7.2vmin;
+  font-size: 7.2vmin;
+}
+
+#music {
+  margin: 2px;
+}
+
+/* 🎧 Audio Control Panel Container Setup */
+#audctrls {
+  display: inline-flex !important;
+  flex-wrap: wrap;
+  gap: 1.8vmin;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 🍳 Egg Cookbook Action Tray Setup */
+.menu-actions-tray {
   display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* Takes up the full height of the viewport */
-  margin: 0;         /* Prevents default browser spacing */
+  flex-wrap: wrap;
+  gap: 1.8vmin;
+  /* ─── STABILITY FIX: Align to the start so the first button never jumps ─── */
+  justify-content: flex-start;
+  text-align: left;
+  /* Centers the entire tray container itself on the page */
+  max-width: max-content;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1.8vmin;
+  box-sizing: border-box;
 }
 
-main {
-  flex: 1; /* Automatically expands to push the footer to the bottom */
+/* 📱 Responsive Adaptive Breakdown */
+@media (max-width: 480px) {
+  #audctrls,
+  .menu-actions-tray {
+    flex-direction: column;
+    align-items: stretch;
+    width: 72vmin;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #audctrls button,
+  .menu-actions-tray button {
+    width: 100%;
+  }
+}
+/* Tooltip Layout Normalization Layer Overrides */
+#audctrls button .tooltiptext,
+.menu-actions-tray button .tooltiptext {
+  position: absolute;
+  visibility: hidden;
+  display: block;
+  opacity: 0;
+  top: 125%;
+  bottom: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999 !important;
+  pointer-events: none;
+  /* ─── CONTROLS AREA CONTENT SPANNING AT bottom OVERRIDES ─── */
+  width: auto; /* Removes rigid pixel bounds */
+  white-space: nowrap; /* Forces content to shape bounds instantly */
+  padding: 1vmin 2.5vmin;
+  font-size: 2.7vmin;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+/* Force state triggers on element interaction */
+#audctrls button:hover .tooltiptext,
+.menu-actions-tray button:hover .tooltiptext {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.appIcon:active,
+.appIcon:focus-visible,
+a:focus-visible .appIcon {
+  animation: bounceButton 0.25s ease-in-out forwards;
+}
+
+.appIcon,
+.link {
+  width: 9vmin;
+  margin-top: 0.9vmin;
+  margin-bottom: 0.9vmin;
+  border-radius: 30%;
+  filter: drop-shadow(0.45vh 0.45vh 0.13vh rgba(0, 0, 0, 0.6));
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: all;
+  transition-duration: 0.07s;
+  transition-timing-function: ease-in-out;
 }
 
 /* Base setup for the body dynamic background layers */
 body#_bg {
-  position: relative;
+  min-width: 100vw;
+  width: 100vw;
   min-height: 100vh;
+  height: 100vh;
+  position: relative;
 }
 
 body#_bg::before,
 body#_bg::after {
+  min-width: 100vw;
+  width: 100vw;
+  min-height: 100vh;
+  height: 100vh;
   content: "";
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
   background-size: cover;
   background-position: center;
   z-index: -1;
@@ -65,17 +244,133 @@ body#_bg.bg-flip::after {
   opacity: 1;
 }
 
-header,
-main,
-footer {
+@keyframes bubblePop {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.95;
+  }
+  30% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+}
+@keyframes moon {
+  0% {
+    transform: translate(-50%, calc(-50% + 20px)) scale(0.5) rotate(-45deg);
+    opacity: 0;
+  }
+  25% {
+    transform: translate(calc(-50% - 15px), calc(-50% - 10px)) scale(1.3) rotate(20deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(calc(-50% + 15px), calc(-50% - 20px)) scale(1.1) rotate(-15deg);
+  }
+  75% {
+    transform: translate(calc(-50% - 5px), calc(-50% - 25px)) scale(1.2) rotate(10deg);
+  }
+  100% {
+    transform: translate(-50%, calc(-50% - 30px)) scale(1.1) rotate(0deg);
+    opacity: 1;
+  }
+}
+/* =========================================================================
+   PERFECTLY CENTERED & INNER-INSET SEAMLESS STACK
+   ========================================================================= */
+.egg {
+  position: relative !important;
+  width: clamp(1.8rem, 2.5vw, 2.5rem);
+  height: clamp(1.8rem, 2.5vw, 2.5rem);
+  aspect-ratio: 1/1;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.egg .egg-box,
+.egg .egg-cracked {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
+}
+.egg {
+  /* -------------------------------------------------------------------------
+     LOCKED DEFAULT STATE & HOVER LOGIC
+     ------------------------------------------------------------------------- */
+}
+.egg:not(.cracking):not(.unlocked) .egg-box:hover {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.05);
+}
+.egg:not(.cracking):not(.unlocked) .egg-cracked {
+  z-index: 1;
+  visibility: visible !important;
+  transform: translate(-50%, -50%) scale(0.7) !important;
+  opacity: 0.8;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.egg {
+  /* -------------------------------------------------------------------------
+     CRACKING POP SEQUENCE
+     ------------------------------------------------------------------------- */
+}
+.egg.cracking .egg-box {
+  animation: bubblePop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+.egg.cracking .egg-cracked {
+  z-index: 3;
+  opacity: 1 !important;
+  visibility: visible !important;
+  animation: moon 1.8s ease forwards;
+}
+.egg {
+  /* -------------------------------------------------------------------------
+     PERMANENT UNLOCKED STATE
+     ------------------------------------------------------------------------- */
+}
+.egg.unlocked .egg-box,
+.egg.unlocked .egg-cracked {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none;
+}
+.egg.unlocked .egg-reward {
+  opacity: 1;
+  visibility: visible;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #000;
+  background-attachment: fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+}
+
+header, main, footer {
   text-align: -webkit-center;
 }
 
-header,
-h1, h2, h3,
-p, a, span,
-button, label {
-  font-family: 'Super Mario 256', sans-serif;
+header, h1, h2, h3, p, a, span, button, label {
+  font-family: "Super Mario 256", sans-serif;
   color: white;
   -webkit-text-stroke-width: 0.05em;
   -webkit-text-stroke-color: black;
@@ -96,30 +391,18 @@ a {
   text-decoration: none;
 }
 
-/* Form Elements Reset & Fonts */
-select,
-input {
-  font-family: sans-serif; 
-}
-
-select {
-  background-color: lightblue;
-  border-color: black;
-}
-
-input {
-  background-color: skyblue;
-}
-
-button {
-  border-radius: 2.5vmin;
-  block-size: auto;
-  min-block-size: 10.5vmin;
-  padding: 1.2vmin 3.5vmin;
-  margin: 0.8vmin;
-  font-size: 4.2vmin;
-  background-color: lightskyblue;
-  outline-color: initial;
+kbd {
+  display: inline-block;
+  background-color: #eee;
+  border-radius: 3px;
+  border: 1px solid #b4b4b4;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), 0 2px 0 0 rgba(255, 255, 255, 0.7) inset;
+  color: #333;
+  font-size: 0.78em;
+  font-weight: 700;
+  line-height: 1;
+  padding: 2px 4px;
+  white-space: nowrap;
 }
 
 .boxBtn {
@@ -129,74 +412,57 @@ button {
   font-size: 2.7vmin;
 }
 
-#grassBox {
-  font-size: 3.1vmin;
-  width: 65vmin;
-  border-radius: 0.9vmin;
-  background-position: center;
-  margin: 9px;
-  padding: 7px;
-  text-align: center;
+.flex {
+  display: flex;
+  justify-content: center;
 }
 
-kbd {
-  display: inline-block;
-  background-color: #eee;
-  border-radius: 3px;
-  border: 1px solid #b4b4b4;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
-  color: #333;
-  font-size: .78em;
-  font-weight: 700;
-  line-height: 1;
-  padding: 2px 4px;
-  white-space: nowrap;
+.gold {
+  color: gold;
 }
 
-.appIcon,
-.link {
-  width: 9vmin;
-  margin-top: 0.9vmin;
-  margin-bottom: 0.9vmin;
-  border-radius: 30%;
-  filter: drop-shadow(0.45vh 0.45vh 0.13vh rgba(0, 0, 0, 0.6));
-  cursor: pointer;
-  -webkit-user-select: none;
-  user-select: none;
-  pointer-events: all;
-  transition-duration: 0.07s;
-  transition-timing-function: ease-in-out;
+.kb-list {
+  text-align: left;
+  color: cyan;
 }
 
-/* Tooltip Component Layout Alignment */
+.socialLogo {
+  margin-right: 9px;
+}
+
+.bottom {
+  font-size: 2.7vmin;
+}
+
+#learnmore, .dLink {
+  color: rgb(0, 174, 255);
+  text-decoration: underline;
+}
+
+/* ─── TOOLTIP BASE COMPONENT ─── */
 .tooltip {
   display: inline-block;
   position: relative;
 }
-
 .tooltip .tooltiptext {
   visibility: hidden;
   position: absolute;
   top: 100%;
   left: 50%;
   z-index: 1;
-  
-  /* ─── THE CONTENT SPANNING FIX ─── */
-  width: auto;                  /* Removes rigid pixel width restrictions */
-  white-space: nowrap;          /* Keeps text perfectly on one single line */
-  padding: 1vmin 2.5vmin;       /* Adaptive spacing based on text length */
-  transform: translateX(-50%);  /* Keeps it balanced over dead center without hard offsets */
-  
+  width: auto;
+  white-space: nowrap;
+  padding: 1vmin 2.5vmin;
+  transform: translateX(-50%);
   border-radius: 5px;
   background-color: #333;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 2.7vmin;
   text-align: center;
   -webkit-text-stroke-width: 0;
-  transition: opacity 0.3s; 
+  transition: opacity 0.3s;
   opacity: 0;
 }
-
 .tooltip .tooltiptext::after {
   content: " ";
   position: absolute;
@@ -207,150 +473,7 @@ kbd {
   border-style: solid;
   border-color: transparent transparent #333 transparent;
 }
-
 .tooltip:hover .tooltiptext {
   visibility: visible;
   opacity: 1;
-}
-
-.flex {
-  display: flex;
-  justify-content: center;
-}
-
-.gold { color: gold; }
-.kb-list { text-align: left; color: cyan; }
-.kb-hint { color: inherit; }
-.kbd-hint { font-size: 4.5vmin; }
-.socialLogo { margin-right: 9px; }
-.bottom { font-size: 2.7vmin; }
-
-#learnmore, .dLink {
-  color: rgb(0, 174, 255);
-  text-decoration: underline;
-}
-
-#back img {
-  position: absolute;
-  top: 1.8vmin;
-  left: 1.8vmin;
-  width: 7.2vmin;
-  font-size: 7.2vmin;
-}
-
-#optForm { margin: 3px; }
-#music { margin: 2px; }
-
-/* Only apply hover translation on devices that natively support precision hovering (mice) */
-@media (hover: hover) {
-  button:hover,
-  input:hover {
-    transform: translateY(-0.9vh);
-  }
-}
-
-/* Use :active for instant physical feedback on touch devices */
-button:active,
-input:active {
-  transform: scale(0.95);
-}
-
-.appIcon:active,
-.appIcon:focus-visible,
-a:focus-visible .appIcon {
-  animation: bounceButton 0.25s ease-in-out forwards;
-}
-
-/* Apply to both sets of buttons to strip out ghost spaces and contain tooltips */
-#audctrls button,
-.menu-actions-tray button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  position: relative; 
-  
-  font-size: 4.2vmin;
-  block-size: auto;            
-  min-block-size: 10.5vmin;
-  padding: 1.2vmin 3.5vmin;     
-  
-  vertical-align: middle;
-  box-sizing: border-box;
-}
-
-/* 🎧 Audio Control Panel Container Setup */
-#audctrls {
-  display: inline-flex !important; 
-  flex-wrap: wrap;                 
-  gap: 1.8vmin;                 
-  justify-content: center;
-  align-items: center;
-}
-
-/* 🍳 Egg Cookbook Action Tray Setup */
-.menu-actions-tray {
-  display: flex;
-  flex-wrap: wrap;                 
-  gap: 1.8vmin;                 
-  
-  /* ─── STABILITY FIX: Align to the start so the first button never jumps ─── */
-  justify-content: flex-start;  
-  text-align: left;
-  
-  /* Centers the entire tray container itself on the page */
-  max-width: max-content;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 1.8vmin;
-  box-sizing: border-box;
-}
-
-/* 📱 Responsive Adaptive Breakdown */
-@media (max-width: 480px) {
-  #audctrls,
-  .menu-actions-tray {
-    flex-direction: column;        
-    align-items: stretch;          
-    width: 72vmin;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
-  #audctrls button,
-  .menu-actions-tray button {
-    width: 100%;
-  }
-}
-
-/* Tooltip Layout Normalization Layer Overrides */
-#audctrls button .tooltiptext,
-.menu-actions-tray button .tooltiptext {
-  position: absolute;   
-  visibility: hidden;   
-  display: block;       
-  opacity: 0;
-  
-  top: 125%;
-  bottom: auto;         
-  
-  left: 50%;
-  transform: translateX(-50%);
-
-  z-index: 999 !important;
-  pointer-events: none;
-  
-  /* ─── CONTROLS AREA CONTENT SPANNING AT bottom OVERRIDES ─── */
-  width: auto;                  /* Removes rigid pixel bounds */
-  white-space: nowrap;          /* Forces content to shape bounds instantly */
-  padding: 1vmin 2.5vmin;       
-  
-  font-size: 2.7vmin;   
-  transition: opacity 0.3s, visibility 0.3s;
-}
-
-/* Force state triggers on element interaction */
-#audctrls button:hover .tooltiptext,
-.menu-actions-tray button:hover .tooltiptext {
-  visibility: visible !important;
-  opacity: 1 !important;
-}
+}/*# sourceMappingURL=main.css.map */

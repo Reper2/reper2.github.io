@@ -1,0 +1,38 @@
+@use "./abstracts/variables";
+
+/* Base setup for the body dynamic background layers */
+body#_bg {
+  @include variables.bg;
+  position: relative;
+}
+
+body#_bg::before,
+body#_bg::after {
+  @include variables.bg;
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-size: cover;
+  background-position: center;
+  z-index: -1;
+  transition: opacity 2s ease-in-out;
+  opacity: 0;
+}
+
+body#_bg::before {
+  background-image: var(--bg-before, none);
+  opacity: 1;
+}
+
+body#_bg::after {
+  background-image: var(--bg-after, none);
+}
+
+body#_bg.bg-flip::before {
+  opacity: 0;
+}
+
+body#_bg.bg-flip::after {
+  opacity: 1;
+}

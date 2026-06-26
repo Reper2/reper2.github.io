@@ -1,0 +1,113 @@
+@use "./abstracts/variables";
+@use "./abstracts/grass";
+@use "./abstracts/form";
+@use "./abstracts/buttons";
+@use "./abstracts/software-lib";
+@use "bg";
+@use "eggs";
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #000;
+  background-attachment: fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main { flex: 1; }
+
+header, main, footer { text-align: -webkit-center; }
+
+header, h1, h2, h3, p, a, span, button, label {
+  font-family: 'Super Mario 256', sans-serif;
+  color: white;
+  -webkit-text-stroke-width: 0.05em;
+  -webkit-text-stroke-color: black;
+}
+
+header {
+  font-size: clamp(1.1rem, 2.6vw, 2.2rem);
+  margin-top: 1.8vmin;
+  margin-bottom: 1.8vmin;
+  background: linear-gradient(45deg, cyan, #A5F2F3, #B3E7F4, #DDF9F1, #E25C46, #E42217, #CF1020, #AA0033);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+a { text-decoration: none; }
+
+kbd {
+  display: inline-block;
+  background-color: #eee;
+  border-radius: 3px;
+  border: 1px solid #b4b4b4;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
+  color: #333;
+  font-size: .78em;
+  font-weight: 700;
+  line-height: 1;
+  padding: 2px 4px;
+  white-space: nowrap;
+}
+
+.boxBtn {
+  border-radius: 1.8vmin;
+  background-color: lightskyblue;
+  padding: 7px;
+  font-size: 2.7vmin;
+}
+
+.flex { display: flex; justify-content: center; }
+.gold { color: gold; }
+.kb-list { text-align: left; color: cyan; }
+.socialLogo { margin-right: 9px; }
+.bottom { font-size: 2.7vmin; }
+#learnmore, .dLink { color: rgb(0, 174, 255); text-decoration: underline; }
+
+/* ─── TOOLTIP BASE COMPONENT ─── */
+.tooltip {
+  display: inline-block;
+  position: relative;
+  
+  .tooltiptext {
+    visibility: hidden;
+    position: absolute;
+    top: 100%; left: 50%; z-index: 1;
+    width: auto;
+    white-space: nowrap;
+    padding: 1vmin 2.5vmin;
+    transform: translateX(-50%);
+    border-radius: 5px;
+    background-color: #333;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 2.7vmin;
+    text-align: center;
+    -webkit-text-stroke-width: 0;
+    transition: opacity 0.3s; 
+    opacity: 0;
+
+    &::after {
+      content: " ";
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: transparent transparent #333 transparent;
+    }
+  }
+
+  &:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
+}
