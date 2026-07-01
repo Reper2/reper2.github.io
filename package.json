@@ -20,10 +20,10 @@
   },
   "scripts": {
     "ls": "node ./cmd/server.js",
-    "buildf": "npm run build && npm run resolveModules && npm run obfuscate && workbox generateSW",
+    "buildf": "pnpm run build && pnpm run resolveModules && pnpm run obfuscate && workbox generateSW",
     "clean": "rm -rf ./app/dist && rm -f ./**/*.tsbuildinfo",
-    "build": "npm run clean && npx tsc -p ./app/tsconfig.json",
-    "watch": "nodemon --watch app --ext ts --exec 'npm run build'",
+    "build": "pnpm run clean && npx tsc -p ./app/tsconfig.json",
+    "watch": "nodemon --watch app --ext ts --exec 'pnpm run build'",
     "resolveModules": "node ./cmd/module-refiner.js",
     "obfuscate": "javascript-obfuscator ./app/dist --output ./app/dist --compact true --self-defending true",
     "encrypt-e": "node ./cmd/encrypt-eggs.js",

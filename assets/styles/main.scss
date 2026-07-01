@@ -116,3 +116,31 @@ audio {
     opacity: 1;
   }
 }
+
+#update-banner {
+  display: none;
+  background: #ffce00;
+  color: #000;
+  padding: 0.75rem; /* Relative unit based on root font size */
+  text-align: center;
+  font-weight: bold;
+  
+  /* Centering positioning */
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  
+  /* Sizing with relative constraints */
+  width: 90vw; 
+  max-width: 40rem; 
+  border-radius: 0.25rem;
+  z-index: 9999;
+
+  button#refresh-btn {
+    margin-left: 1rem;
+    padding: 0.25rem 0.6rem;
+    cursor: pointer;
+    font-weight: bold;
+  }
+}

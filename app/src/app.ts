@@ -18,12 +18,12 @@ const grassSav = new SavUtils("grass");
 
 // Instantiating isolated loaders
 const bgLoader = new BackgroundDatabaseLoader();
-const musicLoader = new MusicDatabaseLoader();
+const musicLoader = isLocalhost ? new MusicDatabaseLoader() : null;
 const grassLoader = new GrassDatabaseLoader();
 
 // Fetch and resolve all async registries up front before constructing the 'app' tree
 const compiledBackgrounds = await bgLoader.loadWithMetadata();
-const compiledMusicDB = await musicLoader.loadRegistry();
+const compiledMusicDB = await musicLoader?.loadRegistry();
 const compiledGrassDB = await grassLoader.loadRegistry();
 
 const bgSav = {
