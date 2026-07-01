@@ -30,7 +30,6 @@ export function flattenDatabaseTree(
   } 
   // 2. Handle leaf elements (Database.File)
   else if (node.type === 'file') {
-    // 💡 FIX: Restored the proper filename appending layout structure
     const fileZipPath = currentPath ? `${currentPath}/${node.name}` : node.name;
     flatMap[fileZipPath] = `${baseUrl}${node.name}`;
   }
@@ -57,7 +56,6 @@ export async function compileZipFromDatabase(
     const directoryData = tuple[0] as TraversableNode | undefined;
     if (!directoryData) continue;
 
-    // 💡 FIX: Safely guard against flat layouts (like photos.json) that have no report block at tuple[1]
     const metadataReport = tuple[1] as Database.Obj2 | undefined;
 
     if (metadataReport && typeof metadataReport === 'object' && 'files' in metadataReport) {

@@ -92,15 +92,26 @@
         title="Malt - Chat with one model, compare several side by side, or let a whole swarm of them debate to a consensus — with a live canvas that runs whatever they build. No keys to wrangle, no tabs to juggle. – developed by my cousin">
         <img src="/images/malt-logo.svg" class="appIcon" alt="malt.quest">
       </a>
+
+      <div id="update-banner"
+        style="display: none; background: #ffce00; color: #000; padding: 12px; text-align: center; font-weight: bold; position: fixed; top: 0; width: 100%; z-index: 9999;">
+        🚀 A new application update is available!
+        <button id="refresh-btn"
+          style="margin-left: 15px; padding: 4px 10px; cursor: pointer; font-weight: bold;">Update Now</button>
+      </div>
+
+      <div class="app-build-info">
+        <p>Last deployment: <span id="deploy-time">Loading metadata...</span></p>
+      </div>
     </div>
 
     <form id="optForm"></form>
     <div class="egg" data-egg="fvsSoftware_underForm"></div>
-    <div class="flex">
+   <div class="flex">
+      <div id="audctrls"></div>
       <div id="eggMenu"></div>
       <div id="copy"></div>
       <div id="install"></div>
-      <div id="audctrls"></div>
     </div>
     <div class="egg" data-egg="fvsSoftware_aboveFooter"></div>
     <audio id="music"></audio>

@@ -67,8 +67,8 @@ export async function updateUrl(
 
   if (activeTrack) {
     url.searchParams.set("music", activeTrack);
-    const { playWithCrossfade } = await import("./music");
-    await playWithCrossfade(activeTrack, musicObj, grassObj, state);
+
+    await playTrackWithEngine(activeTrack, musicObj, grassObj, state);
   } else {
     url.searchParams.delete("music");
   }
@@ -368,5 +368,303 @@ export class EggCookbookPanel extends BasePanel implements AppPanel {
     };
 
     uploader.click();
+  }
+}
+
+import { setupAudioListeners } from "./music";
+
+/**
+ * 🧱 ABSTRACT FOUNDATION PIPELINE
+ * Manages dual-deck roles, trigonometric overlaps, and scrub-safety thresholds.
+ */
+export abstract class BasePlaybackEngine {
+  protected musicObj: Music.Config;
+  protected grassObj: Grass.Config;
+  protected state: typeof appState;
+
+  protected crossfadeTriggered = false;
+  protected userIsSeeking = false;
+
+  constructor(music: Music.Config, grass: Grass.Config, globalState: typeof appState) {
+    this.musicObj = music;
+    this.grassObj = grass;
+    this.state = globalState;
+  }
+
+  /**
+   * Initializes Deck A, maps layout preferences, and starts baseline execution.
+   */
+  public abstract start(initialUrl: string): void;
+
+  /**
+   * Evaluates the current deck timeline to judge if a transition is needed.
+   */
+  protected abstract evaluateTimeline(activeDeck: HTMLAudioElement): void;
+
+  /**
+   * Core scrub protection ensures dragging track sliders doesn't trigger rogue crossfades.
+   */
+  protected bindScrubProtection(audioElement: HTMLAudioElement) {
+    audioElement.onseeking = () => { this.userIsSeeking = true; };
+    audioElement.onseeked = () => {
+      this.userIsSeeking = false;
+      this.crossfadeTriggered = false;
+    };
+  }
+
+  /**
+   * Attaches the time tracker to watch the timeline.
+   */
+  protected attachLifecycleListeners(activeDeck: HTMLAudioElement) {
+    this.crossfadeTriggered = false;
+    activeDeck.onended = null;
+
+    activeDeck.ontimeupdate = () => {
+      if (!activeDeck.duration || activeDeck.paused || this.userIsSeeking) return;
+      this.evaluateTimeline(activeDeck);
+    };
+  }
+
+  /**
+   * 🎛️ CROSS-ENGINE MIXER
+   * Triggers an overlapping mix into an upcoming deck using logarithmic-perceived curves.
+   */
+  protected executeTrigonometricTransition(currentDeck: HTMLAudioElement, nextTrackUrl: string, loopNextTrack: boolean) {
+    const currentIdx = this.musicObj.currentIndex;
+    const nextIdx: 0 | 1 = currentIdx === 0 ? 1 : 0;
+    const upcomingDeck = this.musicObj.elems[nextIdx];
+
+    upcomingDeck.src = nextTrackUrl;
+    upcomingDeck.loop = loopNextTrack;
+    upcomingDeck.volume = 0;
+    upcomingDeck.controls = true;
+
+    // Sync visibility choices from user preferences panel
+    const hideButton = document.getElementById("audctrlBtn_hide");
+    upcomingDeck.style.display = (hideButton && hideButton.style.display === "block") ? "block" : "none";
+
+    setupAudioListeners(upcomingDeck, this.musicObj, this.grassObj, this.state);
+    this.bindScrubProtection(upcomingDeck);
+
+    upcomingDeck.play().then(() => {
+      this.state.isCrossfading = true;
+
+      const DURATION = 4000; // 4-second transition window
+      const STEP_MS = 100;
+      const totalSteps = DURATION / STEP_MS;
+      let currentStep = 0;
+
+      const fadeInterval = setInterval(() => {
+        currentStep++;
+        const progress = Math.min(1, Math.max(0, currentStep / totalSteps));
+
+        // Trigonometric wave fade definitions from music.ts
+        upcomingDeck.volume = Math.min(1, Math.max(0, Math.sin(progress * (Math.PI / 2))));
+        if (!currentDeck.paused) {
+          currentDeck.volume = Math.min(1, Math.max(0, Math.cos(progress * (Math.PI / 2))));
+        }
+
+        if (currentStep >= totalSteps) {
+          clearInterval(fadeInterval);
+
+          currentDeck.pause();
+          currentDeck.volume = 0;
+          currentDeck.style.display = "none";
+          currentDeck.controls = false;
+          currentDeck.ontimeupdate = null;
+
+          upcomingDeck.volume = 1;
+
+          // Sync active index so control elements map accurately
+          this.musicObj.currentIndex = nextIdx;
+          this.state.isCrossfading = false;
+
+          // Recursively bind lifecycle rules if the next item isn't an infinite end loop
+          if (!upcomingDeck.loop) {
+            this.attachLifecycleListeners(upcomingDeck);
+          }
+        }
+      }, STEP_MS);
+    }).catch(e => console.warn("Engine audio gap handoff blocked:", e));
+  }
+}
+
+/**
+ * 💿 1. CLASS IMPLEMENTATION: STANDARD STEREO TRACK RUNTIME
+ * Used for battle tracks, standard ambient loops, and vanilla non-stem tracks.
+ */
+export class StandardTrackEngine extends BasePlaybackEngine {
+  public start(initialUrl: string) {
+    const deckA = this.musicObj.elems[0];
+    this.musicObj.currentIndex = 0;
+
+    deckA.src = initialUrl;
+    deckA.loop = true; // Loop indefinitely by default
+    deckA.volume = 1;
+    deckA.controls = true;
+
+    setupAudioListeners(deckA, this.musicObj, this.grassObj, this.state);
+    this.bindScrubProtection(deckA);
+    this.attachLifecycleListeners(deckA);
+
+    deckA.play()
+      .then(() => { this.state.isBooting = false; })
+      .catch(e => { console.warn(e); this.state.isBooting = false; });
+  }
+
+  protected evaluateTimeline(_activeDeck: HTMLAudioElement) {
+    // Standard tracks loop natively via the browser engine. 
+    // We can add cross-fading mechanics here if track-skipping triggers it down-stream.
+  }
+}
+
+/**
+ * 🎮 2. CLASS IMPLEMENTATION: PROGRESSIVE STEM RE-MIX ENGINE
+ * Chains sequential segments dynamically based on temporal progress rules.
+ */
+export class StemPlaybackEngine extends BasePlaybackEngine {
+  private sectionTracks: string[] = [];
+  private medleyTrack: string | null = null;
+  private currentSectionIndex = 0;
+
+  constructor(stemsData: { sections?: string[], medley?: string | null }, music: Music.Config, grass: Grass.Config, globalState: typeof appState) {
+    super(music, grass, globalState);
+    this.sectionTracks = stemsData.sections || [];
+    this.medleyTrack = stemsData.medley || null;
+  }
+
+  public start(initialUrl: string) {
+    const deckA = this.musicObj.elems[0];
+    this.musicObj.currentIndex = 0;
+
+    deckA.src = initialUrl;
+    deckA.loop = false; // Never loop individual segments natively
+    deckA.volume = 1;
+    deckA.controls = true;
+
+    setupAudioListeners(deckA, this.musicObj, this.grassObj, this.state);
+    this.bindScrubProtection(deckA);
+    this.attachLifecycleListeners(deckA);
+
+    deckA.play()
+      .then(() => { this.state.isBooting = false; })
+      .catch(e => { console.warn(e); this.state.isBooting = false; });
+  }
+
+  protected evaluateTimeline(activeDeck: HTMLAudioElement) {
+    const timeRemaining = activeDeck.duration - activeDeck.currentTime;
+
+    // Trigger crossfade 4.5 seconds early
+    if (timeRemaining <= 4.5 && !this.crossfadeTriggered) {
+      this.crossfadeTriggered = true;
+
+      if (this.currentSectionIndex < this.sectionTracks.length) {
+        const nextSegmentUrl = this.sectionTracks[this.currentSectionIndex];
+        this.currentSectionIndex++;
+        this.executeTrigonometricTransition(activeDeck, nextSegmentUrl, false);
+      } else if (this.medleyTrack) {
+        this.executeTrigonometricTransition(activeDeck, this.medleyTrack, true);
+      }
+    }
+  }
+}
+
+let activeEngineInstance: any = null;
+
+export async function playTrackWithEngine(
+  verifiedTrack: string,
+  musicObj: Music.Config,
+  grassObj: Grass.Config,
+  state: typeof appState
+) {
+  if (!musicObj?.elems?.[0]) return;
+
+  // Clean up previous timeframe tickers to prevent intervals from colliding
+  if (activeEngineInstance) {
+    musicObj.elems[0].ontimeupdate = null;
+    musicObj.elems[1].ontimeupdate = null;
+    musicObj.elems[0].onended = null;
+    musicObj.elems[1].onended = null;
+  }
+
+  const { getTrackUrl, resolveTrackStems } = await import("./music");
+  const trackUrl = await getTrackUrl(musicObj, verifiedTrack);
+  let targetUrlForStems: string = trackUrl ?? "";
+
+  // 🔍 LIVE PROBING NETWORK SCANNER
+  if (!verifiedTrack.includes(".stems_")) {
+    const decodedTrackUrl = decodeURIComponent(targetUrlForStems);
+    const lastSlashIndex = decodedTrackUrl.lastIndexOf("/");
+    if (lastSlashIndex !== -1) {
+      const basePath = decodedTrackUrl.substring(0, lastSlashIndex);
+      const fileName = decodedTrackUrl.substring(lastSlashIndex + 1);
+      const cleanFileName = fileName.replace(/\.mp3$/i, "");
+      const hypotheticalStemsFolder = `${basePath}/.stems_${cleanFileName}`;
+
+      try {
+        const probeResponse = await fetch(`${hypotheticalStemsFolder}/prelude.mp3`, { method: "HEAD" });
+        if (probeResponse.ok) {
+          const musicContext = musicObj as any;
+          if (musicContext?.db?.[0]) {
+            const rootMusicDir = musicContext.db[0];
+            const pathSegments = basePath.split("/");
+            const activeCategoryName = pathSegments[pathSegments.length - 1];
+            const activeCategoryDir = rootMusicDir.contents.find(
+              (item: any) => item.type === "directory" && item.name === activeCategoryName
+            );
+            if (activeCategoryDir && Array.isArray(activeCategoryDir.contents)) {
+              const stemsFolderName = `.stems_${cleanFileName}`;
+              if (!activeCategoryDir.contents.some((item: any) => item.name === stemsFolderName)) {
+                const discoveredContents: any[] = [{ type: "file", name: "prelude.mp3" }];
+                let currentCheckNum = 1;
+                let scanActive = true;
+
+                while (scanActive) {
+                  try {
+                    const testFileName = `section ${currentCheckNum}.mp3`;
+                    const testUrl = `${hypotheticalStemsFolder}/${encodeURIComponent(testFileName)}`;
+
+                    // Issue the HEAD check safely
+                    const checkRes = await fetch(testUrl, { method: "HEAD" });
+
+                    if (checkRes.ok) {
+                      discoveredContents.push({ type: "file", name: testFileName });
+                      currentCheckNum++;
+                    } else {
+                      // 🛑 The server returned a 404/500 cleanly, exit loop safely
+                      scanActive = false;
+                    }
+                  } catch (networkError) {
+                    // 🛡️ Catches dropped sockets or local network failures without crashing the application
+                    console.debug("[Scanner] Loop broken via edge condition:", networkError);
+                    scanActive = false;
+                  }
+
+                  if (currentCheckNum > 50) break; // Engine safety breakout limit
+                }
+                try {
+                  const medleyRes = await fetch(`${hypotheticalStemsFolder}/medley.mp3`, { method: "HEAD" });
+                  if (medleyRes.ok) discoveredContents.push({ type: "file", name: "medley.mp3" });
+                } catch { }
+                activeCategoryDir.contents.push({ type: "directory", name: stemsFolderName, contents: discoveredContents });
+              }
+            }
+          }
+        }
+      } catch (err) {
+        console.debug(err);
+      }
+    }
+  }
+
+  const stems = resolveTrackStems(targetUrlForStems, musicObj.db);
+
+  // 🔀 ENGINE ROUTES
+  if (stems.prelude && stems.base && stems.sections && stems.sections.length > 0) {
+    activeEngineInstance = new StemPlaybackEngine(stems, musicObj, grassObj, state);
+    activeEngineInstance.start(stems.prelude);
+  } else {
+    activeEngineInstance = new StandardTrackEngine(musicObj, grassObj, state);
+    activeEngineInstance.start(stems.prelude || targetUrlForStems);
   }
 }

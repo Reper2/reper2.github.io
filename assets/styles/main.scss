@@ -58,6 +58,11 @@ kbd {
   white-space: nowrap;
 }
 
+audio {
+  width: max-content;
+  height: max-content;
+}
+
 .boxBtn {
   border-radius: 1.8vmin;
   background-color: lightskyblue;

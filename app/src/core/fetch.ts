@@ -1,4 +1,5 @@
 import { Database, Background, Music, Grass } from "../../lib/db-typings";
+import { VersionData } from "./interfaces";
 
 /**
  * Reusable abstract layer for loading terminal-generated tree JSON structures.
@@ -112,5 +113,29 @@ export class MusicDatabaseLoader extends AbstractDatabaseLoader<Music.DatabaseSt
 export class GrassDatabaseLoader extends AbstractDatabaseLoader<Grass.Config["db"]> {
   public override async loadRegistry(): Promise<Grass.Config["db"]> {
     return this.fetchDB<Grass.Config["db"]>("grass");
+  }
+}
+
+export class VersionLoader extends AbstractDatabaseLoader<VersionData> {
+  /**
+   * Fetches the absolute latest deployment metadata utilising the core engine path.
+   */
+  public override async loadRegistry(): Promise<VersionData> {
+    try {
+      // 1. Manually build the correct cache-busting URL string using the inherited basePath
+      const cleanUrl = `${this.basePath}/version.json?cb=${Date.now()}`;
+      
+      // 2. Fetch directly here to guarantee the query parameter stays at the absolute end
+      const response = await fetch(cleanUrl);
+
+      if (!response.ok) {
+        throw new Error(`[VersionLoader] HTTP Exception matching target resource: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.warn("Could not retrieve live network build timestamp. Defaulting fallback setup.");
+      return { timestamp: "Offline/Unknown" };
+    }
   }
 }

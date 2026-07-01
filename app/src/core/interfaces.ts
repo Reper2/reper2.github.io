@@ -31,3 +31,16 @@ export interface AppPanel {
 }
 
 export type Name = string | number;
+
+export interface MarioKartStems {
+  base: string;
+  prelude?: string;
+  finalLap?: string;
+  frontrunning?: string;
+  medley?: string;
+  sections?: string[]; // Holds the ordered path array
+}
+
+export interface VersionData {
+  timestamp: string;
+}

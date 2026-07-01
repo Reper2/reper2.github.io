@@ -6,12 +6,22 @@ export function submit(obj: Music.Config, input?: HTMLInputElement[], selector?:
   const musicInputValue = (input && input[0] instanceof HTMLInputElement) ? input[0].value : undefined;
   const musicSelectValue = (selector && selector[0] instanceof HTMLSelectElement) ? selector[0].value : undefined;
   const inputValue = musicInputValue || musicSelectValue;
-  const currentSaved = sessionStorage.getItem("music");
+  const currentSavedCompound = new SavUtils("music");
 
-  if (inputValue && inputValue === currentSaved) {
-    pickNextTrack(obj);
-  } else if (inputValue) {
-    new SavUtils("music").ss = inputValue;
+  if (inputValue) {
+    // Determine the album layout context for this track target string
+    const matchedAlbum = obj.db[0].contents.find(album => 
+      album.contents.some(track => track.name.replace(/\.[^/.]+$/, "") === inputValue)
+    );
+
+    const packedValue = matchedAlbum ? `${matchedAlbum.name}: ${inputValue}` : inputValue;
+
+    if (packedValue === currentSavedCompound.ss) {
+      pickNextTrack(obj);
+    } else {
+      // 🌟 SavUtils continues tracking a single identifier, saving "album:track" cleanly
+      currentSavedCompound.ss = packedValue;
+    }
   }
 
   if (selector && selector.length > 1 && selector[1]) {

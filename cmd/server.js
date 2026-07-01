@@ -15,6 +15,10 @@ const staticOptions = {
 
 // 1. Serve your main repository at the root URL (using the options)
 app.use('/', express.static(projectRoot, staticOptions));
+app.use('/assets', express.static(path.join(projectRoot, 'assets'), { 
+  dotfiles: 'allow',
+  fallthrough: false // This will force Express to print a loud error if it's a permission issue instead of hiding it
+}));
 
 const repos = [
   'acnh',

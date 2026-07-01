@@ -2,6 +2,8 @@ import { Database, Grass, Music } from "../../lib/db-typings";
 import { updateUrl } from "./utils";
 import { RandomPicker } from "./core";
 import { isLocalhost, appState } from "./core";
+import SavUtils from "./storage";
+import { MarioKartStems } from "./interfaces";
 
 // Internal pointer to track elements locally without relying on the app object tree
 let activeElementsPointer: [HTMLAudioElement, HTMLAudioElement] | null = null;
@@ -44,23 +46,30 @@ export function togglePlayPause(obj: Music.Config, playPauseBtn: HTMLButtonEleme
   }
 }
 
-/**
- * Asynchronously locates and extracts the audio file out of the zip binary array.
- */
 export async function getTrackUrl(obj: Music.Config, sav: string): Promise<string | null> {
+  const music = new SavUtils("music");
+  let targetAlbum: string | null = null;
+  let targetTrack = sav;
+
+  if (sav.includes(": ")) {
+    const parts = sav.split(": ");
+    targetAlbum = parts[0];
+    targetTrack = parts[1];
+  }
+
   for (let i = 0; i < obj.db[0].contents.length; i++) {
     const album = obj.db[0].contents[i];
+    
+    // Efficiency optimisation: skip if we explicitly passed an album and it doesn't match
+    if (targetAlbum && album.name !== targetAlbum) continue;
 
     for (let j = 0; j < album.contents.length; j++) {
       const track = album.contents[j];
 
-      // Strip the extension to match against your 'sav' tracking state
-      if (track.name.replace(/\.[^/.]+$/, "") === sav) {
-
-        // 🌐 Directly build the relative network path to the loose asset file
+      if (track.name.replace(/\.[^/.]+$/, "") === targetTrack) {
+        music.ss = `${album.name}: ${targetTrack}`;
+        
         const directAssetPath = `/assets/music/${album.name}/${track.name}`;
-
-        // Return the raw URL string immediately—no extraction required!
         return directAssetPath;
       }
     }
@@ -229,9 +238,6 @@ export function triggerNextTrack(
   updateUrl(musicObj, grassObj, state);
 }
 
-/**
- * This function is bound to the Prev[ious] [Track] button.
- */
 export function triggerPreviousTrack(
   musicObj: Music.Config,
   grassObj: Grass.Config,
@@ -243,16 +249,26 @@ export function triggerPreviousTrack(
     return;
   }
 
-  const currentMusic = sessionStorage.getItem("music");
-  if (!currentMusic) return;
+  const currentMusicCompound = sessionStorage.getItem("music");
+  if (!currentMusicCompound) return;
+
+  // Unpack our coupled value cleanly
+  const [currentAlbum, currentTrack] = currentMusicCompound.includes(": ") 
+    ? currentMusicCompound.split(": ") 
+    : ["", currentMusicCompound];
 
   for (let i = 0; i < musicObj.db[0].contents.length; i++) {
     const album = musicObj.db[0].contents[i];
+    
+    // Efficiency: Match album context bounds if known
+    if (currentAlbum && album.name !== currentAlbum) continue;
+
     for (let j = 0; j < album.contents.length; j++) {
-      if (album.contents[j].name.replace(/\.[^/.]+$/, "") === currentMusic) {
+      if (album.contents[j].name.replace(/\.[^/.]+$/, "") === currentTrack) { // Uses clean track part now
         const prevIndex = (j - 1 + album.contents.length) % album.contents.length;
         const prevCleanName = album.contents[prevIndex].name.replace(/\.[^/.]+$/, "");
-        sessionStorage.setItem("music", prevCleanName);
+        
+        sessionStorage.setItem("music", `${album.name}: ${prevCleanName}`);
         updateUrl(musicObj, grassObj, state);
         return;
       }
@@ -260,39 +276,114 @@ export function triggerPreviousTrack(
   }
 }
 
-/**
- * Picks a soundtrack from a random number as the index to search at.
- */
 export function pickRandomTrack(obj: Music.Config): void {
+  const music = new SavUtils("music");
   const musicPicker = new RandomPicker(obj.db[0].contents.map(album => album.name));
   musicPicker.pick(
     k => obj.db[0].contents.find(album => album.name === k)!.contents,
-    (_k, file: Database.File) => {
+    (k, file: Database.File) => {
       const cleanName = file.name.split(/[?#]/)[0].trim().replace(/\.[^/.]+$/, "");
-      sessionStorage.setItem("music", cleanName);
+      // 🌟 Couple album identity string (k) with the track target 
+      music.ss = `${k}: ${cleanName}`;
     }
   );
 }
 
-/**
- * If the 'Set' button was used, continue playing soundtracks from that album
- */
 export function pickNextTrack(obj: Music.Config): void {
-  const currentMusic = sessionStorage.getItem("music");
-  if (!currentMusic) {
+  const currentMusicCompound = new SavUtils("music");
+  if (!currentMusicCompound.ss) {
     pickRandomTrack(obj);
     return;
   }
 
+  const [currentAlbum, currentTrack] = currentMusicCompound.ss.includes(": ") 
+    ? currentMusicCompound.ss.split(": ") 
+    : ["", currentMusicCompound];
+
   for (let i = 0; i < obj.db[0].contents.length; i++) {
     const album = obj.db[0].contents[i];
+    if (currentAlbum && album.name !== currentAlbum) continue;
+
     for (let j = 0; j < album.contents.length; j++) {
-      if (album.contents[j].name.replace(/\.[^/.]+$/, "") === currentMusic) {
+      if (album.contents[j].name.replace(/\.[^/.]+$/, "") === currentTrack) {
         const nextIndex = (j + 1) % album.contents.length;
         const nextCleanName = album.contents[nextIndex].name.replace(/\.[^/.]+$/, "");
-        sessionStorage.setItem("music", nextCleanName);
+        
+        // 🌟 Write coupled format
+        currentMusicCompound.ss = `${album.name}: ${nextCleanName}`;
         return;
       }
     }
   }
+}
+
+export function resolveTrackStems(trackUrl: string, musicDb: any): MarioKartStems {
+  const stems: MarioKartStems = { base: trackUrl };
+
+  if (!trackUrl.toLowerCase().includes("mario kart")) {
+    return stems;
+  }
+
+  const lastSlash = trackUrl.lastIndexOf("/");
+  const fileNameWithExt = trackUrl.substring(lastSlash + 1);
+  const cleanTrackName = fileNameWithExt.replace(/\.[^/.]+$/, "");
+
+  const mainAlbum = musicDb[0].contents.find((album: any) => 
+    album.contents.some((file: any) => file.name === fileNameWithExt)
+  );
+
+  if (!mainAlbum) return stems;
+
+  const targetStemFolder = mainAlbum.contents.find((item: any) => 
+    item.type === "directory" && item.name === `.stems_${cleanTrackName}`
+  );
+
+  if (!targetStemFolder || !targetStemFolder.contents || targetStemFolder.contents.length === 0) {
+    return stems;
+  }
+
+  const stemFiles = targetStemFolder.contents;
+  const basePath = trackUrl.substring(0, lastSlash);
+  const hiddenDir = `${basePath}/.stems_${cleanTrackName}`;
+
+  const findFileByKeyword = (keywords: string[]) => {
+    const match = stemFiles.find((file: any) => 
+      keywords.some(kw => file.name.toLowerCase().includes(kw))
+    );
+    return match ? `${hiddenDir}/${match.name}` : undefined;
+  };
+
+  stems.prelude = findFileByKeyword(["prelude", "intro", "start", "countdown"]);
+  stems.finalLap = findFileByKeyword(["final", "lap", "fast", "speed", "hurry", "3rd"]);
+  stems.frontrunning = findFileByKeyword(["front", "lead", "fwd", "running", "1st"]);
+  stems.medley = findFileByKeyword(["medley", "mashup", "compilation"]);
+
+  // Parse and sort numbered elements dynamically
+  const sectionMatches = stemFiles
+    .filter((file: any) => /(section|part|sec|pt)[\s_-]*\d+/i.test(file.name))
+    .sort((a: any, b: any) => {
+      const numA = parseInt(a.name.match(/\d+/)?.[0] || "0", 10);
+      const numB = parseInt(b.name.match(/\d+/)?.[0] || "0", 10);
+      return numA - numB;
+    });
+
+  if (sectionMatches.length > 0) {
+    stems.sections = sectionMatches.map((file: any) => `${hiddenDir}/${file.name}`);
+    stems.base = stems.sections?.[0] ?? stems.base; // Point base tracking to Section 1
+  } else {
+    // Standard un-sectioned loop fallback scanner
+    const normalFile = stemFiles.find((file: any) => {
+      const nameLower = file.name.toLowerCase();
+      return nameLower.includes("normal") || 
+            (!nameLower.includes("prelude") && !nameLower.includes("intro") && 
+             !nameLower.includes("final") && !nameLower.includes("lap") && 
+             !nameLower.includes("fast") && !nameLower.includes("front") && 
+             !nameLower.includes("medley"));
+    });
+    if (normalFile) {
+      stems.base = `${hiddenDir}/${normalFile.name}`;
+    }
+  }
+
+  return stems;
 }

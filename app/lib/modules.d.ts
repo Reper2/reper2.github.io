@@ -12,3 +12,7 @@ declare module 'https://esm.sh/three@0.160.0/examples/jsm/loaders/GLTFLoader.js'
 declare module 'https://cdn.jsdelivr.net/npm/fflate@0.8.2/+esm' {
   export * from 'fflate';
 }
+declare module 'https://cdn.jsdelivr.net/npm/workbox-window@6.5.4/+esm' {
+  import { Workbox as LocalWorkbox } from 'workbox-window';
+  export { LocalWorkbox as Workbox };
+}

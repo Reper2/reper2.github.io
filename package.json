@@ -25,6 +25,9 @@
     "build": "npm run clean && npx tsc -p ./app/tsconfig.json",
     "watch": "nodemon --watch app --ext ts --exec 'npm run build'",
     "resolveModules": "node ./cmd/module-refiner.js",
-    "obfuscate": "javascript-obfuscator ./app/dist --output ./app/dist --compact true --self-defending true"
+    "obfuscate": "javascript-obfuscator ./app/dist --output ./app/dist --compact true --self-defending true",
+    "encrypt-e": "node ./cmd/encrypt-eggs.js",
+    "music-db": "tree assets/music -J > app/databases/music.json",
+    "bg-db": "cd app/databases/backgrounds && tree -J > ../bg.json"
   }
 }

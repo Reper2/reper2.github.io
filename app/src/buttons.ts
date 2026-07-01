@@ -5,23 +5,6 @@ import app from "./app";
 import BeforeInstallPromptEvent from "../lib/install-typings";
 import SavUtils from "./core/storage";
 
-onload = () => {
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("sw.js").then((reg) => {
-      console.groupCollapsed("Service Worker Status");
-      if (reg.installing) {
-        console.log("service worker installing...");
-      } if (reg.waiting) {
-        console.log("service worker installed");
-      } if (reg.active) {
-        console.log("service worker active");
-      }
-      console.log("Service Worker registration successful with scope:", reg.scope);
-      console.groupEnd();
-    }).catch((err) => console.error("Service Worker registration failed:", err));
-  }
-};
-
 const btns = {
   back: {
     _: document.getElementById("back") as HTMLDivElement,

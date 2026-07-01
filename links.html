@@ -72,13 +72,13 @@
       <a href="/d/mk.html" title="Maple Koala - Discord">
         <img src="/images/social-logos/Discord-Symbol-Blurple.svg" class="link" alt="discord_logo">
       </a>
-      
+
       <a href="https://www.reddit.com/user/Reper2" title="Reper2 - Reddit">
         <img src="/images/social-logos/reddit-logo.webp" class="link" alt="reddit_logo">
       </a>
-      
+
       <div class="egg" data-egg="fvsSocials"></div>
-      
+
       <a href="https://islaatlas.com/en/" title="Isla Atlas - SCBI Club Network">
         <img src="https://islaatlas.com/images/logos/logoia_350x133px.png" class="link" alt="ia_logo">
       </a>
@@ -86,15 +86,26 @@
       <a href="/d/ia.html" title="Isla Atlas - Discord">
         <img src="/images/social-logos/Discord-Symbol-Blurple.svg" class="link" alt="discord_logo">
       </a>
+
+      <div id="update-banner"
+        style="display: none; background: #ffce00; color: #000; padding: 12px; text-align: center; font-weight: bold; position: fixed; top: 0; width: 100%; z-index: 9999;">
+        🚀 A new application update is available!
+        <button id="refresh-btn"
+          style="margin-left: 15px; padding: 4px 10px; cursor: pointer; font-weight: bold;">Update Now</button>
+      </div>
+
+      <div class="app-build-info">
+        <p>Last deployment: <span id="deploy-time">Loading metadata...</span></p>
+      </div>
     </div>
 
     <form id="optForm"></form>
     <div class="egg" data-egg="fvsSocials_underForm"></div>
     <div class="flex">
+      <div id="audctrls"></div>
       <div id="eggMenu"></div>
       <div id="copy"></div>
       <div id="install"></div>
-      <div id="audctrls"></div>
     </div>
     <div class="egg" data-egg="fvsSocials_underBtns"></div>
     <audio id="music"></audio>

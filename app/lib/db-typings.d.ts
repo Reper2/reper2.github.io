@@ -81,7 +81,6 @@ export namespace Music {
   interface Config {
     _: HTMLOptGroupElement[];
     
-    // 💡 FIX: Updated to a readonly getter signature to support the runtime DOM evaluation
     elems: [HTMLAudioElement, HTMLAudioElement]; 
     
     // Tracks which element is currently active (index 0 or 1)

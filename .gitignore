@@ -47,7 +47,10 @@ Thumbs.db
 *.m4a
 
 # 2. Explicitly ensure entire raw asset audio folders are wiped from tracking
-/assets/music/
+assets/music/
+cmd/web1.txt
+cmd/files1.txt
+app/databases/music.json
 
 # 3. CRITICAL: Whitelist specific localized static audio tracks if needed downstream
 # (If you ever want an MP3 to bypass the ban, you MUST negate it explicitly like this):

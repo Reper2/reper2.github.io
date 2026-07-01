@@ -1,11 +1,12 @@
 import { Background, Grass, Music } from "../lib/db-typings";
+import { Workbox } from "https://cdn.jsdelivr.net/npm/workbox-window@6.5.4/+esm";
 import {
   changeBackground, // bg
   pushGrassOpts, pushOptGroups, // form
-  getTrackUrl, setupAudioListeners, pickRandomTrack, // music
-  sfx, submit, updateUrl, // utils
+  pickRandomTrack, // music
+  sfx, submit, updateUrl, playTrackWithEngine, // utils
   isLocalhost, appState, // core
-  BackgroundDatabaseLoader, MusicDatabaseLoader, GrassDatabaseLoader // fetch
+  BackgroundDatabaseLoader, MusicDatabaseLoader, GrassDatabaseLoader, VersionLoader // fetch
 } from "./core/";
 import SavUtils from "./core/storage";
 import { applyThemeElements } from "./themes";
@@ -29,6 +30,47 @@ const bgSav = {
   cat: new SavUtils("bg_cat"),
   game: new SavUtils("bg_game")
 };
+
+async function initialiseAppEngine() {
+  // 1. Instantly trigger the fresh abstract data loader to fetch the live deployment date
+  const versionLoader = new VersionLoader();
+  const liveBuildData = await versionLoader.loadRegistry();
+
+  // Render the server-side timestamp value onto the screen interface
+  const deploySlot = document.getElementById("deploy-time");
+  if (deploySlot) {
+    deploySlot.textContent = liveBuildData.timestamp;
+  }
+
+  // 2. Initialise Workbox Window lifecycle tracking
+  if ('serviceWorker' in navigator) {
+    // Point it straight to the CLI generated service worker script file
+    const wb = new Workbox('/sw.js');
+
+    // This listener triggers if Workbox realises files on the network differ from local caches
+    wb.addEventListener('waiting', () => {
+      const banner = document.getElementById("update-banner");
+      const refreshBtn = document.getElementById("refresh-btn");
+
+      if (banner) banner.style.display = "block";
+
+      if (refreshBtn) {
+        refreshBtn.addEventListener('click', () => {
+          // Tell the dormant, waiting service worker to take control and evict old caches
+          wb.messageSkipWaiting();
+
+          // Hard reload the browser window to draw the brand-new app view state
+          window.location.reload();
+        });
+      }
+    });
+
+    // Fire the background registration cycle
+    wb.register();
+  }
+}
+
+initialiseAppEngine();
 
 // 🛡️ GUARDRAIL OVERRIDES: Check the DOM context up-front before building selections
 const forcedCategoryAttr = document.body.getAttribute("data-bg-force");
@@ -380,7 +422,7 @@ $(function () {
       categorySelect.disabled = true;
       categorySelect.style.opacity = "0.5";
       gameSelect.disabled = true;
-      
+
       // Hide them completely so users cannot alter the path
       categorySelect.style.display = "none";
       gameSelect.style.display = "none";
@@ -409,9 +451,11 @@ $(function () {
   }
 
   if (isLocalhost) {
-    let initialTrack = musicTrackState.active;
-    if (initialTrack) {
-      musicTrackState.active = initialTrack;
+    const initialTrackCompound = musicSav.ss || musicSav.sp;
+
+    if (initialTrackCompound) {
+      // Passes "album: track" directly into the configuration block state context
+      musicTrackState.active = initialTrackCompound;
     } else {
       if (app.music) {
         pickRandomTrack(app.music);
@@ -420,33 +464,9 @@ $(function () {
 
     const verifiedTrack = musicTrackState.active;
 
-    if (verifiedTrack && app.music?.elems && app.music.elems.length > 0 && app.music.elems[0]) {
-      const deckA = app.music.elems[0];
-
-      getTrackUrl(app.music, verifiedTrack).then((trackUrl) => {
-        if (trackUrl) {
-          deckA.src = trackUrl;
-          deckA.load();
-          deckA.volume = 1;
-          deckA.controls = true;
-
-          const hideButton = document.getElementById("audctrlBtn_hide");
-          if (hideButton && hideButton.style.display === "none") {
-            deckA.style.display = "none";
-          } else {
-            deckA.style.display = "block";
-          }
-
-          setupAudioListeners(deckA, app.music, app.grass, appState);
-
-          deckA.play()
-            .then(() => { appState.isBooting = false; })
-            .catch(e => {
-              console.warn("Audio play blocked by browser policy:", e);
-              appState.isBooting = false;
-            });
-        }
-      });
+    if (verifiedTrack && app.music?.elems?.[0]) {
+      // Let your centralised service handle initial booting, probing, and class matching
+      playTrackWithEngine(verifiedTrack, app.music, app.grass, appState);
       console.log("🚀 Initial Boot Deck Sync Complete:", verifiedTrack);
     } else {
       console.log("ℹ️ Audio layer unallocated or bypassed for this project scope.");

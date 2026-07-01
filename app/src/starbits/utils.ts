@@ -107,11 +107,28 @@ export function generateStarbitShower(
     }
 
     context.loader.load(gltfModelPath, (gltf: any) => {
-      const masterMesh = gltf.scene.children[0] as THREE.Mesh;
+      let masterMesh: THREE.Mesh | null = null;
+
+      // 1. Traverse deeply to crawl past "Node0" and "m0" to extract "Node2"
+      gltf.scene.traverse((child: any) => {
+        if (!masterMesh && child instanceof THREE.Mesh) {
+          masterMesh = child;
+        }
+      });
+
+      // 2. Safety checklist guard
+      if (!masterMesh) {
+        console.error("[Starbit Engine] Instantiation aborted: Could not isolate mesh components from Node0 structure.");
+        return;
+      }
+
+      // 3. Compute calculations using stable boundary integers
       const TOTAL_BITS = starBitColours.length * totalEggs;
       const progress = eggCount / totalEggs;
+      const exactSpawnTarget = Math.floor(TOTAL_BITS * progress);
 
-      for (let i = 0; i < TOTAL_BITS * progress; i++) {
+      // 4. Instantiation cycle
+      for (let i = 0; i < exactSpawnTarget; i++) {
         activeStarbits.push(new Starbit3D(masterMesh, context.scene));
       }
 

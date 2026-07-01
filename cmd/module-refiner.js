@@ -8,7 +8,7 @@ const dir = path.resolve("./app/dist");
 function processFile(file) {
   let text = fs.readFileSync(file, "utf8");
 
-  // 🚀 The Magic Fix: Using "+?" makes the match non-greedy so it catches 
+  // Using "+?" makes the match non-greedy so it catches 
   // every individual quote path on a single minified line sequentially!
   text = text.replace(/(["'])([^"'\r\n]+?)(\1)/g, (match, quote, importPath) => {
 
