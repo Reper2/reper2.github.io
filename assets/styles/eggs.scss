@@ -1,5 +1,3 @@
-@use "./abstracts/variables";
-
 @keyframes bubblePop {
   0% {
     transform: translate(-50%, -50%) scale(1);
@@ -57,7 +55,6 @@
   // Center-stacked structure layers
   .egg-box,
   .egg-cracked {
-    @include variables.absolute-centre(true);
     width: 100% !important;
     height: 100% !important;
     object-fit: contain; 
@@ -71,11 +68,11 @@
       opacity: 1.0;
       transform: translate(-50%, -50%) scale(1.05);
     }
-
+ 
     .egg-cracked {
       z-index: 1;
       visibility: visible !important;
-      transform: translate(-50%, -50%) scale(0.70) !important;
+      transform: translate(-50%, -50%) scale(0.70);
       opacity: 0.8; 
       pointer-events: none;
       transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -87,6 +84,8 @@
      ------------------------------------------------------------------------- */
   &.cracking {
     .egg-box {
+      // ⚡ NOTE: If bubblePop still doesn't fire, ensure bubblePop keyframes 
+      // also include the translate(-50%, -50%) state on every frame.
       animation: bubblePop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
 

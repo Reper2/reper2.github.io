@@ -51,6 +51,7 @@ assets/music/
 cmd/web1.txt
 cmd/files1.txt
 app/databases/music.json
+app/databases/music/*
 
 # 3. CRITICAL: Whitelist specific localized static audio tracks if needed downstream
 # (If you ever want an MP3 to bypass the ban, you MUST negate it explicitly like this):

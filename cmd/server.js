@@ -19,6 +19,12 @@ app.use('/assets', express.static(path.join(projectRoot, 'assets'), {
   dotfiles: 'allow',
   fallthrough: false // This will force Express to print a loud error if it's a permission issue instead of hiding it
 }));
+app.use('/app', express.static(path.join(projectRoot, 'app'), {
+  dotfiles: 'allow',
+  fallthrough: false
+}));
+
+// 2. Serve sibling repositories at their respective URL paths
 
 const repos = [
   'acnh',

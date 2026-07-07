@@ -1,12 +1,31 @@
+@font-face {
+  font-family: "Super Mario 256";
+  src: url("/assets/SuperMario256.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Hylia Serif";
+  src: url("/assets/alt-theme/HyliaSerifBeta-Regular.otf") format("opentype");
+}
+@keyframes bounceButton {
+  to {
+    transform: scale(0.95);
+  }
+}
+@keyframes gradient-scroll {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 200% 50%;
+  }
+}
 header, h1, h2, h3, p, a, span, button, label {
-  font-family: "Hylia Serif", serif;
+  font-family: "Hylia Serif", sans-serif;
+  color: white;
   -webkit-text-stroke-width: 0.13vmin;
-  stroke-width: 0.13vmin;
+  -webkit-text-stroke-color: black;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
   letter-spacing: 0.06em;
-  line-height: 1.5;
 }
 
 header {

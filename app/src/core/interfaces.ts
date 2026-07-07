@@ -38,7 +38,8 @@ export interface MarioKartStems {
   finalLap?: string;
   frontrunning?: string;
   medley?: string;
-  sections?: string[]; // Holds the ordered path array
+  submix?: string; // Captures environmental layers like Movie Screen / Water Section
+  sections?: string[];
 }
 
 export interface VersionData {

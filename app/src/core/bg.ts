@@ -4,7 +4,7 @@ import { RandomPicker } from "./core";
 let isLayerA = true;
 let isInitialLoad = true;
 
-// ⚠️ FALLBACK DESTINATION SETTINGS
+// FALLBACK DESTINATION SETTINGS
 const FALLBACK_CONFIG = {
   username: "reper2",
   repo: "switch-album", 
@@ -26,7 +26,7 @@ export function changeBackground(obj: Background.Config): void {
     }
 
     try {
-      // 📡 Pre-flight status verification checkpoint
+      // Pre-flight status verification checkpoint
       // A HEAD request checks response headers instantly without downloading any image data!
       const checkResponse = await fetch(targetUrl, { method: "HEAD" });
       

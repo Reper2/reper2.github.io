@@ -16,18 +16,16 @@
 }
 
 @mixin absolute-centre($important: false) {
-  position: if($important, absolute !important, absolute);
-  top: if($important, 50% !important, 50%);
-  left: if($important, 50% !important, 50%);
-  transform: translate(-50%, -50%);
-}
-
-@mixin mouse-hover-only {
-  @media (hover: hover) {
-    &:hover {
-      @content;
-    }
+  $suffix: "";
+  
+  @if $important {
+    $suffix: " !important";
   }
+
+  position: absolute#{$suffix};
+  top: 50%#{$suffix};
+  left: 50%#{$suffix};
+  transform: translate(-50%, -50%)#{$suffix};
 }
 
 @mixin game-text($font: 'Super Mario 256', $stroke-width: 0.05em, $color: white) {
@@ -63,47 +61,5 @@
 
   to {
     background-position: 200% 50%;
-  }
-}
-
-@keyframes bubblePop {
-  0% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0.95;
-  }
-
-  30% {
-    transform: translate(-50%, -50%) scale(1.2);
-    opacity: 1.0;
-  }
-
-  100% {
-    transform: translate(-50%, -50%) scale(0);
-    opacity: 0;
-  }
-}
-
-@keyframes moon {
-  0% {
-    transform: translate(-50%, calc(-50% + 20px)) scale(0.5) rotate(-45deg);
-    opacity: 0;
-  }
-
-  25% {
-    transform: translate(calc(-50% - 15px), calc(-50% - 10px)) scale(1.3) rotate(20deg);
-    opacity: 1;
-  }
-
-  50% {
-    transform: translate(calc(-50% + 15px), calc(-50% - 20px)) scale(1.1) rotate(-15deg);
-  }
-
-  75% {
-    transform: translate(calc(-50% - 5px), calc(-50% - 25px)) scale(1.2) rotate(10deg);
-  }
-
-  100% {
-    transform: translate(-50%, calc(-50% - 30px)) scale(1.1) rotate(0deg);
-    opacity: 1;
   }
 }

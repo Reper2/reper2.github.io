@@ -73,7 +73,7 @@ export class BackgroundDatabaseLoader extends AbstractDatabaseLoader<Background.
       }
     });
 
-    // 🌟 Fetch the flat photos.json for holidays concurrently alongside your games
+    // Fetch the flat photos.json for holidays concurrently alongside your games
     const holidayRequest = this.fetchDB<[Database.Obj1, Database.Obj2]>("photos")
       .then((payload) => ({ key: "holidays", data: payload }))
       .catch((err) => {
@@ -116,6 +116,33 @@ export class GrassDatabaseLoader extends AbstractDatabaseLoader<Grass.Config["db
   }
 }
 
+/**
+ * Dedicated Loader for pre-compiled static stem database trees
+ */
+export class StemDatabaseLoader extends AbstractDatabaseLoader<any[]> {
+  private category: string;
+  private stemsFolder: string;
+
+  constructor(category: string, stemsFolder: string) {
+    super();
+    super.fetchDB; // Ensure the base fetch method is available
+    this.category = category;
+    this.stemsFolder = stemsFolder;
+  }
+
+  /**
+   * 
+   * @returns A Promise resolving to an array of stem file objects, each containing metadata and file paths.
+   * The loader constructs the fetch path dynamically based on the category and stems folder provided.
+   * Example: For category "Mario Kart World" and stemsFolder ".stems_Rainbow Road", it fetches:
+   * /app/databases/music/Mario%20Kart%20World/.stems_Rainbow%20Road.json
+   */
+  public override async loadRegistry(): Promise<any[]> {
+    const filename = `music/${this.category}/${this.stemsFolder}`;
+    return this.fetchDB<any[]>(filename);
+  }
+}
+
 export class VersionLoader extends AbstractDatabaseLoader<VersionData> {
   /**
    * Fetches the absolute latest deployment metadata utilising the core engine path.
@@ -124,7 +151,7 @@ export class VersionLoader extends AbstractDatabaseLoader<VersionData> {
     try {
       // 1. Manually build the correct cache-busting URL string using the inherited basePath
       const cleanUrl = `${this.basePath}/version.json?cb=${Date.now()}`;
-      
+
       // 2. Fetch directly here to guarantee the query parameter stays at the absolute end
       const response = await fetch(cleanUrl);
 

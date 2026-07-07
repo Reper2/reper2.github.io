@@ -1,6 +1,8 @@
+@use "./abstracts/variables";
+
 // Typography & Headings Override
 header, h1, h2, h3, p, a, span, button, label {
-  @include game-text('Hylia Serif', 0.13vmin);
+  @include variables.game-text('Hylia Serif', 0.13vmin);
   -webkit-font-smoothing: antialiased;
   letter-spacing: 0.06em;
 }

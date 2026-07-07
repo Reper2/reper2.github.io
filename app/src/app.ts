@@ -8,6 +8,7 @@ import {
   isLocalhost, appState, // core
   BackgroundDatabaseLoader, MusicDatabaseLoader, GrassDatabaseLoader, VersionLoader // fetch
 } from "./core/";
+import { initMusicProxy } from "./core/music"; // Adjust path if necessary depending on folder tree
 import SavUtils from "./core/storage";
 import { applyThemeElements } from "./themes";
 
@@ -72,13 +73,12 @@ async function initialiseAppEngine() {
 
 initialiseAppEngine();
 
-// 🛡️ GUARDRAIL OVERRIDES: Check the DOM context up-front before building selections
+// GUARDRAIL OVERRIDES: Check the DOM context up-front before building selections
 const forcedCategoryAttr = document.body.getAttribute("data-bg-force");
 const isForcedBgPage = forcedCategoryAttr === "games" || forcedCategoryAttr === "holidays";
 
 export const bgSelectionState = {
   get category(): string {
-    // 🧠 Bulletproof Fallback: if data-bg-force is set on body, override the state explicitly
     if (isForcedBgPage) return forcedCategoryAttr!;
     return bgSav.cat.ss ?? bgSav.cat.sp ?? "games"; // defaults to games
   },
@@ -87,7 +87,6 @@ export const bgSelectionState = {
     bgSav.cat.ss = bgSav.cat.sp = val;
   },
   get specificGame(): string | null {
-    // 🧠 Bulletproof Fallback: Nullify specific games if the category is locked by data-bg-force
     if (isForcedBgPage) return null;
     return bgSav.game.ss ?? bgSav.game.sp ?? null;
   },
@@ -312,10 +311,14 @@ app.label._[2].htmlFor = app.selector._[1].name = "grass";
 $(function () {
   themeState.active = themeState.active;
 
-  // 🛡️ FORM ENGINE DEEP SAFEGUARD
+  // FORM ENGINE DEEP SAFEGUARD
   if (!app.form) {
     console.log("ℹ️ Configuration form ('#optForm') unallocated on this view page matrix. Sub-injection bypassed.");
   } else {
+    initMusicProxy(app.music.elems, {
+      get currentIdx() { return app.music.currentIndex as 0 | 1; }
+    });
+     
     // Initialise audio elements safely if they map inside the layout
     app.music.elems.forEach((el: HTMLAudioElement | null) => {
       if (el) {
@@ -417,7 +420,7 @@ $(function () {
 
     app.form.appendChild(app.break[2]); // Break after grass
 
-    // 🔒 UI GUARDRAIL: Lock or completely skip rendering selectors if the page enforces a context
+    // UI GUARDRAIL: Lock or completely skip rendering selectors if the page enforces a context
     if (isForcedBgPage) {
       categorySelect.disabled = true;
       categorySelect.style.opacity = "0.5";
@@ -465,7 +468,7 @@ $(function () {
     const verifiedTrack = musicTrackState.active;
 
     if (verifiedTrack && app.music?.elems?.[0]) {
-      // Let your centralised service handle initial booting, probing, and class matching
+      // Let the centralised service handle initial booting, probing, and class matching
       playTrackWithEngine(verifiedTrack, app.music, app.grass, appState);
       console.log("🚀 Initial Boot Deck Sync Complete:", verifiedTrack);
     } else {

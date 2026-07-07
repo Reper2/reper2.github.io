@@ -30,7 +30,9 @@ button {
 button, input {
   transition: transform 0.2s ease;
   
-  @include mouse-hover-only {
-    transform: translateY(-0.9vh); // Injected seamlessly inside the media query
+  @media (hover: hover) {
+    &:hover {
+      transform: translateY(-0.9vh); // Injected seamlessly inside the media query
+    }
   }
 }

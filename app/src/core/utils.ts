@@ -2,9 +2,10 @@ import { Grass, Music } from "../../lib/db-typings";
 import { globalTheme } from "../themes";
 import { eggsav, getParsedState } from "../eggs/";
 import vault from "../eggs/vault";
-import { AppPanel } from "./interfaces";
-import { triggerPreviousTrack, triggerNextTrack, togglePlayPause } from "./music";
+import { AppPanel, MarioKartStems } from "./interfaces";
+import { triggerPreviousTrack, triggerNextTrack, togglePlayPause, playWithCrossfade, resolveTrackStems } from "./music";
 import { isLocalhost, appState } from "./core";
+import { StemDatabaseLoader } from "./fetch";
 import SavUtils from "./storage";
 
 // Define hidden private pointers to hold our audio instances
@@ -14,13 +15,11 @@ let cookingDubiousInstance: HTMLAudioElement | null = null;
 
 export const sfx = {
   playRandomCooking() {
-    // 1. STAGE 1 GUARDS: Terminate instantly before any assets are constructed or fetched
     if (!isLocalhost) return;
 
     const dynamicThemeCheck = globalTheme.ls || globalTheme.sp || "alt";
     if (dynamicThemeCheck !== "alt") return;
 
-    // 2. LAZY LOAD: Allocate the audio memory buffers only if we pass the guards above
     if (!cookingNormalInstance) {
       cookingNormalInstance = new Audio("/assets/alt-theme/cooking_success.mp3");
     }
@@ -31,7 +30,6 @@ export const sfx = {
       cookingDubiousInstance = new Audio("/assets/alt-theme/cooking_failed.mp3");
     }
 
-    // 3. EXECUTE GAMEPLAY ROLL LOGIC
     const roll = Math.random();
     let selectedAudio: HTMLAudioElement;
 
@@ -46,7 +44,6 @@ export const sfx = {
       console.log("🎲 SFX: Standard Cooking Success!");
     }
 
-    // Safe to trigger playback now
     selectedAudio.currentTime = 0;
     selectedAudio.volume = 0.5;
     selectedAudio.play().catch(e => console.warn("SFX playback interrupted:", e));
@@ -67,7 +64,6 @@ export async function updateUrl(
 
   if (activeTrack) {
     url.searchParams.set("music", activeTrack);
-
     await playTrackWithEngine(activeTrack, musicObj, grassObj, state);
   } else {
     url.searchParams.delete("music");
@@ -85,7 +81,7 @@ export async function updateUrl(
 }
 
 /**
- * 🏛️ THE BASE BLUEPRINT (Abstract Base Class)
+ * THE BASE BLUEPRINT
  */
 export abstract class BasePanel implements AppPanel {
   readonly elementId: string;
@@ -126,6 +122,8 @@ export class AudioControlPanel extends BasePanel {
     this.config = config;
     this.obj = obj;
     this.render();
+
+    this.toggleVisibility(this.isOpen);
   }
 
   public render(): void {
@@ -371,11 +369,8 @@ export class EggCookbookPanel extends BasePanel implements AppPanel {
   }
 }
 
-import { setupAudioListeners } from "./music";
-
 /**
- * 🧱 ABSTRACT FOUNDATION PIPELINE
- * Manages dual-deck roles, trigonometric overlaps, and scrub-safety thresholds.
+ * ABSTRACT FOUNDATION PIPELINE
  */
 export abstract class BasePlaybackEngine {
   protected musicObj: Music.Config;
@@ -391,19 +386,9 @@ export abstract class BasePlaybackEngine {
     this.state = globalState;
   }
 
-  /**
-   * Initializes Deck A, maps layout preferences, and starts baseline execution.
-   */
-  public abstract start(initialUrl: string): void;
-
-  /**
-   * Evaluates the current deck timeline to judge if a transition is needed.
-   */
+  public abstract start(): Promise<void>;
   protected abstract evaluateTimeline(activeDeck: HTMLAudioElement): void;
 
-  /**
-   * Core scrub protection ensures dragging track sliders doesn't trigger rogue crossfades.
-   */
   protected bindScrubProtection(audioElement: HTMLAudioElement) {
     audioElement.onseeking = () => { this.userIsSeeking = true; };
     audioElement.onseeked = () => {
@@ -412,159 +397,215 @@ export abstract class BasePlaybackEngine {
     };
   }
 
-  /**
-   * Attaches the time tracker to watch the timeline.
-   */
-  protected attachLifecycleListeners(activeDeck: HTMLAudioElement) {
-    this.crossfadeTriggered = false;
-    activeDeck.onended = null;
-
+  protected attachLifecycleListeners(activeDeck: HTMLAudioElement): void {
     activeDeck.ontimeupdate = () => {
-      if (!activeDeck.duration || activeDeck.paused || this.userIsSeeking) return;
       this.evaluateTimeline(activeDeck);
+    };
+
+    activeDeck.onended = () => {
+      if (!this.crossfadeTriggered && !this.state.isCrossfading) {
+        this.crossfadeTriggered = true;
+        activeDeck.ontimeupdate = null;
+        activeDeck.onended = null;
+        triggerNextTrack(this.musicObj, this.grassObj, this.state);
+      }
+    };
+  }
+}
+
+export class StandardTrackPlaybackEngine extends BasePlaybackEngine {
+  private targetTrackCompound: string;
+  private cleanAssetUrl: string;
+
+  constructor(targetTrackCompound: string, cleanAssetUrl: string, musicObj: Music.Config, grassObj: Grass.Config, state: typeof appState) {
+    super(musicObj, grassObj, state);
+    this.targetTrackCompound = targetTrackCompound;
+    this.cleanAssetUrl = cleanAssetUrl;
+  }
+
+  public async start(): Promise<void> {
+    console.log(`🎚️ Standard Engine routing track: ${this.targetTrackCompound}`);
+
+    const currentIdx = this.musicObj.currentIndex;
+    const currentDeck = this.musicObj.elems[currentIdx];
+
+    const isInitialBoot = !currentDeck || currentDeck.src === "" || currentDeck.src === window.location.href;
+
+    const targetIdx: 0 | 1 = isInitialBoot ? currentIdx : (currentIdx === 0 ? 1 : 0);
+    const targetDeck = this.musicObj.elems[targetIdx];
+
+    if (targetDeck) {
+      const targetFullUrl = window.location.origin + this.cleanAssetUrl;
+      if (targetDeck.src !== targetFullUrl) {
+        targetDeck.src = this.cleanAssetUrl;
+        targetDeck.load();
+      }
+
+      // 🧼 Clear any residual flags before playing
+      this.crossfadeTriggered = false;
+      this.bindScrubProtection(targetDeck);
+      this.attachLifecycleListeners(targetDeck);
+
+      if (isInitialBoot) {
+        targetDeck.volume = 1;
+        targetDeck.style.display = "block";
+        targetDeck.controls = true;
+        await targetDeck.play().catch(e => console.warn("Initial boot autoplay deferred:", e));
+      } else {
+        // Normal ongoing track skip crossfade execution routing
+        await playWithCrossfade(this.targetTrackCompound, this.musicObj, this.grassObj, this.state);
+      }
+    }
+
+    this.state.isBooting = false;
+  }
+
+  protected evaluateTimeline(activeDeck: HTMLAudioElement): void {
+    // CRITICAL SAFEGUARD: Don't trigger crossfades if seeking, already fading, or if the song just started!
+    if (this.crossfadeTriggered || this.state.isCrossfading || this.userIsSeeking || activeDeck.currentTime < 5) return;
+
+    const timeRemaining = activeDeck.duration - activeDeck.currentTime;
+    if (activeDeck.duration && timeRemaining <= 10) {
+      this.crossfadeTriggered = true;
+      activeDeck.ontimeupdate = null;
+      triggerNextTrack(this.musicObj, this.grassObj, this.state);
+    }
+  }
+}
+
+export class StemPlaybackEngine extends BasePlaybackEngine {
+  private targetTrackCompound: string;
+  private stems: MarioKartStems;
+  private currentPlayingStemType: "prelude" | "sections" | "base" = "base";
+  private currentSectionIndex = 0;
+
+  constructor(targetTrackCompound: string, stems: MarioKartStems, musicObj: Music.Config, grassObj: Grass.Config, state: typeof appState) {
+    super(musicObj, grassObj, state);
+    this.targetTrackCompound = targetTrackCompound;
+    this.stems = stems;
+  }
+
+  public async start(): Promise<void> {
+    console.log(`🎛️ Stem Engine preparing multi-track routing: ${this.targetTrackCompound}`);
+
+    const currentIdx = this.musicObj.currentIndex;
+    const currentDeck = this.musicObj.elems[currentIdx];
+    const isInitialBoot = !currentDeck || currentDeck.src === "" || currentDeck.src === window.location.href;
+
+    const targetIdx: 0 | 1 = isInitialBoot ? currentIdx : (currentIdx === 0 ? 1 : 0);
+    const targetDeck = this.musicObj.elems[targetIdx];
+
+    if (targetDeck) {
+      // Determine our entry segment
+      let initialSource = this.stems.base;
+      if (this.stems.prelude) {
+        initialSource = this.stems.prelude;
+        this.currentPlayingStemType = "prelude";
+        console.log(`🎬 [STEM ENGINE] Initializing sequence with Prelude: ${initialSource}`);
+      } else if (this.stems.sections && this.stems.sections.length > 0) {
+        initialSource = this.stems.sections[0];
+        this.currentPlayingStemType = "sections";
+        this.currentSectionIndex = 0;
+        console.log(`🎬 [STEM ENGINE] No Prelude found. Starting straight with Section 1: ${initialSource}`);
+      } else {
+        this.currentPlayingStemType = "base";
+        console.log(`🎬 [STEM ENGINE] Standard flat loop backup assigned: ${initialSource}`);
+      }
+
+      const targetFullUrl = window.location.origin + initialSource;
+      if (targetDeck.src !== targetFullUrl) {
+        targetDeck.src = initialSource;
+        targetDeck.load();
+      }
+
+      this.crossfadeTriggered = false;
+      this.bindScrubProtection(targetDeck);
+      
+      // Wire up local listeners
+      this.attachStemLifecycleListeners(targetDeck);
+
+      if (isInitialBoot) {
+        targetDeck.volume = 1;
+        targetDeck.style.display = "block";
+        targetDeck.controls = true;
+        await targetDeck.play().catch(e => console.warn("Autoplay deferred:", e));
+      } else {
+        await playWithCrossfade(this.targetTrackCompound, this.musicObj, this.grassObj, this.state, initialSource);
+      }
+    }
+
+    this.state.isBooting = false;
+  }
+
+  private attachStemLifecycleListeners(activeDeck: HTMLAudioElement): void {
+    activeDeck.ontimeupdate = () => {
+      this.evaluateTimeline(activeDeck);
+    };
+
+    activeDeck.onended = async () => {
+      console.log(`🔁 [STEM ENGINE] Component track block ended. Processing segment transition from: ${this.currentPlayingStemType}`);
+
+      // Case A: Prelude Finished -> Move to Sections or Base Loop
+      if (this.currentPlayingStemType === "prelude") {
+        if (this.stems.sections && this.stems.sections.length > 0) {
+          this.currentPlayingStemType = "sections";
+          this.currentSectionIndex = 0;
+          activeDeck.src = this.stems.sections[0];
+        } else {
+          this.currentPlayingStemType = "base";
+          activeDeck.src = this.stems.base;
+        }
+
+        console.log(`➡️ [STEM ENGINE] Prelude complete. Transitioning to main loop: ${activeDeck.src}`);
+        this.rebootAndPlayDeck(activeDeck);
+        return;
+      }
+
+      // Case B: Sequential Section Complete -> Advance index (Section 1 -> Section 2...)
+      if (this.currentPlayingStemType === "sections" && this.stems.sections) {
+        this.currentSectionIndex++;
+        if (this.currentSectionIndex < this.stems.sections.length) {
+          activeDeck.src = this.stems.sections[this.currentSectionIndex];
+          console.log(`➡️ [STEM ENGINE] Sequencing into next section segment [${this.currentSectionIndex + 1}/${this.stems.sections.length}]: ${activeDeck.src}`);
+          this.rebootAndPlayDeck(activeDeck);
+          return;
+        }
+      }
+
+      // Case C: Sequence fully exhausted -> Advance global tracks
+      if (!this.crossfadeTriggered && !this.state.isCrossfading) {
+        this.crossfadeTriggered = true;
+        activeDeck.ontimeupdate = null;
+        activeDeck.onended = null;
+        console.log(`🏁 [STEM ENGINE] Entire multi-stem structure fully completed. Fading out to next global playlist song.`);
+        triggerNextTrack(this.musicObj, this.grassObj, this.state);
+      }
     };
   }
 
-  /**
-   * 🎛️ CROSS-ENGINE MIXER
-   * Triggers an overlapping mix into an upcoming deck using logarithmic-perceived curves.
-   */
-  protected executeTrigonometricTransition(currentDeck: HTMLAudioElement, nextTrackUrl: string, loopNextTrack: boolean) {
-    const currentIdx = this.musicObj.currentIndex;
-    const nextIdx: 0 | 1 = currentIdx === 0 ? 1 : 0;
-    const upcomingDeck = this.musicObj.elems[nextIdx];
-
-    upcomingDeck.src = nextTrackUrl;
-    upcomingDeck.loop = loopNextTrack;
-    upcomingDeck.volume = 0;
-    upcomingDeck.controls = true;
-
-    // Sync visibility choices from user preferences panel
-    const hideButton = document.getElementById("audctrlBtn_hide");
-    upcomingDeck.style.display = (hideButton && hideButton.style.display === "block") ? "block" : "none";
-
-    setupAudioListeners(upcomingDeck, this.musicObj, this.grassObj, this.state);
-    this.bindScrubProtection(upcomingDeck);
-
-    upcomingDeck.play().then(() => {
-      this.state.isCrossfading = true;
-
-      const DURATION = 4000; // 4-second transition window
-      const STEP_MS = 100;
-      const totalSteps = DURATION / STEP_MS;
-      let currentStep = 0;
-
-      const fadeInterval = setInterval(() => {
-        currentStep++;
-        const progress = Math.min(1, Math.max(0, currentStep / totalSteps));
-
-        // Trigonometric wave fade definitions from music.ts
-        upcomingDeck.volume = Math.min(1, Math.max(0, Math.sin(progress * (Math.PI / 2))));
-        if (!currentDeck.paused) {
-          currentDeck.volume = Math.min(1, Math.max(0, Math.cos(progress * (Math.PI / 2))));
-        }
-
-        if (currentStep >= totalSteps) {
-          clearInterval(fadeInterval);
-
-          currentDeck.pause();
-          currentDeck.volume = 0;
-          currentDeck.style.display = "none";
-          currentDeck.controls = false;
-          currentDeck.ontimeupdate = null;
-
-          upcomingDeck.volume = 1;
-
-          // Sync active index so control elements map accurately
-          this.musicObj.currentIndex = nextIdx;
-          this.state.isCrossfading = false;
-
-          // Recursively bind lifecycle rules if the next item isn't an infinite end loop
-          if (!upcomingDeck.loop) {
-            this.attachLifecycleListeners(upcomingDeck);
-          }
-        }
-      }, STEP_MS);
-    }).catch(e => console.warn("Engine audio gap handoff blocked:", e));
-  }
-}
-
-/**
- * 💿 1. CLASS IMPLEMENTATION: STANDARD STEREO TRACK RUNTIME
- * Used for battle tracks, standard ambient loops, and vanilla non-stem tracks.
- */
-export class StandardTrackEngine extends BasePlaybackEngine {
-  public start(initialUrl: string) {
-    const deckA = this.musicObj.elems[0];
-    this.musicObj.currentIndex = 0;
-
-    deckA.src = initialUrl;
-    deckA.loop = true; // Loop indefinitely by default
-    deckA.volume = 1;
-    deckA.controls = true;
-
-    setupAudioListeners(deckA, this.musicObj, this.grassObj, this.state);
-    this.bindScrubProtection(deckA);
-    this.attachLifecycleListeners(deckA);
-
-    deckA.play()
-      .then(() => { this.state.isBooting = false; })
-      .catch(e => { console.warn(e); this.state.isBooting = false; });
+  private rebootAndPlayDeck(deck: HTMLAudioElement) {
+    deck.load();
+    deck.volume = 1;
+    // Rebind local state rules to guard against dynamic DOM recycling drops
+    this.attachStemLifecycleListeners(deck);
+    deck.play().catch(e => console.error("Stem chain play exception:", e));
   }
 
-  protected evaluateTimeline(_activeDeck: HTMLAudioElement) {
-    // Standard tracks loop natively via the browser engine. 
-    // We can add cross-fading mechanics here if track-skipping triggers it down-stream.
-  }
-}
+  protected evaluateTimeline(activeDeck: HTMLAudioElement): void {
+    if (this.crossfadeTriggered || this.state.isCrossfading || this.userIsSeeking || activeDeck.currentTime < 5) return;
 
-/**
- * 🎮 2. CLASS IMPLEMENTATION: PROGRESSIVE STEM RE-MIX ENGINE
- * Chains sequential segments dynamically based on temporal progress rules.
- */
-export class StemPlaybackEngine extends BasePlaybackEngine {
-  private sectionTracks: string[] = [];
-  private medleyTrack: string | null = null;
-  private currentSectionIndex = 0;
+    const isOnFinalSegment = 
+      this.currentPlayingStemType === "base" || 
+      (this.currentPlayingStemType === "sections" && this.stems.sections && this.currentSectionIndex === this.stems.sections.length - 1);
 
-  constructor(stemsData: { sections?: string[], medley?: string | null }, music: Music.Config, grass: Grass.Config, globalState: typeof appState) {
-    super(music, grass, globalState);
-    this.sectionTracks = stemsData.sections || [];
-    this.medleyTrack = stemsData.medley || null;
-  }
+    if (!isOnFinalSegment) return;
 
-  public start(initialUrl: string) {
-    const deckA = this.musicObj.elems[0];
-    this.musicObj.currentIndex = 0;
-
-    deckA.src = initialUrl;
-    deckA.loop = false; // Never loop individual segments natively
-    deckA.volume = 1;
-    deckA.controls = true;
-
-    setupAudioListeners(deckA, this.musicObj, this.grassObj, this.state);
-    this.bindScrubProtection(deckA);
-    this.attachLifecycleListeners(deckA);
-
-    deckA.play()
-      .then(() => { this.state.isBooting = false; })
-      .catch(e => { console.warn(e); this.state.isBooting = false; });
-  }
-
-  protected evaluateTimeline(activeDeck: HTMLAudioElement) {
     const timeRemaining = activeDeck.duration - activeDeck.currentTime;
-
-    // Trigger crossfade 4.5 seconds early
-    if (timeRemaining <= 4.5 && !this.crossfadeTriggered) {
+    if (activeDeck.duration && timeRemaining <= 10) {
       this.crossfadeTriggered = true;
-
-      if (this.currentSectionIndex < this.sectionTracks.length) {
-        const nextSegmentUrl = this.sectionTracks[this.currentSectionIndex];
-        this.currentSectionIndex++;
-        this.executeTrigonometricTransition(activeDeck, nextSegmentUrl, false);
-      } else if (this.medleyTrack) {
-        this.executeTrigonometricTransition(activeDeck, this.medleyTrack, true);
-      }
+      activeDeck.ontimeupdate = null;
+      console.log("⏱️ [STEM ENGINE] Final track timeline bounds breached. Triggering crossfade sequence layout transition.");
+      triggerNextTrack(this.musicObj, this.grassObj, this.state);
     }
   }
 }
@@ -572,99 +613,128 @@ export class StemPlaybackEngine extends BasePlaybackEngine {
 let activeEngineInstance: any = null;
 
 export async function playTrackWithEngine(
-  verifiedTrack: string,
+  trackCompound: string,
   musicObj: Music.Config,
   grassObj: Grass.Config,
   state: typeof appState
-) {
-  if (!musicObj?.elems?.[0]) return;
+): Promise<void> {
+  if (!trackCompound || !trackCompound.includes(":")) return;
 
-  // Clean up previous timeframe tickers to prevent intervals from colliding
-  if (activeEngineInstance) {
-    musicObj.elems[0].ontimeupdate = null;
-    musicObj.elems[1].ontimeupdate = null;
-    musicObj.elems[0].onended = null;
-    musicObj.elems[1].onended = null;
-  }
+  // 1. Purely split the compound by the colon
+  const splitIdx = trackCompound.indexOf(":");
+  const categoryName = trackCompound.substring(0, splitIdx).trim();
+  const rawTrackName = trackCompound.substring(splitIdx + 1).trim();
 
-  const { getTrackUrl, resolveTrackStems } = await import("./music");
-  const trackUrl = await getTrackUrl(musicObj, verifiedTrack);
-  let targetUrlForStems: string = trackUrl ?? "";
+  // Save the raw, exact compound back to storage so it matches the db on next reload
+  new SavUtils("music").ss = trackCompound;
 
-  // 🔍 LIVE PROBING NETWORK SCANNER
-  if (!verifiedTrack.includes(".stems_")) {
-    const decodedTrackUrl = decodeURIComponent(targetUrlForStems);
-    const lastSlashIndex = decodedTrackUrl.lastIndexOf("/");
-    if (lastSlashIndex !== -1) {
-      const basePath = decodedTrackUrl.substring(0, lastSlashIndex);
-      const fileName = decodedTrackUrl.substring(lastSlashIndex + 1);
-      const cleanFileName = fileName.replace(/\.mp3$/i, "");
-      const hypotheticalStemsFolder = `${basePath}/.stems_${cleanFileName}`;
+  let targetCategoryDir = categoryName;
+  let finalTrackFilename = rawTrackName;
+  let matchedAlbum: any = null;
 
-      try {
-        const probeResponse = await fetch(`${hypotheticalStemsFolder}/prelude.mp3`, { method: "HEAD" });
-        if (probeResponse.ok) {
-          const musicContext = musicObj as any;
-          if (musicContext?.db?.[0]) {
-            const rootMusicDir = musicContext.db[0];
-            const pathSegments = basePath.split("/");
-            const activeCategoryName = pathSegments[pathSegments.length - 1];
-            const activeCategoryDir = rootMusicDir.contents.find(
-              (item: any) => item.type === "directory" && item.name === activeCategoryName
-            );
-            if (activeCategoryDir && Array.isArray(activeCategoryDir.contents)) {
-              const stemsFolderName = `.stems_${cleanFileName}`;
-              if (!activeCategoryDir.contents.some((item: any) => item.name === stemsFolderName)) {
-                const discoveredContents: any[] = [{ type: "file", name: "prelude.mp3" }];
-                let currentCheckNum = 1;
-                let scanActive = true;
+  // 2. Resolve true folder casing and locate the exact file entry from the DB tree
+  if (musicObj.db && musicObj.db[0] && musicObj.db[0].contents) {
+    matchedAlbum = musicObj.db[0].contents.find((album: any) =>
+      album.name.toLowerCase().trim() === categoryName.toLowerCase().trim()
+    );
 
-                while (scanActive) {
-                  try {
-                    const testFileName = `section ${currentCheckNum}.mp3`;
-                    const testUrl = `${hypotheticalStemsFolder}/${encodeURIComponent(testFileName)}`;
+    if (matchedAlbum) {
+      targetCategoryDir = matchedAlbum.name;
 
-                    // Issue the HEAD check safely
-                    const checkRes = await fetch(testUrl, { method: "HEAD" });
+      const foundFile = matchedAlbum.contents.find((item: any) => {
+        if (item.type !== "file") return false;
 
-                    if (checkRes.ok) {
-                      discoveredContents.push({ type: "file", name: testFileName });
-                      currentCheckNum++;
-                    } else {
-                      // 🛑 The server returned a 404/500 cleanly, exit loop safely
-                      scanActive = false;
-                    }
-                  } catch (networkError) {
-                    // 🛡️ Catches dropped sockets or local network failures without crashing the application
-                    console.debug("[Scanner] Loop broken via edge condition:", networkError);
-                    scanActive = false;
-                  }
+        const dbNameLower = item.name.toLowerCase().trim();
+        const searchNameLower = rawTrackName.toLowerCase().trim();
 
-                  if (currentCheckNum > 50) break; // Engine safety breakout limit
-                }
-                try {
-                  const medleyRes = await fetch(`${hypotheticalStemsFolder}/medley.mp3`, { method: "HEAD" });
-                  if (medleyRes.ok) discoveredContents.push({ type: "file", name: "medley.mp3" });
-                } catch { }
-                activeCategoryDir.contents.push({ type: "directory", name: stemsFolderName, contents: discoveredContents });
-              }
-            }
-          }
-        }
-      } catch (err) {
-        console.debug(err);
+        // Guarantee exact filename match, or check exact match with an appended extension fallback
+        return dbNameLower === searchNameLower ||
+          dbNameLower === `${searchNameLower}.mp3` ||
+          dbNameLower.replace(/\.mp3$/i, '') === searchNameLower;
+      });
+
+      if (foundFile) {
+        finalTrackFilename = foundFile.name;
       }
     }
   }
 
-  const stems = resolveTrackStems(targetUrlForStems, musicObj.db);
+  const cleanTrackBase = finalTrackFilename.replace(/\.mp3$/i, "");
+  const targetUrlForStems = `/assets/music/${targetCategoryDir}/${cleanTrackBase}.mp3`;
 
-  // 🔀 ENGINE ROUTES
-  if (stems.prelude && stems.base && stems.sections && stems.sections.length > 0) {
-    activeEngineInstance = new StemPlaybackEngine(stems, musicObj, grassObj, state);
-    activeEngineInstance.start(stems.prelude);
+  // DEDUPLICATION SAFEGUARD: Find which deck we are targetting
+  const currentIdx = musicObj.currentIndex;
+  const currentDeck = musicObj.elems[currentIdx];
+  const isInitialBoot = !currentDeck || currentDeck.src === "" || currentDeck.src === window.location.href;
+
+  const targetIdx: 0 | 1 = isInitialBoot ? currentIdx : (currentIdx === 0 ? 1 : 0);
+  const targetDeck = musicObj.elems[targetIdx];
+
+  // If the target deck is already loading or playing this exact asset file path, BAIL OUT!
+  if (targetDeck && targetDeck.src.endsWith(encodeURI(targetUrlForStems))) {
+    console.log(`🛡️ [ENGINE ROUTER] Blocked double-load/eviction for: ${cleanTrackBase}`);
+    return;
+  }
+
+  console.log("==================================================");
+  console.log(`🎵 [ENGINE ROUTER] Booting Track: ${cleanTrackBase} [Category: ${targetCategoryDir}]`);
+  console.log(`🔗 [ENGINE ROUTER] Resolved Asset URL: ${targetUrlForStems}`);
+
+  const hasTrackNumberPrefix = /^\d+[\.-]\d+\b|^\d+\.\s*/.test(cleanTrackBase);
+
+  if (isLocalhost && matchedAlbum && !hasTrackNumberPrefix) {
+    try {
+      const stemsFolderName = `.stems_${cleanTrackBase}`;
+      const hiddenDir = `${targetCategoryDir}/${stemsFolderName}`;
+
+      const folderAlreadyExists = matchedAlbum.contents.some(
+        (item: any) => item.name === stemsFolderName && item.type === "directory"
+      );
+
+      if (!folderAlreadyExists) {
+        console.log(`📡 [STEM RUNTIME] Probing target layout structure via network: /app/databases/music/${hiddenDir}.json`);
+
+        const stemsLoader = new StemDatabaseLoader(targetCategoryDir, encodeURIComponent(stemsFolderName));
+        const discoveredContents = await stemsLoader.loadRegistry();
+
+        if (discoveredContents && discoveredContents.length > 0) {
+          // Payload flattening safeguard: If the root is a directory container, unpack its children
+          let flatFiles = discoveredContents;
+          if (discoveredContents[0] && discoveredContents[0].type === "directory" && Array.isArray(discoveredContents[0].contents)) {
+            console.log(`🧼 [STEM RUNTIME] Unwrapping layout structural wrapper block cleanly.`);
+            flatFiles = discoveredContents[0].contents;
+          }
+
+          matchedAlbum.contents.push({
+            type: "directory",
+            name: stemsFolderName,
+            contents: flatFiles // Now strictly flat array entries containing type: "file"
+          } as any);
+          console.log(`🚀 [STEM RUNTIME] Injected "${stemsFolderName}" layer directly into memory tree parameters. Elements count:`, flatFiles.length);
+        }
+      }
+    } catch (err) {
+      console.error("🚨 [STEM RUNTIME] Core critical asset mapping crash encountered:", err);
+    }
+  }
+  
+  const stems = resolveTrackStems(targetUrlForStems, musicObj.db, {
+    category: targetCategoryDir,
+    exactFileName: finalTrackFilename
+  });
+  console.log(`📋 [STEM ENGINE MATCH] Evaluating properties parsed by resolveTrackStems():`, stems);
+
+  const sav = new SavUtils("music").ss ?? "";
+
+  if (
+    stems.prelude &&
+    stems.base &&
+    ((stems.sections && stems.sections.length > 0) || stems.submix || stems.medley)
+  ) {
+    activeEngineInstance = new StemPlaybackEngine(sav, stems, musicObj, grassObj, state);
+    await activeEngineInstance.start();
   } else {
-    activeEngineInstance = new StandardTrackEngine(musicObj, grassObj, state);
-    activeEngineInstance.start(stems.prelude || targetUrlForStems);
+    activeEngineInstance = new StandardTrackPlaybackEngine(sav, targetUrlForStems, musicObj, grassObj, state);
+    await activeEngineInstance.start();
   }
 }

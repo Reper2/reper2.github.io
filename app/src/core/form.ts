@@ -19,7 +19,7 @@ export function submit(obj: Music.Config, input?: HTMLInputElement[], selector?:
     if (packedValue === currentSavedCompound.ss) {
       pickNextTrack(obj);
     } else {
-      // 🌟 SavUtils continues tracking a single identifier, saving "album:track" cleanly
+      // SavUtils continues tracking a single identifier, saving "album:track" cleanly
       currentSavedCompound.ss = packedValue;
     }
   }

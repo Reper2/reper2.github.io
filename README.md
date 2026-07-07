@@ -130,6 +130,8 @@ I have published [mobile](https://github.com/Reper2/mobile-clock) and [desktop](
 ## ⚖️ Asset Governance & Disclaimer
 This is an independent, non-commercial, fan-made passion project designed for technical evaluation, portfolio demonstration, and educational research purposes.
 
+**If you reuse any code from my repos, you must credit me in the header of the script with a link to the script you used, modified, adapted, etc.**
+
 * **Intellectual Property:** All character assets and Animal Crossing terrain textures present on this website are the registered trademarks and intellectual property of **[Nintendo Co., Ltd.](https://www.nintendo.com/)**
 * **Typography & Vetting:** Typographic elements used for styling (including fan-created typefaces like *Super Mario 256* and *Hylia Serif*) are gathered directly from verified distribution points. They are utilised strictly in a transformative, non-commercial capacity to test interface aesthetics.
 * **Risk & Compliance Isolation:** This platform is fully isolated from commercial monetisation channels. No copyright infringement is intended, and all original rights are recognised and reserved by their respective brand owners.
