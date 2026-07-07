@@ -330,12 +330,18 @@ export function resolveTrackStems(
   stems.medley = findFileByKeyword(["medley", "mashup", "compilation"]);
   stems.submix = findFileByKeyword(["moviescreen", "water", "underwater", "submix", "outpost"]);
   
-  const sectionRegex = /(section|part|sec|pt|phase|ph)[\s_-]*\d+/i;
+  const sectionRegex = /(?:section|part|sec|pt|phase|ph)[\s_-]*(\d+)/i;
+  
   const sectionMatches = targetStemFolder.contents
     .filter((f: any) => f && f.name && sectionRegex.test(f.name))
     .sort((a: any, b: any) => {
-      const numA = parseInt(a.name.match(sectionRegex)?.[1] ?? "0", 10);
-      const numB = parseInt(b.name.match(sectionRegex)?.[1] ?? "0", 10);
+      const matchA = a.name.match(sectionRegex);
+      const matchB = b.name.match(sectionRegex);
+      
+      // 2. Extracts the first capture group (\d+) which represents the actual number digits
+      const numA = matchA ? parseInt(matchA[1], 10) : 0;
+      const numB = matchB ? parseInt(matchB[1], 10) : 0;
+      
       return numA - numB;
     });
 
