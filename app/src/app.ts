@@ -39,8 +39,12 @@ async function initialiseAppEngine() {
 
   // Render the server-side timestamp value onto the screen interface
   const deploySlot = document.getElementById("deploy-time");
-  if (deploySlot) {
-    deploySlot.textContent = liveBuildData.timestamp;
+  if (deploySlot && liveBuildData.timestamp) {
+    // 💡 Convert the UTC string to a local JavaScript Date object
+    const localDate = new Date(liveBuildData.timestamp);
+    
+    // Format nicely based on the user's browser location settings
+    deploySlot.textContent = localDate.toLocaleString();
   }
 
   // 2. Initialise Workbox Window lifecycle tracking
@@ -71,8 +75,8 @@ async function initialiseAppEngine() {
     // Fire the background registration cycle
     wb.register();
   }
-
 }
+
 
 initialiseAppEngine();
 
