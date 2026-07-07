@@ -57,11 +57,13 @@ async function initialiseAppEngine() {
 
       if (refreshBtn) {
         refreshBtn.addEventListener('click', () => {
-          // Tell the dormant, waiting service worker to take control and evict old caches
-          wb.messageSkipWaiting();
+          // 1. Set up a one-time listener to reload ONLY when the new SW takes control
+          wb.addEventListener('controlling', () => {
+            window.location.reload();
+          });
 
-          // Hard reload the browser window to draw the brand-new app view state
-          window.location.reload();
+          // 2. Tell the dormant, waiting service worker to take control
+          wb.messageSkipWaiting();
         });
       }
     });
@@ -69,6 +71,7 @@ async function initialiseAppEngine() {
     // Fire the background registration cycle
     wb.register();
   }
+
 }
 
 initialiseAppEngine();
@@ -318,7 +321,7 @@ $(function () {
     initMusicProxy(app.music.elems, {
       get currentIdx() { return app.music.currentIndex as 0 | 1; }
     });
-     
+
     // Initialise audio elements safely if they map inside the layout
     app.music.elems.forEach((el: HTMLAudioElement | null) => {
       if (el) {
