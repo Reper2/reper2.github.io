@@ -49,8 +49,19 @@ async function initialiseAppEngine() {
 
   // 2. Initialise Workbox Window lifecycle tracking
   if ('serviceWorker' in navigator) {
-    // Point it straight to the CLI generated service worker script file
-    const wb = new Workbox('/sw.js');
+    const wb = new Workbox('sw.js', { type: 'module' });
+
+    // Acknowledge when the service worker successfully takes active control of the page
+    wb.addEventListener('controlling', () => {
+      console.log("✅ App Engine: Service Worker has taken control of the page.");
+    });
+
+    wb.addEventListener('activated', (event) => {
+      // If this wasn't an immediate backend update, log that it's up and running safely
+      if (!event.isUpdate) {
+        console.log("🚀 App Engine: Service Worker activated for the first time!");
+      }
+    });
 
     // This listener triggers if Workbox realises files on the network differ from local caches
     wb.addEventListener('waiting', () => {
@@ -60,15 +71,16 @@ async function initialiseAppEngine() {
       if (banner) banner.style.display = "block";
 
       if (refreshBtn) {
+        // Use { once: true } so we don't accidentally stack up click event listeners
         refreshBtn.addEventListener('click', () => {
-          // 1. Set up a one-time listener to reload ONLY when the new SW takes control
+          // Listen for controlling to reload the page with the fresh assets
           wb.addEventListener('controlling', () => {
             window.location.reload();
           });
 
-          // 2. Tell the dormant, waiting service worker to take control
+          // Tell the dormant, waiting service worker to skip waiting and activate
           wb.messageSkipWaiting();
-        });
+        }, { once: true });
       }
     });
 
@@ -78,7 +90,7 @@ async function initialiseAppEngine() {
 }
 
 
-initialiseAppEngine();
+await initialiseAppEngine();
 
 // GUARDRAIL OVERRIDES: Check the DOM context up-front before building selections
 const forcedCategoryAttr = document.body.getAttribute("data-bg-force");

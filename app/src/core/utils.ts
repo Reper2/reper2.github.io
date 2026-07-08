@@ -545,12 +545,15 @@ export class StemPlaybackEngine extends BasePlaybackEngine {
     activeDeck.onended = async () => {
       console.log(`🔁 [STEM ENGINE] Component track block ended. Processing segment transition from: ${this.currentPlayingStemType}`);
 
-      // Case A: Prelude Finished -> Move to Sections or Base Loop
+      // Case A: Prelude Finished -> Move to Sections, Medley, or Base Loop
       if (this.currentPlayingStemType === "prelude") {
         if (this.stems.sections && this.stems.sections.length > 0) {
           this.currentPlayingStemType = "sections";
           this.currentSectionIndex = 0;
           activeDeck.src = this.stems.sections[0];
+        } else if (this.stems.medley) {
+          this.currentPlayingStemType = "medley" as any;
+          activeDeck.src = this.stems.medley;
         } else {
           this.currentPlayingStemType = "base";
           activeDeck.src = this.stems.base;
@@ -561,7 +564,7 @@ export class StemPlaybackEngine extends BasePlaybackEngine {
         return;
       }
 
-      // Case B: Sequential Section Complete -> Advance index (Section 1 -> Section 2...)
+      // Case B: Sequential Section Complete -> Advance index or divert to Medley
       if (this.currentPlayingStemType === "sections" && this.stems.sections) {
         this.currentSectionIndex++;
         if (this.currentSectionIndex < this.stems.sections.length) {
@@ -569,10 +572,16 @@ export class StemPlaybackEngine extends BasePlaybackEngine {
           console.log(`➡️ [STEM ENGINE] Sequencing into next section segment [${this.currentSectionIndex + 1}/${this.stems.sections.length}]: ${activeDeck.src}`);
           this.rebootAndPlayDeck(activeDeck);
           return;
+        } else if (this.stems.medley) {
+          this.currentPlayingStemType = "medley" as any;
+          activeDeck.src = this.stems.medley;
+          console.log(`🔀 [STEM ENGINE] Sections completed. Diverting to Medley segment: ${activeDeck.src}`);
+          this.rebootAndPlayDeck(activeDeck);
+          return;
         }
       }
 
-      // Case C: Sequence fully exhausted -> Advance global tracks
+      // Case C: Sequence fully exhausted (including Medley / Base) -> Advance global tracks
       if (!this.crossfadeTriggered && !this.state.isCrossfading) {
         this.crossfadeTriggered = true;
         activeDeck.ontimeupdate = null;
@@ -594,9 +603,12 @@ export class StemPlaybackEngine extends BasePlaybackEngine {
   protected evaluateTimeline(activeDeck: HTMLAudioElement): void {
     if (this.crossfadeTriggered || this.state.isCrossfading || this.userIsSeeking || activeDeck.currentTime < 5) return;
 
+    // The track is on its final structural segment if it's playing the 'base' track, 
+    // or if a medley track exists and is currently active, or if it is on the last section with no medley available.
     const isOnFinalSegment = 
-      this.currentPlayingStemType === "base" || 
-      (this.currentPlayingStemType === "sections" && this.stems.sections && this.currentSectionIndex === this.stems.sections.length - 1);
+      this.currentPlayingStemType === "base" ||
+      this.currentPlayingStemType === ("medley" as any) ||
+      (this.currentPlayingStemType === "sections" && this.stems.sections && this.currentSectionIndex === this.stems.sections.length - 1 && !this.stems.medley);
 
     if (!isOnFinalSegment) return;
 
