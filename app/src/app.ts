@@ -51,13 +51,13 @@ async function initialiseAppEngine() {
   if ('serviceWorker' in navigator) {
     const wb = new Workbox('sw.js', { type: 'module' });
 
-    // Acknowledge when the service worker successfully takes active control of the page
+    // Whenever a new worker successfully claims and takes active control, reload immediately.
     wb.addEventListener('controlling', () => {
-      console.log("✅ App Engine: Service Worker has taken control of the page.");
+      console.log("✅ App Engine: Service Worker has taken control of the page. Reloading...");
+      window.location.reload();
     });
 
     wb.addEventListener('activated', (event) => {
-      // If this wasn't an immediate backend update, log that it's up and running safely
       if (!event.isUpdate) {
         console.log("🚀 App Engine: Service Worker activated for the first time!");
       }
@@ -73,12 +73,10 @@ async function initialiseAppEngine() {
       if (refreshBtn) {
         // Use { once: true } so we don't accidentally stack up click event listeners
         refreshBtn.addEventListener('click', () => {
-          // Listen for controlling to reload the page with the fresh assets
-          wb.addEventListener('controlling', () => {
-            window.location.reload();
-          });
-
-          // Tell the dormant, waiting service worker to skip waiting and activate
+          console.log("📥 Update button clicked. Sending skipWaiting payload...");
+          
+          // Tell the dormant, waiting service worker to skip waiting and activate.
+          // The global 'controlling' listener above will catch this and handle the reload!
           wb.messageSkipWaiting();
         }, { once: true });
       }
@@ -88,7 +86,6 @@ async function initialiseAppEngine() {
     wb.register();
   }
 }
-
 
 await initialiseAppEngine();
 
