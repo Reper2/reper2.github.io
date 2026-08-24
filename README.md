@@ -74,7 +74,7 @@ To stream dynamic visual backdrops without introducing client-side lag or cross-
 
 * **Pre-Rendering Memory Caching Engine:** Instantiates unattached image objects in volatile memory (`new Image()`) to fetch remote graphical payloads completely off-screen. By listening for the atomic asynchronous `onload` event before editing the layout tree, the platform guarantees zero rendering blocking or layout stutter.
 * **State-Controlled Double-Buffering:** Implements a hardware-inspired double-buffering routine using alternating layout layers via CSS custom properties (`--bg-before` and `--bg-after`). Flipping a boolean switch (`isLayerA`) transitions the visual layer, preventing raw texture popping or flashes when assets swap.
-* **Decoupled Private Asset Delivery Architecture:** Resolves remote asset paths directly from a dedicated, self-managed media repository (`Reper2/switch-album`) containing original console image captures. By isolating your media files from the primary website codebase, you reduce git bloat, separate structural application code from static assets, and pull verified content dynamically via GitHub's unauthenticated distributed storage framework (`://githubusercontent.com`).
+* **Decoupled Private Asset Delivery Architecture:** Resolves remote asset paths directly from a dedicated, self-managed media repository (`fire-ethan/switch-album`) containing original console image captures. By isolating your media files from the primary website codebase, you reduce git bloat, separate structural application code from static assets, and pull verified content dynamically via GitHub's unauthenticated distributed storage framework (`://githubusercontent.com`).
 
 ### 🌐 Private Network Perimeter Detection & Debug Configuration Overrides (`core/core.ts`)
 To securely manage application state profiles across varying deployments, the core initialisation module implements explicit network boundary analysis and runtime environment testing:
@@ -120,10 +120,10 @@ The platform features native desktop shortcut mapping to streamline navigation, 
 If your browser supports modern PWA architecture, you can install this platform to run locally and offline. To optimise performance and storage, asset loading is stratified: only cached backgrounds load without an active network connection, as they are fetched dynamically rather than pre-cached aggressively inside the Service Worker.
 
 ## 🖼️ Backgrounds
-Background assets displayed on this and associated platforms are dynamically fetched via a custom architecture from the [switch-album](https://github.com/Reper2/switch-album) repository.
+Background assets displayed on this and associated platforms are dynamically fetched via a custom architecture from the [switch-album](https://github.com/fire-ethan/switch-album) repository.
 
 ## ⏰ Clocks
-I have published [mobile](https://github.com/Reper2/mobile-clock) and [desktop](https://github.com/Reper2/desktop-clock) clock interfaces:
+I have published [mobile](https://github.com/fire-ethan/mobile-clock) and [desktop](https://github.com/fire-ethan/desktop-clock) clock interfaces:
 * **Mobile Clock:** Engineered as an ambient background utility for focus blocks, utilising original travel photography with low-distraction gradient text animations.
 * **Desktop Clock:** Optimised for large-format display output (TVs or secondary monitors) during active gaming sessions.
 

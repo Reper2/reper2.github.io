@@ -1,3 +1,12 @@
+/**
+ * @author Ethan Graham
+ * @license MIT
+ * @copyright 2021-2026 Ethan Graham
+ * @see https://github.com/fire-ethan/fire-ethan.github.io/blob/master/LICENSE
+ * @see https://github.com/fire-ethan/holiday-album/blob/master/LICENSE
+ * License information in LICENSE files overrides any other license information in this file.
+ */
+
 import { compileZipFromDatabase } from '../zipper';
 import { Background } from '../../lib/db-typings';
 import { BackgroundDatabaseLoader } from '../core/';

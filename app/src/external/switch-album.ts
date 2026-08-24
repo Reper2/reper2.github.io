@@ -1,4 +1,13 @@
 /**
+ * @author Ethan Graham
+ * @license MIT
+ * @copyright 2021-2026 Ethan Graham
+ * @see https://github.com/fire-ethan/fire-ethan.github.io/blob/master/LICENSE
+ * @see https://github.com/fire-ethan/switch-album/blob/master/LICENSE
+ * License information in LICENSE file overrides any other license information in this file.
+ */
+
+/**
  * Dynamically injects a download link paragraph into a specified container.
  * @param {string} containerId - The ID of the parent element where the link should go.
  * @param {string} albumName - The display name of the game album.
@@ -23,7 +32,7 @@ function injectDownloadLink(containerId: string, albumName: string, branchName: 
   // Create the actual download link
   const a = document.createElement('a');
   a.className = "dLink";
-  a.href = `https://github.com/Reper2/switch-album/archive/refs/heads/${branchName}.zip`;
+  a.href = `https://github.com/fire-ethan/switch-album/archive/refs/heads/${branchName}.zip`;
   a.textContent = "Download";
 
   // Create the line break

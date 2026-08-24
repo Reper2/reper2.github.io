@@ -29,9 +29,7 @@ Thumbs.db
 # 🔐 SECRET DEVELOPMENT FILES (EGG HUNT VAULT)
 # ====================================================================
 /app/lib/egg-debugger.d.ts
-/app/src/eggs/debug.ts
-/app/dist/eggs/debug.js
-/cmd/encrypt-eggs.js
+*/**/private/
 
 /assets/secret-styles.css
 /assets/secret-styles.css.map

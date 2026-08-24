@@ -1,3 +1,11 @@
+/**
+ * @author Ethan Graham
+ * @license MIT
+ * @copyright 2021-2026 Ethan Graham
+ * @see https://github.com/fire-ethan/fire-ethan.github.io/blob/master/LICENSE
+ * License information in LICENSE file overrides any other license information in this file.
+ */
+
 import { globalTheme } from "../themes";
 import SavUtils from "../core/storage";
 import { isLocalhost } from "../core/";
@@ -8,6 +16,7 @@ import { startCompSeq } from "./comp-seq";
 import { getParsedState, resolvePath, sha256 } from "./utils";
 import { mountLocal3DBubble } from "./bubble";
 import vault from "./vault";
+import { getRandomVerse } from "./verse-data";
 
 const THEME_ASSETS = {
   alt: {
@@ -59,7 +68,7 @@ if (activeThemeContext === "alt") {
 }
 
 export const STORAGE_KEY = "eggs";
-export const TOTAL_EGGS = 34;
+export const TOTAL_EGGS = 44;
 
 let payloadIv: BufferSource | null = null;
 let payloadData: BufferSource | null = null;
@@ -231,43 +240,79 @@ async function getBinPayload(): Promise<boolean> {
 export const eggsav = new SavUtils(STORAGE_KEY);
 
 async function buildCanonicalState(state: EggState): Promise<string> {
-  const ids = Object.keys(state).sort();
-  const parts = await Promise.all(
-    ids.map(async (id) => {
+  // 1. Grab keys and sort alphabetically (ASCII)
+  const sortedIds = Object.keys(state).sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+
+  // 2. Map entries synchronously/asynchronously
+  const entries = await Promise.all(
+    sortedIds.map(async (id) => {
       const egg = state[id];
       const value = egg.unlocked ? "1" : "0";
       const context = [id, egg.path, egg.titleLength, egg.path.length].join("|");
       const hash = await sha256(context);
       const fp = Array.from(new Uint8Array(hash))
         .slice(0, 4)
-        .map(b => b.toString(16).padStart(2, "0"))
+        .map((b) => b.toString(16).padStart(2, "0"))
         .join("");
-      return `${id}:${value}:${fp}`;
+
+      return { id, entry: `${id}:${value}:${fp}` };
     })
   );
-  return parts.join("|");
-}
 
-async function deriveKey(state: EggState): Promise<CryptoKey> {
-  const canonical = await buildCanonicalState(state);
-  const hash = await sha256(canonical);
-  return crypto.subtle.importKey("raw", hash, { name: "AES-GCM" }, false, ["decrypt"]);
+  // 3. Ensure final string array is strictly ordered by ID
+  entries.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+
+  const canonicalString = entries.map((e) => e.entry).join("|");
+  console.log("📌 Strict Canonical String:\n", canonicalString);
+  return canonicalString;
 }
 
 async function tryUnlock(): Promise<void> {
   const state = getParsedState();
   const currentFoundCount = Object.values(state).filter(e => e.unlocked).length;
 
-  if (currentFoundCount < TOTAL_EGGS || !payloadIv || !payloadData) return;
+  console.group("🔑 [Egg Debugger] Attempting Unlock");
+  console.log(`Progress: ${currentFoundCount} / ${TOTAL_EGGS} eggs collected.`);
+
+  if (currentFoundCount < TOTAL_EGGS || !payloadIv || !payloadData) {
+    console.warn("⚠️ Unlock conditions not met.", {
+      currentFoundCount,
+      totalRequired: TOTAL_EGGS,
+      hasPayloadIv: !!payloadIv,
+      hasPayloadData: !!payloadData
+    });
+    console.groupEnd();
+    return;
+  }
 
   try {
     const key = await deriveKey(state);
-    const decrypted = await crypto.subtle.decrypt({ name: "AES-GCM", iv: payloadIv }, key, payloadData);
+    console.log("🔑 Derived CryptoKey successfully from canonical state.");
+
+    const decrypted = await crypto.subtle.decrypt(
+      { name: "AES-GCM", iv: payloadIv }, 
+      key, 
+      payloadData
+    );
     const text = new TextDecoder().decode(decrypted);
+
     if (text.startsWith("VALID_REWARD")) {
+      console.log("🎉 Decryption successful! Valid payload unlocked.");
       showReward(text);
+    } else {
+      console.warn("⚠️ Decrypted payload did not contain expected prefix 'VALID_REWARD':", text);
     }
-  } catch { }
+  } catch (error) {
+    console.error("❌ Decryption failed! Fingerprint/Key mismatch detected:", error);
+  } finally {
+    console.groupEnd();
+  }
+}
+
+async function deriveKey(state: EggState): Promise<CryptoKey> {
+  const canonical = await buildCanonicalState(state);
+  const hash = await sha256(canonical);
+  return crypto.subtle.importKey("raw", hash, { name: "AES-GCM" }, false, ["decrypt"]);
 }
 
 // =========================================================================
@@ -278,7 +323,7 @@ async function initEggs(): Promise<void> {
   if (!assetLoaded) return;
 
   const state = vault.fetch({});
-  
+
   // Clean runtime selection pointer fallback layer
   const activeValue = globalTheme.ls || globalTheme.sp;
   const currentTheme = (activeValue === "original") ? "original" : "alt";
@@ -352,7 +397,19 @@ async function initEggs(): Promise<void> {
             const context = constructStarbitScene();
             if (context) {
               const moonImagesArray = Array(totalUnlockedCount).fill(THEME_ASSETS.original.crackedSrc);
-              generateStarbitShower(GLTF_MODEL_URL, moonImagesArray, context, totalUnlockedCount, TOTAL_EGGS);
+
+              // Get a random verse for the milestone
+              const randomVerse = getRandomVerse();
+
+              // Pass the verse alongside your starbit shower arguments
+              generateStarbitShower(
+                GLTF_MODEL_URL,
+                moonImagesArray,
+                context,
+                totalUnlockedCount,
+                TOTAL_EGGS,
+                randomVerse // <-- Pass verse here
+              );
             }
           }
         }

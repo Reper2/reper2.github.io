@@ -1,9 +1,17 @@
+/**
+ * @author Ethan Graham
+ * @license MIT
+ * @copyright 2021-2026 Ethan Graham
+ * @see https://github.com/fire-ethan/fire-ethan.github.io/blob/master/LICENSE
+ * License information in LICENSE file overrides any other license information in this file.
+ */
+
 import { Grass, Music } from "../../lib/db-typings";
 import { globalTheme } from "../themes";
 import { eggsav, getParsedState } from "../eggs/";
 import vault from "../eggs/vault";
 import { AppPanel, MarioKartStems } from "./interfaces";
-import { triggerPreviousTrack, triggerNextTrack, togglePlayPause, playWithCrossfade, resolveTrackStems } from "./music";
+import * as musicPlayer from "./music";
 import { isLocalhost, appState } from "./core";
 import { StemDatabaseLoader } from "./fetch";
 import SavUtils from "./storage";
@@ -156,9 +164,9 @@ export class AudioControlPanel extends BasePanel {
     }
 
     const playbackData = [
-      { id: "audBtn_prev", label: isAlt ? "Previous" : "⏮️ Prev", tip: "Previous Track", action: () => triggerPreviousTrack(this.obj.music, this.obj.grass, appState) },
-      { id: "audBtn_playPause", label: isAlt ? "Pause" : "⏸️ Pause", tip: "Play / Pause Soundtrack", action: (btn: HTMLButtonElement) => togglePlayPause(this.obj.music, btn) },
-      { id: "audBtn_next", label: isAlt ? "Next" : "⏭️ Next", tip: "Next Track", action: () => triggerNextTrack(this.obj.music, this.obj.grass, appState) }
+      { id: "audBtn_prev", label: isAlt ? "Previous" : "⏮️ Prev", tip: "Previous Track", action: () => musicPlayer.triggerPreviousTrack(this.obj.music, this.obj.grass, appState) },
+      { id: "audBtn_playPause", label: isAlt ? "Pause" : "⏸️ Pause", tip: "Play / Pause Soundtrack", action: (btn: HTMLButtonElement) => musicPlayer.togglePlayPause(this.obj.music, btn) },
+      { id: "audBtn_next", label: isAlt ? "Next" : "⏭️ Next", tip: "Next Track", action: () => musicPlayer.triggerNextTrack(this.obj.music, this.obj.grass, appState) }
     ];
 
     playbackData.forEach(item => {
@@ -407,7 +415,7 @@ export abstract class BasePlaybackEngine {
         this.crossfadeTriggered = true;
         activeDeck.ontimeupdate = null;
         activeDeck.onended = null;
-        triggerNextTrack(this.musicObj, this.grassObj, this.state);
+        musicPlayer.triggerNextTrack(this.musicObj, this.grassObj, this.state);
       }
     };
   }
@@ -453,7 +461,7 @@ export class StandardTrackPlaybackEngine extends BasePlaybackEngine {
         await targetDeck.play().catch(e => console.warn("Initial boot autoplay deferred:", e));
       } else {
         // Normal ongoing track skip crossfade execution routing
-        await playWithCrossfade(this.targetTrackCompound, this.musicObj, this.grassObj, this.state);
+        await musicPlayer.playWithCrossfade(this.targetTrackCompound, this.musicObj, this.grassObj, this.state);
       }
     }
 
@@ -468,7 +476,7 @@ export class StandardTrackPlaybackEngine extends BasePlaybackEngine {
     if (activeDeck.duration && timeRemaining <= 10) {
       this.crossfadeTriggered = true;
       activeDeck.ontimeupdate = null;
-      triggerNextTrack(this.musicObj, this.grassObj, this.state);
+      musicPlayer.triggerNextTrack(this.musicObj, this.grassObj, this.state);
     }
   }
 }
@@ -530,7 +538,7 @@ export class StemPlaybackEngine extends BasePlaybackEngine {
         targetDeck.controls = true;
         await targetDeck.play().catch(e => console.warn("Autoplay deferred:", e));
       } else {
-        await playWithCrossfade(this.targetTrackCompound, this.musicObj, this.grassObj, this.state, initialSource);
+        await musicPlayer.playWithCrossfade(this.targetTrackCompound, this.musicObj, this.grassObj, this.state, initialSource);
       }
     }
 
@@ -587,7 +595,7 @@ export class StemPlaybackEngine extends BasePlaybackEngine {
         activeDeck.ontimeupdate = null;
         activeDeck.onended = null;
         console.log(`🏁 [STEM ENGINE] Entire multi-stem structure fully completed. Fading out to next global playlist song.`);
-        triggerNextTrack(this.musicObj, this.grassObj, this.state);
+        musicPlayer.triggerNextTrack(this.musicObj, this.grassObj, this.state);
       }
     };
   }
@@ -617,7 +625,7 @@ export class StemPlaybackEngine extends BasePlaybackEngine {
       this.crossfadeTriggered = true;
       activeDeck.ontimeupdate = null;
       console.log("⏱️ [STEM ENGINE] Final track timeline bounds breached. Triggering crossfade sequence layout transition.");
-      triggerNextTrack(this.musicObj, this.grassObj, this.state);
+      musicPlayer.triggerNextTrack(this.musicObj, this.grassObj, this.state);
     }
   }
 }
@@ -730,7 +738,7 @@ export async function playTrackWithEngine(
     }
   }
   
-  const stems = resolveTrackStems(targetUrlForStems, musicObj.db, {
+  const stems = musicPlayer.resolveTrackStems(targetUrlForStems, musicObj.db, {
     category: targetCategoryDir,
     exactFileName: finalTrackFilename
   });

@@ -1,3 +1,11 @@
+/**
+ * @author Ethan Graham
+ * @license MIT
+ * @copyright 2021-2026 Ethan Graham
+ * @see https://github.com/fire-ethan/fire-ethan.github.io/blob/master/LICENSE
+ * License information in LICENSE file overrides any other license information in this file.
+ */
+
 import { copyLink } from "./core/";
 import vault from "./eggs/vault";
 
@@ -44,7 +52,7 @@ document.addEventListener("keydown", (k: KeyboardEvent) => {
   if (k.altKey && keyLower === "l") {
     k.preventDefault();
     console.warn("Alt+L was pressed");
-    window.open("https://github.com/Reper2/reper2.github.io/blob/master/LICENSE");
+    window.open("https://github.com/fire-ethan/fire-ethan.github.io/blob/master/LICENSE");
     window.open("/LICENSE");
   }
 

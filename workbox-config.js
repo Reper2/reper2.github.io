@@ -24,7 +24,7 @@ module.exports = {
   ],
   maximumFileSizeToCacheInBytes: 5000000, 
   swDest: "./sw.js",
-  cacheId: `reper2-build-${Date.now()}`,
+  cacheId: `fire-ethan-build-${Date.now()}`,
   ignoreURLParametersMatching: [/^utm_/, /^fbclid$/],
   clientsClaim: true, 
   skipWaiting: true,   

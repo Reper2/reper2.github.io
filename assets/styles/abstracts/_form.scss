@@ -1,19 +1,23 @@
 @use "variables";
 
-#optForm { margin: 3px; }
+#optForm {
+  margin: 3px;
+}
 
 select,
 input {
-  font-family: sans-serif; 
+  font-family: sans-serif;
 }
 
 select {
-  background-color: lightblue;
+  background: linear-gradient(45deg, #034694 40%, #8c7150 75%, #DBA111 100%);
   border-color: black;
+  color: white;
 }
 
 input {
-  background-color: skyblue;
+  background: linear-gradient(45deg, #034694 40%, #8c7150 75%, #DBA111 100%);
+  color: white;
 }
 
 button {
@@ -23,13 +27,15 @@ button {
   padding: 1.2vmin 3.5vmin;
   margin: 0.8vmin;
   font-size: 4.2vmin;
-  background-color: lightskyblue;
+  background: linear-gradient(45deg, #034694 40%, #8c7150 75%, #DBA111 100%);
+  color: white;
   outline-color: initial;
 }
 
-button, input {
+button,
+input {
   transition: transform 0.2s ease;
-  
+
   @media (hover: hover) {
     &:hover {
       transform: translateY(-0.9vh); // Injected seamlessly inside the media query

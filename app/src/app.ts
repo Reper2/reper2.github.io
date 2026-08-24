@@ -1,13 +1,14 @@
+/**
+ * @author Ethan Graham
+ * @license MIT
+ * @copyright 2021-2026 Ethan Graham
+ * @see https://github.com/fire-ethan/fire-ethan.github.io/blob/master/LICENSE
+ * License information in LICENSE file overrides any other license information in this file.
+ */
+
 import { Background, Grass, Music } from "../lib/db-typings";
 import { Workbox } from "https://cdn.jsdelivr.net/npm/workbox-window@6.5.4/+esm";
-import {
-  changeBackground, // bg
-  pushGrassOpts, pushOptGroups, // form
-  pickRandomTrack, // music
-  sfx, submit, updateUrl, playTrackWithEngine, // utils
-  isLocalhost, appState, // core
-  BackgroundDatabaseLoader, MusicDatabaseLoader, GrassDatabaseLoader, VersionLoader // fetch
-} from "./core/";
+import * as utils from "./core/";
 import { initMusicProxy } from "./core/music"; // Adjust path if necessary depending on folder tree
 import SavUtils from "./core/storage";
 import { applyThemeElements } from "./themes";
@@ -18,9 +19,9 @@ const musicSav = new SavUtils("music");
 const grassSav = new SavUtils("grass");
 
 // Instantiating isolated loaders
-const bgLoader = new BackgroundDatabaseLoader();
-const musicLoader = isLocalhost ? new MusicDatabaseLoader() : null;
-const grassLoader = new GrassDatabaseLoader();
+const bgLoader = new utils.BackgroundDatabaseLoader();
+const musicLoader = utils.isLocalhost ? new utils.MusicDatabaseLoader() : null;
+const grassLoader = new utils.GrassDatabaseLoader();
 
 // Fetch and resolve all async registries up front before constructing the 'app' tree
 const compiledBackgrounds = await bgLoader.loadWithMetadata();
@@ -34,7 +35,7 @@ const bgSav = {
 
 async function initialiseAppEngine() {
   // 1. Instantly trigger the fresh abstract data loader to fetch the live deployment date
-  const versionLoader = new VersionLoader();
+  const versionLoader = new utils.VersionLoader();
   const liveBuildData = await versionLoader.loadRegistry();
 
   // Render the server-side timestamp value onto the screen interface
@@ -42,7 +43,7 @@ async function initialiseAppEngine() {
   if (deploySlot && liveBuildData.timestamp) {
     // 💡 Convert the UTC string to a local JavaScript Date object
     const localDate = new Date(liveBuildData.timestamp);
-    
+
     // Format nicely based on the user's browser location settings
     deploySlot.textContent = localDate.toLocaleString();
   }
@@ -74,10 +75,12 @@ async function initialiseAppEngine() {
         // Use { once: true } so we don't accidentally stack up click event listeners
         refreshBtn.addEventListener('click', () => {
           console.log("📥 Update button clicked. Sending skipWaiting payload...");
-          
+
           // Tell the dormant, waiting service worker to skip waiting and activate.
           // The global 'controlling' listener above will catch this and handle the reload!
-          wb.messageSkipWaiting();
+          wb.messageSkipWaiting()
+          console.log("✅ Update completed. Reloading...");
+          window.location.reload();
         }, { once: true });
       }
     });
@@ -209,37 +212,37 @@ export const app = {
     onclick: [
       (e: MouseEvent): void => {
         e.preventDefault();
-        sfx.playRandomCooking();
-        appState.playMode = "sequential";
-        submit(app.music, app.input._, app.selector._);
-        updateUrl(app.music, app.grass, appState);
+        utils.sfx.playRandomCooking();
+        utils.appState.playMode = "sequential";
+        utils.submit(app.music, app.input._, app.selector._);
+        utils.updateUrl(app.music, app.grass, utils.appState);
       },
       (e: MouseEvent): void => {
         e.preventDefault();
-        sfx.playRandomCooking();
-        appState.playMode = "sequential";
-        submit(app.music, app.input._, app.selector._);
-        updateUrl(app.music, app.grass, appState);
+        utils.sfx.playRandomCooking();
+        utils.appState.playMode = "sequential";
+        utils.submit(app.music, app.input._, app.selector._);
+        utils.updateUrl(app.music, app.grass, utils.appState);
       },
       (): void => {
         musicTrackState.active = null;
         grassTheme.active = null;
-        updateUrl(app.music, app.grass, appState);
+        utils.updateUrl(app.music, app.grass, utils.appState);
       },
       (): void => {
-        sfx.playRandomCooking();
-        appState.playMode = "random";
-        pickRandomTrack(app.music);
+        utils.sfx.playRandomCooking();
+        utils.appState.playMode = "random";
+        utils.pickRandomTrack(app.music);
 
         grassTheme.active = app.grass.db.src[Math.floor(Math.random() * app.grass.db.src.length)];
-        updateUrl(app.music, app.grass, appState);
+        utils.updateUrl(app.music, app.grass, utils.appState);
       },
       (): void => {
         const nextTheme = themeState.active === "alt" ? "original" : "alt";
         themeState.active = nextTheme;
 
         if (nextTheme === "alt") {
-          sfx.playRandomCooking();
+          utils.sfx.playRandomCooking();
         }
         console.log(`🎨 UI Theme State flipped and re-rendered to: ${nextTheme.toUpperCase()}`);
       }
@@ -344,7 +347,7 @@ $(function () {
       }
     });
 
-    if (isLocalhost) {
+    if (utils.isLocalhost) {
       for (let i = 0; i < app.selector._.length; i++) {
         app.selector._[i].appendChild(app.placeholder._[i]);
       }
@@ -352,7 +355,7 @@ $(function () {
       const parent = app.music.db[0];
       for (let i = 0; i < parent.contents.length; i++) {
         const album = parent.contents[i];
-        pushOptGroups(app.music._, [album.name]);
+        utils.pushOptGroups(app.music._, [album.name]);
         app.music.opt[i] = [];
 
         for (let j = 0; j < album.contents.length; j++) {
@@ -367,9 +370,9 @@ $(function () {
       app.selector._[1].appendChild(app.placeholder._[1]);
     }
 
-    pushGrassOpts(app.grass.opt, app.grass.db);
+    utils.pushGrassOpts(app.grass.opt, app.grass.db);
 
-    if (isLocalhost) {
+    if (utils.isLocalhost) {
       for (let i = 0; i < app.music._.length; i++) {
         const optgroup = app.music._[i];
         for (const option of app.music.opt[i]) {
@@ -379,7 +382,7 @@ $(function () {
       }
     }
 
-    if (isLocalhost) {
+    if (utils.isLocalhost) {
       app.form.appendChild(app.label._[0]);
       app.form.appendChild(app.selector._[0]);
       app.form.appendChild(app.break[0]);
@@ -469,7 +472,7 @@ $(function () {
     app.grass.elem.style.backgroundImage = `url('/images/grass/${grassTheme.active}.png')`;
   }
 
-  if (isLocalhost) {
+  if (utils.isLocalhost) {
     const initialTrackCompound = musicSav.ss || musicSav.sp;
 
     if (initialTrackCompound) {
@@ -477,7 +480,7 @@ $(function () {
       musicTrackState.active = initialTrackCompound;
     } else {
       if (app.music) {
-        pickRandomTrack(app.music);
+        utils.pickRandomTrack(app.music);
       }
     }
 
@@ -485,16 +488,16 @@ $(function () {
 
     if (verifiedTrack && app.music?.elems?.[0]) {
       // Let the centralised service handle initial booting, probing, and class matching
-      playTrackWithEngine(verifiedTrack, app.music, app.grass, appState);
+      utils.playTrackWithEngine(verifiedTrack, app.music, app.grass, utils.appState);
       console.log("🚀 Initial Boot Deck Sync Complete:", verifiedTrack);
     } else {
       console.log("ℹ️ Audio layer unallocated or bypassed for this project scope.");
-      appState.isBooting = false;
+      utils.appState.isBooting = false;
     }
   }
 
-  changeBackground(app.bg);
-  setInterval(() => { changeBackground(app.bg); }, 20000);
+  utils.changeBackground(app.bg);
+  setInterval(() => { utils.changeBackground(app.bg); }, 20000);
 });
 
 export default app;

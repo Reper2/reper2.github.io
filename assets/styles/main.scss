@@ -2,6 +2,7 @@
 @use "./abstracts/grass";
 @use "./abstracts/form";
 @use "./abstracts/buttons";
+@use "./abstracts/projects";
 @use "./abstracts/software-lib";
 @use "bg";
 @use "eggs";
@@ -20,11 +21,31 @@ body {
   min-height: 100vh;
 }
 
-main { flex: 1; }
+main {
+  flex: 1;
+}
 
-header, main, footer { text-align: -webkit-center; }
+header,
+main,
+footer {
+  text-align: -webkit-center;
+}
 
-header, h1, h2, h3, p, a, span, button, label {
+header,
+h1,
+h2,
+h3,
+p,
+a,
+span,
+button,
+label,
+kbd,
+dt,
+dd,
+li,
+ul,
+ol {
   font-family: 'Super Mario 256', sans-serif;
   color: white;
   -webkit-text-stroke-width: 0.05em;
@@ -42,7 +63,9 @@ header {
   -webkit-text-fill-color: transparent;
 }
 
-a { text-decoration: none; }
+a {
+  text-decoration: none;
+}
 
 kbd {
   display: inline-block;
@@ -65,27 +88,50 @@ audio {
 
 .boxBtn {
   border-radius: 1.8vmin;
-  background-color: lightskyblue;
+  background: linear-gradient(45deg, #034694 40%, #8c7150 75%, #DBA111 100%);
   padding: 7px;
   font-size: 2.7vmin;
 }
 
-.flex { display: flex; justify-content: center; }
-.gold { color: gold; }
-.kb-list { text-align: left; color: cyan; }
-.socialLogo { margin-right: 9px; }
-.bottom { font-size: 2.7vmin; }
-#learnmore, .dLink { color: rgb(0, 174, 255); text-decoration: underline; }
+.flex {
+  display: flex;
+  justify-content: center;
+}
+
+.gold {
+  color: gold;
+}
+
+.kb-list {
+  text-align: left;
+  color: cyan;
+}
+
+.socialLogo {
+  margin-right: 9px;
+}
+
+.bottom {
+  font-size: 2.7vmin;
+}
+
+#learnmore,
+.dLink {
+  color: rgb(0, 174, 255);
+  text-decoration: underline;
+}
 
 /* ─── TOOLTIP BASE COMPONENT ─── */
 .tooltip {
   display: inline-block;
   position: relative;
-  
+
   .tooltiptext {
     visibility: hidden;
     position: absolute;
-    top: 100%; left: 50%; z-index: 1;
+    top: 100%;
+    left: 50%;
+    z-index: 1;
     width: auto;
     white-space: nowrap;
     padding: 1vmin 2.5vmin;
@@ -96,7 +142,7 @@ audio {
     font-size: 2.7vmin;
     text-align: center;
     -webkit-text-stroke-width: 0;
-    transition: opacity 0.3s; 
+    transition: opacity 0.3s;
     opacity: 0;
 
     &::after {
@@ -121,19 +167,20 @@ audio {
   display: none;
   background: #ffce00;
   color: #000;
-  padding: 0.75rem; /* Relative unit based on root font size */
+  padding: 0.75rem;
+  /* Relative unit based on root font size */
   text-align: center;
   font-weight: bold;
-  
+
   /* Centering positioning */
   position: fixed;
   top: 1rem;
   left: 50%;
   transform: translateX(-50%);
-  
+
   /* Sizing with relative constraints */
-  width: 90vw; 
-  max-width: 40rem; 
+  width: 90vw;
+  max-width: 40rem;
   border-radius: 0.25rem;
   z-index: 9999;
 
@@ -143,4 +190,9 @@ audio {
     cursor: pointer;
     font-weight: bold;
   }
+}
+
+details > div {
+  font-size: smaller;
+  margin-left: 1.5rem;
 }

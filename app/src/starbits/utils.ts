@@ -1,5 +1,13 @@
+/**
+ * @author Ethan Graham
+ * @license MIT
+ * @copyright 2021-2026 Ethan Graham
+ * @see https://github.com/fire-ethan/fire-ethan.github.io/blob/master/LICENSE
+ * License information in LICENSE file overrides any other license information in this file.
+ */
+
 import * as THREE from "https://esm.sh/three@0.160.0";
-import { Starbit3D, Moon2D, activeStarbits, activeMoons, starBitColours } from "./core";
+import * as core from "./core";
 
 let animationId: number | null = null;
 
@@ -34,29 +42,29 @@ async function getGLTFLoaderClass(): Promise<any> {
 export function animateGalacticScene(context: RainSceneContext): void {
   const { scene, camera, renderer, canvas } = context;
 
-  for (let i = activeStarbits.length - 1; i >= 0; i--) {
-    const bit = activeStarbits[i];
+  for (let i = core.activeStarbits.length - 1; i >= 0; i--) {
+    const bit = core.activeStarbits[i];
     bit.update();
 
     if (bit.mesh.position.y < -7 || bit.mesh.position.x > 14) {
       bit.destroy();
-      activeStarbits.splice(i, 1);
+      core.activeStarbits.splice(i, 1);
     }
   }
 
-  for (let j = activeMoons.length - 1; j >= 0; j--) {
-    const flatImg = activeMoons[j];
+  for (let j = core.activeMoons.length - 1; j >= 0; j--) {
+    const flatImg = core.activeMoons[j];
     flatImg.update();
 
     if (flatImg.sprite.position.y < -7 || flatImg.sprite.position.x > 14) {
       flatImg.destroy();
-      activeMoons.splice(j, 1);
+      core.activeMoons.splice(j, 1);
     }
   }
 
   renderer.render(scene, camera);
 
-  if (activeStarbits.length === 0 && activeMoons.length === 0) {
+  if (core.activeStarbits.length === 0 && core.activeMoons.length === 0) {
     if (animationId !== null) {
       cancelAnimationFrame(animationId);
       animationId = null;
@@ -72,7 +80,8 @@ export function generateStarbitShower(
   array2DImageUrls: string[],
   context: any, // Changed to 'any' to safely type-check input variations
   eggCount: number,
-  totalEggs: number
+  totalEggs: number,
+  verseText?: string
 ): void {
 
   // 🔄 HYBRID RESOLVER: If the constructor function itself was passed instead of its instance, execute it!
@@ -96,7 +105,7 @@ export function generateStarbitShower(
     for (let k = 0; k < eggCount; k++) {
       const randomUrlIndex = Math.floor(Math.random() * array2DImageUrls.length);
       const chosenUrl = array2DImageUrls[randomUrlIndex];
-      activeMoons.push(new Moon2D(chosenUrl, context.scene));
+      core.activeMoons.push(new core.Moon2D(chosenUrl, context.scene));
     }
   }
 
@@ -123,13 +132,13 @@ export function generateStarbitShower(
       }
 
       // 3. Compute calculations using stable boundary integers
-      const TOTAL_BITS = starBitColours.length * totalEggs;
+      const TOTAL_BITS = core.starBitColours.length * totalEggs;
       const progress = eggCount / totalEggs;
       const exactSpawnTarget = Math.floor(TOTAL_BITS * progress);
 
       // 4. Instantiation cycle
       for (let i = 0; i < exactSpawnTarget; i++) {
-        activeStarbits.push(new Starbit3D(masterMesh, context.scene));
+        core.activeStarbits.push(new core.Starbit3D(masterMesh, context.scene));
       }
 
       if (animationId === null) {
@@ -139,6 +148,45 @@ export function generateStarbitShower(
       console.error("glTF structure failed to load completely:", error);
     });
   });
+
+  if (verseText) {
+    const verseBanner = document.createElement("div");
+    verseBanner.className = "starbit-verse-banner";
+    verseBanner.innerText = verseText;
+
+    Object.assign(verseBanner.style, {
+      position: "fixed",
+      bottom: "10%",
+      left: "50%",
+      transform: "translateX(-50%)",
+      color: "#ffffff",
+      fontSize: "1.25rem",
+      fontStyle: "italic",
+      textAlign: "center",
+      pointerEvents: "none",
+      zIndex: "10000",
+      opacity: "1",
+      transition: "opacity 1s ease-in-out",
+
+      /* High contrast container styles */
+      backgroundColor: "rgba(15, 15, 25, 0.85)", // Dark background shield
+      padding: "14px 28px",
+      borderRadius: "12px",
+      border: "1px solid rgba(255, 255, 255, 0.15)", // Subtle glowing border
+      backdropFilter: "blur(8px)", // Blurs elements directly behind the box
+      boxShadow: "0 8px 32px rgba(0, 0, 0, 0.45)", // Strong separation shadow
+      maxWidth: "80vw", // Prevents overflow on mobile screens
+      whiteSpace: "normal"
+    });
+
+    document.body.appendChild(verseBanner);
+
+    // Fade out and cleanup when the shower finishes
+    setTimeout(() => {
+      verseBanner.style.opacity = "0";
+      setTimeout(() => verseBanner.remove(), 1000);
+    }, 4000);
+  }
 }
 
 let rainContextCache: RainSceneContext | null = null;

@@ -1,0 +1,61 @@
+@use "variables";
+
+.project-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3vmin;
+  margin-top: 2vmin;
+
+  h2 {
+    font-size: 4vmin;
+    margin-bottom: 1vmin;
+  }
+}
+
+.project-card {
+  background-color: rgba(0, 0, 0, 0.45);
+  border: 0.3vmin solid rgba(255, 255, 255, 0.2);
+  border-radius: 1.5vmin;
+  padding: 2.5vmin;
+  text-align: left;
+  box-shadow: 0 0.5vmin 1.5vmin rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+
+  @media (hover: hover) {
+    &:hover {
+      transform: translateY(-0.4vh);
+      border-color: cyan;
+    }
+  }
+
+  .project-title {
+    font-size: 3.2vmin;
+    margin-top: 0;
+    margin-bottom: 1.5vmin;
+  }
+
+  .project-details {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 1.2vmin;
+    row-gap: 0.8vmin;
+    margin: 0 0 1.8vmin 0;
+    font-size: 2.3vmin;
+
+    dt {
+      font-weight: bold;
+      color: gold;
+    }
+
+    dd {
+      margin-left: 0;
+    }
+  }
+
+  .project-description {
+    font-size: 2.2vmin;
+    line-height: 1.4;
+    margin: 0;
+  }
+}

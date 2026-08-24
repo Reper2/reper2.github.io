@@ -1,3 +1,11 @@
+/**
+ * @author Ethan Graham
+ * @license MIT
+ * @copyright 2021-2026 Ethan Graham
+ * @see https://github.com/fire-ethan/fire-ethan.github.io/blob/master/LICENSE
+ * License information in LICENSE file overrides any other license information in this file.
+ */
+
 import { isLocalhost, copyLink } from "./core/core";
 import { AudioControlPanel, EggCookbookPanel } from "./core/utils";
 import { globalTheme } from "./themes";
@@ -112,10 +120,10 @@ if (btns.copy._) {
 // Footer
 if (btns.footer._) {
   btns.footer.cr.license.title = "View License (Alt+L)";
-  btns.footer.cr.license.href = "https://github.com/Reper2/reper2.github.io/blob/master/LICENSE";
+  btns.footer.cr.license.href = "https://github.com/fire-ethan/fire-ethan.github.io/blob/master/LICENSE";
   btns.footer.cr.license.target = "_blank";
   btns.footer.cr.license.rel = "noopener noreferrer";
-  btns.footer.cr.txt.textContent = "(c) 2021-2026 Reper2/Ethan. All rights reserved.";
+  btns.footer.cr.txt.textContent = "(c) 2021-2026 Ethan Graham. All rights reserved.";
 
   btns.footer.cr.license.appendChild(btns.footer.cr.txt);
   btns.footer._.appendChild(btns.footer.cr.license);

@@ -55,9 +55,13 @@
   // Center-stacked structure layers
   .egg-box,
   .egg-cracked {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 100% !important;
     height: 100% !important;
-    object-fit: contain; 
+    object-fit: contain;
   }
 
   /* -------------------------------------------------------------------------
@@ -68,12 +72,12 @@
       opacity: 1.0;
       transform: translate(-50%, -50%) scale(1.05);
     }
- 
+
     .egg-cracked {
       z-index: 1;
       visibility: visible !important;
       transform: translate(-50%, -50%) scale(0.70);
-      opacity: 0.8; 
+      opacity: 0.8;
       pointer-events: none;
       transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
@@ -91,7 +95,7 @@
 
     .egg-cracked {
       z-index: 3;
-      opacity: 1 !important; 
+      opacity: 1 !important;
       visibility: visible !important;
       animation: moon 1.8s ease forwards;
     }
@@ -101,6 +105,7 @@
      PERMANENT UNLOCKED STATE
      ------------------------------------------------------------------------- */
   &.unlocked {
+
     .egg-box,
     .egg-cracked {
       opacity: 0 !important;

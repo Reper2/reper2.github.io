@@ -40,12 +40,14 @@ input {
 }
 
 select {
-  background-color: lightblue;
+  background: linear-gradient(45deg, #034694 40%, #8c7150 75%, #DBA111 100%);
   border-color: black;
+  color: white;
 }
 
 input {
-  background-color: skyblue;
+  background: linear-gradient(45deg, #034694 40%, #8c7150 75%, #DBA111 100%);
+  color: white;
 }
 
 button {
@@ -55,15 +57,18 @@ button {
   padding: 1.2vmin 3.5vmin;
   margin: 0.8vmin;
   font-size: 4.2vmin;
-  background-color: lightskyblue;
+  background: linear-gradient(45deg, #034694 40%, #8c7150 75%, #DBA111 100%);
+  color: white;
   outline-color: initial;
 }
 
-button, input {
+button,
+input {
   transition: transform 0.2s ease;
 }
 @media (hover: hover) {
-  button:hover, input:hover {
+  button:hover,
+  input:hover {
     transform: translateY(-0.9vh);
   }
 }
@@ -146,6 +151,59 @@ button, input {
 .menu-actions-tray button:hover .tooltiptext {
   visibility: visible !important;
   opacity: 1 !important;
+}
+
+.project-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3vmin;
+  margin-top: 2vmin;
+}
+.project-list h2 {
+  font-size: 4vmin;
+  margin-bottom: 1vmin;
+}
+
+.project-card {
+  background-color: rgba(0, 0, 0, 0.45);
+  border: 0.3vmin solid rgba(255, 255, 255, 0.2);
+  border-radius: 1.5vmin;
+  padding: 2.5vmin;
+  text-align: left;
+  box-shadow: 0 0.5vmin 1.5vmin rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+@media (hover: hover) {
+  .project-card:hover {
+    transform: translateY(-0.4vh);
+    border-color: cyan;
+  }
+}
+.project-card .project-title {
+  font-size: 3.2vmin;
+  margin-top: 0;
+  margin-bottom: 1.5vmin;
+}
+.project-card .project-details {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 1.2vmin;
+  row-gap: 0.8vmin;
+  margin: 0 0 1.8vmin 0;
+  font-size: 2.3vmin;
+}
+.project-card .project-details dt {
+  font-weight: bold;
+  color: gold;
+}
+.project-card .project-details dd {
+  margin-left: 0;
+}
+.project-card .project-description {
+  font-size: 2.2vmin;
+  line-height: 1.4;
+  margin: 0;
 }
 
 .appIcon:active,
@@ -333,11 +391,27 @@ main {
   flex: 1;
 }
 
-header, main, footer {
+header,
+main,
+footer {
   text-align: -webkit-center;
 }
 
-header, h1, h2, h3, p, a, span, button, label {
+header,
+h1,
+h2,
+h3,
+p,
+a,
+span,
+button,
+label,
+kbd,
+dt,
+dd,
+li,
+ul,
+ol {
   font-family: "Super Mario 256", sans-serif;
   color: white;
   -webkit-text-stroke-width: 0.05em;
@@ -380,7 +454,7 @@ audio {
 
 .boxBtn {
   border-radius: 1.8vmin;
-  background-color: lightskyblue;
+  background: linear-gradient(45deg, #034694 40%, #8c7150 75%, #DBA111 100%);
   padding: 7px;
   font-size: 2.7vmin;
 }
@@ -407,7 +481,8 @@ audio {
   font-size: 2.7vmin;
 }
 
-#learnmore, .dLink {
+#learnmore,
+.dLink {
   color: rgb(0, 174, 255);
   text-decoration: underline;
 }
@@ -455,7 +530,8 @@ audio {
   display: none;
   background: #ffce00;
   color: #000;
-  padding: 0.75rem; /* Relative unit based on root font size */
+  padding: 0.75rem;
+  /* Relative unit based on root font size */
   text-align: center;
   font-weight: bold;
   /* Centering positioning */
@@ -474,4 +550,9 @@ audio {
   padding: 0.25rem 0.6rem;
   cursor: pointer;
   font-weight: bold;
+}
+
+details > div {
+  font-size: smaller;
+  margin-left: 1.5rem;
 }/*# sourceMappingURL=main.css.map */

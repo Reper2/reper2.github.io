@@ -1,4 +1,12 @@
 /**
+ * @author Ethan Graham
+ * @license MIT
+ * @copyright 2021-2026 Ethan Graham
+ * @see https://github.com/fire-ethan/fire-ethan.github.io/blob/master/LICENSE
+ * License information in LICENSE file overrides any other license information in this file.
+ */
+
+/**
  * Low-level decoupled utility for session, local, and URL storage profiles.
  * This file has ZERO dependencies to explicitly eliminate initialisation loops.
  */

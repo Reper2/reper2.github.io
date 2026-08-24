@@ -1,3 +1,11 @@
+/**
+ * @author Ethan Graham
+ * @license MIT
+ * @copyright 2021-2026 Ethan Graham
+ * @see https://github.com/fire-ethan/fire-ethan.github.io/blob/master/LICENSE
+ * License information in LICENSE file overrides any other license information in this file.
+ */
+
 import { Background, Database } from "../../lib/db-typings";
 import { RandomPicker } from "./core";
 
@@ -6,7 +14,7 @@ let isInitialLoad = true;
 
 // FALLBACK DESTINATION SETTINGS
 const FALLBACK_CONFIG = {
-  username: "reper2",
+  username: "fire-ethan",
   repo: "switch-album", 
 };
 
@@ -16,7 +24,7 @@ export function changeBackground(obj: Background.Config): void {
 
   // Handler function to cycle image buffer swaps with automated status safeguards
   const renderImage = async (branch: string, file: Database.File) => {
-    let targetUrl = "https://cdn.jsdelivr.net/gh/reper2/";
+    let targetUrl = "https://cdn.jsdelivr.net/gh/fire-ethan/";
     let isFallbackActive = false;
 
     if (currentCategory === "holidays") {
@@ -36,7 +44,7 @@ export function changeBackground(obj: Background.Config): void {
         
         // Rewrite the resource mapping endpoint seamlessly on the fly
         if (currentCategory === "holidays") {
-          targetUrl = `https://raw.githubusercontent.com/reper2/holiday-album/master/photos/${file.name}`;
+          targetUrl = `https://raw.githubusercontent.com/fire-ethan/holiday-album/master/photos/${file.name}`;
         } else {
           targetUrl = `https://raw.githubusercontent.com/${FALLBACK_CONFIG.username}/${FALLBACK_CONFIG.repo}/${branch}/${file.name}`;
         }
@@ -73,7 +81,7 @@ export function changeBackground(obj: Background.Config): void {
       if (!isFallbackActive) {
         console.warn(`[Background Guard] Post-load pipeline failure caught on primary URL. Redirecting secondary fallback cycle.`);
         if (currentCategory === "holidays") {
-          targetUrl = `https://raw.githubusercontent.com/reper2/holiday-album/master/photos/${file.name}`;
+          targetUrl = `https://raw.githubusercontent.com/fire-ethan/holiday-album/master/photos/${file.name}`;
         } else {
           targetUrl = `https://raw.githubusercontent.com/${FALLBACK_CONFIG.username}/${FALLBACK_CONFIG.repo}/${branch}/${file.name}`;
         }

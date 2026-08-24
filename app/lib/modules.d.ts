@@ -1,3 +1,11 @@
+/**
+ * @author Ethan Graham
+ * @license MIT
+ * @copyright 2021-2026 Ethan Graham
+ * @see https://github.com/fire-ethan/fire-ethan.github.io/blob/master/LICENSE
+ * License information in LICENSE file overrides any other license information in this file.
+ */
+
 declare module 'https://esm.unpkg.com/@zip.js/zip.js' {
   // Pull the type declarations dynamically from the installed package types
   export * from '@zip.js/zip.js';

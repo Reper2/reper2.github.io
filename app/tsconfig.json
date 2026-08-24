@@ -31,13 +31,14 @@
     "diagnostics": true,
     "listEmittedFiles": true,
     "types": [
-      "jquery"
+      "jquery",
+      "node"
     ]
   },
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Recommended",
   "include": [
-    "src/**/*.ts",
+    "src/**/**/*.ts",
     "lib/**/*.d.ts",
     "lib/egg-debugger.d.ts"
   ],
