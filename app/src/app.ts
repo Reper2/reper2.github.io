@@ -64,7 +64,6 @@ async function initialiseAppEngine() {
       }
     });
 
-    // This listener triggers if Workbox realises files on the network differ from local caches
     wb.addEventListener('waiting', () => {
       const banner = document.getElementById("update-banner");
       const refreshBtn = document.getElementById("refresh-btn");
@@ -72,15 +71,10 @@ async function initialiseAppEngine() {
       if (banner) banner.style.display = "block";
 
       if (refreshBtn) {
-        // Use { once: true } so we don't accidentally stack up click event listeners
         refreshBtn.addEventListener('click', () => {
           console.log("📥 Update button clicked. Sending skipWaiting payload...");
 
-          // Tell the dormant, waiting service worker to skip waiting and activate.
-          // The global 'controlling' listener above will catch this and handle the reload!
-          wb.messageSkipWaiting()
-          console.log("✅ Update completed. Reloading...");
-          window.location.reload();
+          wb.messageSkipWaiting();
         }, { once: true });
       }
     });
