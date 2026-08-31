@@ -9,7 +9,7 @@
 import { globalTheme } from "../themes";
 import SavUtils from "../core/storage";
 import { isLocalhost } from "../core/";
-import { generateStarbitShower, constructStarbitScene } from "../starbits/";
+import { generateStarbitShower, constructStarbitScene } from "https://esm.sh/@eg-frosty-volcano/cosmic-shower@1.0.2?external=three";
 
 import { EggState } from "./interfaces";
 import { startCompSeq } from "./comp-seq";
@@ -31,9 +31,9 @@ const THEME_ASSETS = {
   },
   original: {
     stylesheet: "/assets/original-theme.css",
-    boxSrc: "/images/vecteezy_bubble.png",         // The bubble acts as the "cage" block!
+    boxSrc: "/images/vecteezy_bubble.png",
     boxAlt: "Egg - Bubble Cage",
-    crackedSrc: "/images/moon.png",                // The moon is the prize trapped inside!
+    crackedSrc: "/images/moon.png",
     crackedAlt: "Egg - Revealed Moon",
     sfxKorok: "",
     sfxFanfare: "",
@@ -263,36 +263,36 @@ async function buildCanonicalState(state: EggState): Promise<string> {
   entries.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
 
   const canonicalString = entries.map((e) => e.entry).join("|");
-  console.log("📌 Strict Canonical String:\n", canonicalString);
+  // console.log("📌 Strict Canonical String:\n", canonicalString);
   return canonicalString;
 }
 
 async function tryUnlock(): Promise<void> {
   const state = getParsedState();
-  const currentFoundCount = Object.values(state).filter(e => e.unlocked).length;
+  // const currentFoundCount = Object.values(state).filter(e => e.unlocked).length;
 
-  console.group("🔑 [Egg Debugger] Attempting Unlock");
-  console.log(`Progress: ${currentFoundCount} / ${TOTAL_EGGS} eggs collected.`);
+  // console.group("🔑 [Egg Debugger] Attempting Unlock");
+  // console.log(`Progress: ${currentFoundCount} / ${TOTAL_EGGS} eggs collected.`);
 
-  if (currentFoundCount < TOTAL_EGGS || !payloadIv || !payloadData) {
-    console.warn("⚠️ Unlock conditions not met.", {
-      currentFoundCount,
-      totalRequired: TOTAL_EGGS,
-      hasPayloadIv: !!payloadIv,
-      hasPayloadData: !!payloadData
-    });
-    console.groupEnd();
-    return;
-  }
+  // if (currentFoundCount < TOTAL_EGGS || !payloadIv || !payloadData) {
+  //   console.warn("⚠️ Unlock conditions not met.", {
+  //     currentFoundCount,
+  //     totalRequired: TOTAL_EGGS,
+  //     hasPayloadIv: !!payloadIv,
+  //     hasPayloadData: !!payloadData
+  //   });
+  //   console.groupEnd();
+  //   return;
+  // }
 
   try {
     const key = await deriveKey(state);
     console.log("🔑 Derived CryptoKey successfully from canonical state.");
 
     const decrypted = await crypto.subtle.decrypt(
-      { name: "AES-GCM", iv: payloadIv }, 
-      key, 
-      payloadData
+      { name: "AES-GCM", iv: payloadIv as BufferSource},
+      key,
+      payloadData as BufferSource
     );
     const text = new TextDecoder().decode(decrypted);
 
@@ -303,9 +303,9 @@ async function tryUnlock(): Promise<void> {
       console.warn("⚠️ Decrypted payload did not contain expected prefix 'VALID_REWARD':", text);
     }
   } catch (error) {
-    console.error("❌ Decryption failed! Fingerprint/Key mismatch detected:", error);
-  } finally {
-    console.groupEnd();
+    // console.error("❌ Decryption failed! Fingerprint/Key mismatch detected:", error);
+  // } finally {
+    // console.groupEnd();
   }
 }
 
@@ -406,9 +406,10 @@ async function initEggs(): Promise<void> {
                 GLTF_MODEL_URL,
                 moonImagesArray,
                 context,
+                "/assets/HighLight3.png",
                 totalUnlockedCount,
                 TOTAL_EGGS,
-                randomVerse // <-- Pass verse here
+                randomVerse
               );
             }
           }

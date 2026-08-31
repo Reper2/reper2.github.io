@@ -7,7 +7,7 @@
  */
 
 import * as THREE from "https://esm.sh/three@0.160.0";
-import { Starbit3D, Moon2D, activeStarbits, activeMoons } from "../starbits/core";
+import { Starbit3D, Moon2D, activeStarbits, activeMoons } from "https://esm.sh/@eg-frosty-volcano/cosmic-shower@1.0.2?external=three";
 
 // Animation Configuration States
 type SequenceState = "FROST_IN" | "SOLID_FREEZE" | "BURST_OUT" | "FINISHED";
@@ -427,7 +427,7 @@ function tick(masterMesh: THREE.Mesh | null = null): void {
 
       if (masterMesh) {
         for (let i = 0; i < targetExplosionVolume; i++) {
-          const starbit = new Starbit3D(masterMesh, scene);
+          const starbit = new Starbit3D(masterMesh, scene, "/assets/HighLight3.png");
           starbit.mesh.position.set(0, 0, 1);
           starbit.mesh.scale.set(0.03, 0.03, 0.03);
 

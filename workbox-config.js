@@ -18,8 +18,6 @@ module.exports = {
   ],
   globPatterns: [
     "**/*.{html,css,js,png,jpg,jpeg,svg,ttf,webmanifest,ico,webp,bin,gltf}",
-    // 💡 FIX: The "{.,}" modifier explicitly tells Workbox to match 
-    // folders or filenames starting with a dot (like your .stems_ JSON maps)
     "app/databases/music/**/{.,}*.json"
   ],
   maximumFileSizeToCacheInBytes: 5000000, 

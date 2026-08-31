@@ -29,6 +29,7 @@ app.use('/app', express.static(path.join(projectRoot, 'app'), {
 const repos = [
   'acnh',
   'acnh-apps',
+  'cosmic-shower',
   'desktop-clock',
   // 'easter-egg-engine',
   // 'gtcf',

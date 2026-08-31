@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@eg-frosty-volcano/cosmic-shower':
+        specifier: ^1.0.2
+        version: 1.0.2(three@0.185.1)
       '@zip.js/zip.js':
         specifier: ^2.8.26
         version: 2.8.26
@@ -21,8 +24,8 @@ importers:
         specifier: ^5.4.2
         version: 5.4.3
       three:
-        specifier: ^0.184.0
-        version: 0.184.0
+        specifier: ^0.185.1
+        version: 0.185.1
       window:
         specifier: ^1.0.0
         version: 1.0.0
@@ -560,6 +563,11 @@ packages:
 
   '@dimforge/rapier3d-compat@0.12.0':
     resolution: {integrity: sha512-uekIGetywIgopfD97oDL5PfeezkFpNhwlzlaEYNOA0N6ghdsOvh/HYjSMek5Q2O1PYvRSDFcqFVJl4r4ZBwOow==}
+
+  '@eg-frosty-volcano/cosmic-shower@1.0.2':
+    resolution: {integrity: sha512-f9ZWH0zWQV6D9A1p1BGJ6BKZR+wwzdtucVVNsv0IxyacVIVC0woHb2igl1SpvPzvVNl8A+VAUVGbKHmdni8xYw==}
+    peerDependencies:
+      three: 0.185.1
 
   '@eslint-community/eslint-utils@4.9.1':
     resolution: {integrity: sha512-phrYmNiYppR7znFEdqgfWHXR6NCkZEK7hwWDHZUjit/2/U0r6XvkDl0SYnoM51Hq7FhCGdLDT6zxCCOY1hexsQ==}
@@ -2619,8 +2627,8 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  three@0.184.0:
-    resolution: {integrity: sha512-wtTRjG92pM5eUg/KuUnHsqSAlPM296brTOcLgMRqEeylYTh/CdtvKUvCyyCQTzFuStieWxvZb8mVTMvdPyUpxg==}
+  three@0.185.1:
+    resolution: {integrity: sha512-5aojFCXKwnjBRZvUnt3WFfEcvUJgkN5LlijRFN95hMy8WVkG4I0QNcJE+OuWvuJ0bOdStrbfXn0pkd6/QyiAlg==}
 
   throttleit@2.1.0:
     resolution: {integrity: sha512-nt6AMGKW1p/70DF/hGBdJB57B8Tspmbp5gfJ8ilhLnt7kkr2ye7hzD6NVG8GGErk2HWF34igrL2CXmNIkzKqKw==}
@@ -3594,6 +3602,10 @@ snapshots:
       '@babel/helper-validator-identifier': 7.29.7
 
   '@dimforge/rapier3d-compat@0.12.0': {}
+
+  '@eg-frosty-volcano/cosmic-shower@1.0.2(three@0.185.1)':
+    dependencies:
+      three: 0.185.1
 
   '@eslint-community/eslint-utils@4.9.1(eslint@10.5.0(supports-color@5.5.0))':
     dependencies:
@@ -5796,7 +5808,7 @@ snapshots:
       commander: 2.20.3
       source-map-support: 0.5.21
 
-  three@0.184.0: {}
+  three@0.185.1: {}
 
   throttleit@2.1.0: {}
 

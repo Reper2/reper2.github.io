@@ -11,11 +11,12 @@
     "typescript": "^6.0.3"
   },
   "dependencies": {
+    "@eg-frosty-volcano/cosmic-shower": "^1.0.2",
     "@zip.js/zip.js": "^2.8.26",
     "dom": "^0.0.3",
     "express": "^5.2.1",
     "javascript-obfuscator": "^5.4.2",
-    "three": "^0.184.0",
+    "three": "^0.185.1",
     "window": "^1.0.0",
     "workbox-cli": "^7.4.1"
   },
